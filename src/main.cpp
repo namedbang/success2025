@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-06 02:31:30
+ * @LastEditTime: 2024-12-08 22:37:14
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -143,10 +143,6 @@ int main(int argc, char *argv[])
 
     while (true)
     { /// 8ms
-        /*debug------------------------------------ */
-        // unsigned char temp = 0x01;
-        // SerialPortWriteByte(Uart_inf.UID0, temp);
-        /*debug------------------------------------ */
         auto result = pool.enqueue(
             [process_p]
             { return process_p->processing(); }); // 加入任务列表

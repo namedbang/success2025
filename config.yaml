@@ -3,8 +3,8 @@ verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
 #------Debug-------#
-Debug_FPS: "false"
-Debug_Kalman: "true"
+Debug_FPS: "true"
+Debug_Kalman: "false"
 Debug_Can: "false"
 #################################################################
 camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1280X1240_6ms.config"
