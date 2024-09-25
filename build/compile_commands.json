@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/gyxy/Desktop/workspeaseMY/success2025/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++   -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -isystem /usr/include/opencv4  -g   -o CMakeFiles/RM_exe.dir/src/main.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp",
+  "file": "/home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp"
+}
+]
