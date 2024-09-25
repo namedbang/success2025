@@ -1,0 +1,5 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+}
