@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"
   "CMakeFiles/RM_exe.dir/src/main.cpp.o"
   "RM_exe"
   "RM_exe.pdb"

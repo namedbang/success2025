@@ -123,6 +123,33 @@ RM_exe/fast:
 	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/build
 .PHONY : RM_exe/fast
 
+src/hardware/api/camera.o: src/hardware/api/camera.cpp.o
+
+.PHONY : src/hardware/api/camera.o
+
+# target to build an object file
+src/hardware/api/camera.cpp.o:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o
+.PHONY : src/hardware/api/camera.cpp.o
+
+src/hardware/api/camera.i: src/hardware/api/camera.cpp.i
+
+.PHONY : src/hardware/api/camera.i
+
+# target to preprocess a source file
+src/hardware/api/camera.cpp.i:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.i
+.PHONY : src/hardware/api/camera.cpp.i
+
+src/hardware/api/camera.s: src/hardware/api/camera.cpp.s
+
+.PHONY : src/hardware/api/camera.s
+
+# target to generate assembly for a file
+src/hardware/api/camera.cpp.s:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s
+.PHONY : src/hardware/api/camera.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... RM_exe"
+	@echo "... src/hardware/api/camera.o"
+	@echo "... src/hardware/api/camera.i"
+	@echo "... src/hardware/api/camera.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
