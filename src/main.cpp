@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-02 18:03:56
+ * @LastEditTime: 2024-11-03 18:01:40
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -16,9 +16,10 @@
 
 int main(int argc, char *argv[])
 {
-    Picture *picture = new Picture();
-    BsaeCamera *BsaeCamera = new MindCamera(picture);
-    BsaeCamera->camera_chank();
+    bool chank;
+    Picture *picture = new Picture();                 // 创建视频管道
+    BsaeCamera *BsaeCamera = new MindCamera(picture); // 将相机接入管道
+    chank = BsaeCamera->camera_chank();
     delete BsaeCamera;
     delete picture;
     return 0;
