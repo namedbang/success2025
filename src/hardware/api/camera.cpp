@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:36:52
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-03 17:55:09
+ * @LastEditTime: 2024-11-05 14:36:47
  * @FilePath: /success2025/src/hardware/api/camera.cpp
  * @Description:
  *
@@ -36,7 +36,7 @@ bool MindCamera::MYCameraInit()
     // 没有连接设备
     if (iCameraCounts == 0)
     {
-        return -1;
+        return false;
     }
 
     // 相机初始化。初始化成功后，才能调用任何其他相机相关的操作接口
@@ -46,7 +46,7 @@ bool MindCamera::MYCameraInit()
     printf("初始化状态 = %d\n", iStatus);
     if (iStatus != CAMERA_STATUS_SUCCESS)
     {
-        return -1;
+        return false;
     }
 
     // 获得相机的特性描述结构体。该结构体中包含了相机可设置的各种参数的范围信息。决定了相关函数的参数
@@ -70,28 +70,41 @@ bool MindCamera::MYCameraInit()
         CameraSetIspOutFormat(hCamera, CAMERA_MEDIA_TYPE_BGR8);
     }
 
-    return iStatus;
+    return true;
 }
 
 void MindCamera::camera_read_once(unsigned char camera_id)
 {
-    while (CameraGetImageBuffer(hCamera, &sFrameInfo, &pbyBuffer, 1) == CAMERA_STATUS_SUCCESS)
-        ; // 最大等到1000
-          // {
-    CameraImageProcess(hCamera, pbyBuffer, g_pRgbBuffer, &sFrameInfo);
+    try // 相机读取帧
+    {
+        if (CameraGetImageBuffer(hCamera, &sFrameInfo, &pbyBuffer, 1000) == CAMERA_STATUS_SUCCESS)
+        {
+            // 最大等到1000
+            // {
+            CameraImageProcess(hCamera, pbyBuffer, g_pRgbBuffer, &sFrameInfo);
 
-    cv::Mat matImage(
-        cvSize(sFrameInfo.iWidth, sFrameInfo.iHeight),
-        sFrameInfo.uiMediaType == CAMERA_MEDIA_TYPE_MONO8 ? CV_8UC1 : CV_8UC3,
-        g_pRgbBuffer);
-    this->Picture_p->preImage = matImage; // 更新img
+            cv::Mat matImage(
+                cvSize(sFrameInfo.iWidth, sFrameInfo.iHeight),
+                sFrameInfo.uiMediaType == CAMERA_MEDIA_TYPE_MONO8 ? CV_8UC1 : CV_8UC3,
+                g_pRgbBuffer);
+            this->Picture_p->preImage = matImage; // 更新img
 
-    // imshow("Opencv Demo", matImage);
-    // waitKey(0);
-    // 在成功调用CameraGetImageBuffer后，必须调用CameraReleaseImageBuffer来释放获得的buffer。
-    // 否则再次调用CameraGetImageBuffer时，程序将被挂起一直阻塞，直到其他线程中调用CameraReleaseImageBuffer来释放了buffer
-    CameraReleaseImageBuffer(hCamera, pbyBuffer);
-    // }
+            // imshow("Opencv Demo", matImage);
+            // waitKey(0);
+            // 在成功调用CameraGetImageBuffer后，必须调用CameraReleaseImageBuffer来释放获得的buffer。
+            // 否则再次调用CameraGetImageBuffer时，程序将被挂起一直阻塞，直到其他线程中调用CameraReleaseImageBuffer来释放了buffer
+            CameraReleaseImageBuffer(hCamera, pbyBuffer);
+            // }
+        }
+        else
+        {
+            throw "相机读取帧失败";
+        }
+    }
+    catch (const char *e)
+    {
+        std::cerr << e << '\n';
+    }
 }
 
 #include <iostream>
