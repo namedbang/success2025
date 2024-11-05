@@ -4,6 +4,8 @@
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../include/mind/CameraApi.h
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../include/mind/CameraDefine.h
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../include/mind/CameraStatus.h
+CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/utils/cout.h
+CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/app/ConfigurationReader.hpp
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/app/api/picture.hpp
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/hardware/api/camera.cpp
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/hardware/api/camera.hpp
@@ -121,6 +123,7 @@ CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: /usr/include/opencv4/opencv
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../include/mind/CameraApi.h
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../include/mind/CameraDefine.h
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../include/mind/CameraStatus.h
+CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/utils/cout.h
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/app/ConfigurationReader.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/app/api/picture.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/hardware/api/camera.hpp

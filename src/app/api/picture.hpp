@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-03 14:20:08
+ * @LastEditTime: 2024-11-05 16:00:16
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -13,11 +13,16 @@
 
 #include <opencv2/imgproc/types_c.h>
 #include "opencv2/highgui/highgui.hpp"
+#include "../ConfigurationReader.hpp"
 
 class Picture
 {
 private:
-    /* data */
+    ConfigurationReader *Config;
+    double T1; // to FPS
+    double T2;
+    double spendTime;
+
 public:
     cv::Mat preImage;
     char ImgShow()
@@ -25,7 +30,26 @@ public:
         cv::imshow("success2025", preImage);
         return cv::waitKey(1) == 'q';
     }
-    Picture(/* args */) = default;
+    void CalculateTime()
+    {
+        this->spendTime = (this->T2 - this->T1) * 1000 / (cv::getTickFrequency());
+    }
+    void TimeBegin()
+    {
+        T1 = cv::getTickCount();
+    }
+    void TimeEnd()
+    {
+        T2 = cv::getTickCount();
+    }
+    void CvShowOnUI()
+    {
+        if ((Config->FPS_show == "true") && (preImage.empty()))
+        {
+        }
+    }
+    Picture(ConfigurationReader *Config_p)
+        : Config(Config_p) {}
     ~Picture() = default;
 };
 

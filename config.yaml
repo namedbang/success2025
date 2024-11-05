@@ -1,2 +1,4 @@
 %YAML:1.0	#注意：一定要有这行
 verison: "1.0.0"
+ros_enable: "false"
+FPS_show: "true"
