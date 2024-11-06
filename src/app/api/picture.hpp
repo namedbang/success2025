@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-05 16:00:16
+ * @LastEditTime: 2024-11-05 16:22:03
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -25,8 +25,8 @@ private:
 
 public:
     cv::Mat preImage;
-    char ImgShow()
-    { // in while
+    char ImgShow() // in while
+    {
         cv::imshow("success2025", preImage);
         return cv::waitKey(1) == 'q';
     }
@@ -44,8 +44,13 @@ public:
     }
     void CvShowOnUI()
     {
-        if ((Config->FPS_show == "true") && (preImage.empty()))
+        if ((Config->enable_show == "true") && (preImage.empty()))
         {
+            std::ostringstream oss;
+            if (Config->FPS_show == "true")
+                oss << "FPS:  " << 1 / spendTime << '\n';
+            if (Config->time_show == "true")
+                oss << spendTime << "  ms" << '\n';
         }
     }
     Picture(ConfigurationReader *Config_p)

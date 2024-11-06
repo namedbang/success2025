@@ -1,4 +1,7 @@
 %YAML:1.0	#注意：一定要有这行
 verison: "1.0.0"
 ros_enable: "false"
+########show on picture############
+enable_show: "true"
 FPS_show: "true"
+time_show: "true"
