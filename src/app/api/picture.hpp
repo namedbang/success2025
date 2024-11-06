@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-05 16:22:03
+ * @LastEditTime: 2024-11-06 20:24:29
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -42,7 +42,7 @@ public:
     {
         T2 = cv::getTickCount();
     }
-    void CvShowOnUI()
+    void CvPutTextOnUI()
     {
         if ((Config->enable_show == "true") && (preImage.empty()))
         {
@@ -51,6 +51,18 @@ public:
                 oss << "FPS:  " << 1 / spendTime << '\n';
             if (Config->time_show == "true")
                 oss << spendTime << "  ms" << '\n';
+            std::string result = oss.str();
+            // 定义文本的位置（图像左下角的坐标）
+            cv::Point org(50, 50);
+            // 定义字体（例如，HERSHEY_SIMPLEX）
+            int fontFace = cv::FONT_HERSHEY_SIMPLEX;
+            // 定义字体比例
+            double fontScale = 1;
+            // 定义文本的线宽（如果为负数或FONT_THICKNESS，则填充文本）
+            int thickness = 2;
+            // 定义文本颜色（例如，白色）
+            cv::Scalar color(255, 255, 255);
+            cv::putText(preImage, result, org, fontFace, fontScale, color, thickness, cv::LINE_AA);
         }
     }
     Picture(ConfigurationReader *Config_p)

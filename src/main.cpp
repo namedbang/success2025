@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-05 15:52:55
+ * @LastEditTime: 2024-11-06 20:31:40
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -39,9 +39,10 @@ int main(int argc, char *argv[])
     {
         picture->TimeBegin();
         BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts);
+        picture->TimeEnd();
+        picture->CvPutTextOnUI();
         if (true == picture->ImgShow())
             break;
-        picture->TimeEnd();
     }
     delete BsaeCamera;
     delete picture;
