@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-06 20:24:29
+ * @LastEditTime: 2024-11-07 16:06:39
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -44,13 +44,13 @@ public:
     }
     void CvPutTextOnUI()
     {
-        if ((Config->enable_show == "true") && (preImage.empty()))
+        if ((Config->enable_show == "true") && !(preImage.empty()))
         {
             std::ostringstream oss;
             if (Config->FPS_show == "true")
-                oss << "FPS:  " << 1 / spendTime << '\n';
+                oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
             if (Config->time_show == "true")
-                oss << spendTime << "  ms" << '\n';
+                oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
             std::string result = oss.str();
             // 定义文本的位置（图像左下角的坐标）
             cv::Point org(50, 50);
@@ -59,9 +59,9 @@ public:
             // 定义字体比例
             double fontScale = 1;
             // 定义文本的线宽（如果为负数或FONT_THICKNESS，则填充文本）
-            int thickness = 2;
+            int thickness = 3;
             // 定义文本颜色（例如，白色）
-            cv::Scalar color(255, 255, 255);
+            cv::Scalar color(0, 255, 255);
             cv::putText(preImage, result, org, fontFace, fontScale, color, thickness, cv::LINE_AA);
         }
     }

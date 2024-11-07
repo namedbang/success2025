@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:36:52
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-05 14:36:47
+ * @LastEditTime: 2024-11-07 20:11:42
  * @FilePath: /success2025/src/hardware/api/camera.cpp
  * @Description:
  *
@@ -41,7 +41,8 @@ bool MindCamera::MYCameraInit()
 
     // 相机初始化。初始化成功后，才能调用任何其他相机相关的操作接口
     iStatus = CameraInit(&tCameraEnumList, -1, -1, &hCamera);
-
+    iStatusDir = CameraReadParameterFromFile(hCamera, (char *)("/home/gyxy/Desktop/workspeaseMY/success2025/cfg/camera.config"));
+    printf("是否导入cfg  = %d\n", iStatusDir);
     // 初始化失败
     printf("初始化状态 = %d\n", iStatus);
     if (iStatus != CAMERA_STATUS_SUCCESS)

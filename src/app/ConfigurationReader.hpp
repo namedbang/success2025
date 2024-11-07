@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-05 14:46:32
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-05 16:21:07
+ * @LastEditTime: 2024-11-07 15:42:32
  * @FilePath: /success2025/src/app/ConfigurationReader.hpp
  * @Description:
  *
@@ -29,7 +29,7 @@ public:
 
     ConfigurationReader(std::string Pth)
         : YamlPth(Pth) {} // 读取配置文件地址
-    ~ConfigurationReader();
+    ~ConfigurationReader() {}
 
     void ConfigurationRead()
     {

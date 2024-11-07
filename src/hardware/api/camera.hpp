@@ -23,6 +23,7 @@ protected:
 
 public:
     int iStatus = -1;
+    int iStatusDir = -1;
     int iCameraCounts = 1;
 
     BsaeCamera(Picture *Picture = nullptr) : Picture_p(Picture) {}
