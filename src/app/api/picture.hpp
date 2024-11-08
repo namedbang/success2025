@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-07 16:06:39
+ * @LastEditTime: 2024-11-08 20:08:50
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -25,6 +25,7 @@ private:
 
 public:
     cv::Mat preImage;
+    cv::Mat endImage;
     char ImgShow() // in while
     {
         cv::imshow("success2025", preImage);
@@ -51,6 +52,8 @@ public:
                 oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
             if (Config->time_show == "true")
                 oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
+            if (static_cast<int>(1000 / spendTime) < 80)
+                std::cout << "low_fps_warn" << std::endl;
             std::string result = oss.str();
             // 定义文本的位置（图像左下角的坐标）
             cv::Point org(50, 50);

@@ -6,5 +6,5 @@ CXX_FLAGS = -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -isystem /usr/include/opencv4 
+CXX_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -isystem /usr/local/include/opencv4 
 

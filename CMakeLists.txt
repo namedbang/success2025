@@ -22,6 +22,7 @@ include_directories(${PROJECT_DIR}/include/mind/) #迈德+=
 include_directories(${OPENCV_INCLUDE_DIRS})
 include_directories(${PROJECT_DIR}/src/app/api)
 include_directories(${PROJECT_DIR}/src/hardware/api)
+include_directories(${PROJECT_DIR}/src/process)
 #C文件路径变量----------------
 set(SOURCE_FILES_HC "")  
 # 使用 file(GLOB_RECURSE) 命令递归查找所有 .cpp 和 .h 文件  

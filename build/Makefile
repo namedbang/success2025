@@ -177,6 +177,33 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/process/process_opencv.o: src/process/process_opencv.cpp.o
+
+.PHONY : src/process/process_opencv.o
+
+# target to build an object file
+src/process/process_opencv.cpp.o:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o
+.PHONY : src/process/process_opencv.cpp.o
+
+src/process/process_opencv.i: src/process/process_opencv.cpp.i
+
+.PHONY : src/process/process_opencv.i
+
+# target to preprocess a source file
+src/process/process_opencv.cpp.i:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i
+.PHONY : src/process/process_opencv.cpp.i
+
+src/process/process_opencv.s: src/process/process_opencv.cpp.s
+
+.PHONY : src/process/process_opencv.s
+
+# target to generate assembly for a file
+src/process/process_opencv.cpp.s:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s
+.PHONY : src/process/process_opencv.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/process/process_opencv.o"
+	@echo "... src/process/process_opencv.i"
+	@echo "... src/process/process_opencv.s"
 .PHONY : help
 
 

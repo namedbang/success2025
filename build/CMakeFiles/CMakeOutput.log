@@ -447,3 +447,31 @@ Parsed CXX implicit link information from above output:
   implicit fwks: []
 
 
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_f85ac/fast && /usr/bin/make -f CMakeFiles/cmTC_f85ac.dir/build.make CMakeFiles/cmTC_f85ac.dir/build
+make[1]: 进入目录“/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_f85ac.dir/CheckIncludeFile.c.o
+/usr/bin/aarch64-linux-gnu-gcc   -fPIC    -o CMakeFiles/cmTC_f85ac.dir/CheckIncludeFile.c.o   -c /home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_f85ac
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f85ac.dir/link.txt --verbose=1
+/usr/bin/aarch64-linux-gnu-gcc -fPIC     CMakeFiles/cmTC_f85ac.dir/CheckIncludeFile.c.o  -o cmTC_f85ac 
+make[1]: 离开目录“/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp”
+
+
+
+Determining if the function pthread_create exists in the pthread passed with the following output:
+Change Dir: /home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_88a15/fast && /usr/bin/make -f CMakeFiles/cmTC_88a15.dir/build.make CMakeFiles/cmTC_88a15.dir/build
+make[1]: 进入目录“/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_88a15.dir/CheckFunctionExists.c.o
+/usr/bin/aarch64-linux-gnu-gcc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_88a15.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.16/Modules/CheckFunctionExists.c
+Linking C executable cmTC_88a15
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_88a15.dir/link.txt --verbose=1
+/usr/bin/aarch64-linux-gnu-gcc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_88a15.dir/CheckFunctionExists.c.o  -o cmTC_88a15  -lpthread 
+make[1]: 离开目录“/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/CMakeTmp”
+
+
+

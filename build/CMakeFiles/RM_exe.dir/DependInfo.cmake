@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp" "/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp" "/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/RM_exe.dir/src/main.cpp.o"
+  "/home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp" "/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -14,7 +15,8 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include/mind"
   "../src/app/api"
   "../src/hardware/api"
-  "/usr/include/opencv4"
+  "../src/process"
+  "/usr/local/include/opencv4"
   )
 
 # Targets to which this target links.
