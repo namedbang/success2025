@@ -70,9 +70,22 @@ CMakeFiles/RM_exe.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RM_exe.dir/src/main.cpp.s"
 	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp -o CMakeFiles/RM_exe.dir/src/main.cpp.s
 
+CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o: CMakeFiles/RM_exe.dir/flags.make
+CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o: ../src/cuda/inRange_gpu.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o"
+	/usr/local/cuda-11.4/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/gyxy/Desktop/workspeaseMY/success2025/src/cuda/inRange_gpu.cu -o CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o
+
+CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.i"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
+
+CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.s"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
+
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/hardware/api/camera.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"
 	/usr/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp
 
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.i: cmake_force
@@ -85,7 +98,7 @@ CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s: cmake_force
 
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/process/process_opencv.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
 	/usr/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp
 
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i: cmake_force
@@ -99,6 +112,7 @@ CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s: cmake_force
 # Object files for target RM_exe
 RM_exe_OBJECTS = \
 "CMakeFiles/RM_exe.dir/src/main.cpp.o" \
+"CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o" \
 "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o" \
 "CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
 
@@ -106,6 +120,7 @@ RM_exe_OBJECTS = \
 RM_exe_EXTERNAL_OBJECTS =
 
 RM_exe: CMakeFiles/RM_exe.dir/src/main.cpp.o
+RM_exe: CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o
 RM_exe: CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/build.make
@@ -179,7 +194,7 @@ RM_exe: /usr/local/lib/libopencv_cudaarithm.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_core.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_cudev.so.4.6.0
 RM_exe: CMakeFiles/RM_exe.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable RM_exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable RM_exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RM_exe.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

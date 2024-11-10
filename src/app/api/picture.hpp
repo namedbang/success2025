@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-09 16:17:37
+ * @LastEditTime: 2024-11-10 19:35:52
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -28,7 +28,8 @@ public:
     cv::Mat endImage;
     char ImgShow() // in while
     {
-        cv::imshow("success2025", preImage);
+        cv::namedWindow("success2025", cv::WINDOW_AUTOSIZE);
+        cv::imshow("success2025", endImage);
         return cv::waitKey(1) == 'q';
     }
     void CalculateTime()
@@ -45,18 +46,10 @@ public:
     }
     void CvPutTextOnUI()
     {
-        if (static_cast<int>(1000 / spendTime) < 80)
+        if (static_cast<int>(1000 / spendTime) < 70)
             std::cout << "low_fps_warn  " << static_cast<int>(spendTime) << std::endl;
-        if ((Config->enable_show == "true") && !(preImage.empty()))
+        if ((Config->enable_show == "true") && !(endImage.empty()))
         {
-            std::ostringstream oss;
-            if (Config->FPS_show == "true")
-                oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
-            if (Config->time_show == "true")
-                oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
-            std::string result = oss.str();
-            // 定义文本的位置（图像左下角的坐标）
-            cv::Point org(50, 50);
             // 定义字体（例如，HERSHEY_SIMPLEX）
             int fontFace = cv::FONT_HERSHEY_SIMPLEX;
             // 定义字体比例
@@ -65,7 +58,23 @@ public:
             int thickness = 3;
             // 定义文本颜色（例如，白色）
             cv::Scalar color(0, 255, 255);
-            cv::putText(preImage, result, org, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            std::ostringstream oss;
+            std::string result;
+            oss.clear();
+            oss.str("");
+            if (Config->FPS_show == "true")
+                oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
+            result = oss.str();
+            cv::Point orgFPS(50, 50);
+            cv::putText(endImage, result, orgFPS, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            oss.clear();
+            oss.str("");
+            if (Config->time_show == "true")
+                oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
+            result = oss.str();
+            // 定义文本的位置（图像左下角的坐标）
+            cv::Point orgTime(50, 100);
+            cv::putText(endImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
         }
     }
     Picture(ConfigurationReader *Config_p)

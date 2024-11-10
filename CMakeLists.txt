@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.10)
 set(CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(RM)
+
+enable_language(CUDA)#激活CUDA语言支持，CUDA时可选
+# set(CMAKE_CUDA_ARCHITECTURES 72)
+include(CheckLanguage)
+check_language(CUDA)
+if(CMAKE_CUDA_COMPILER)
+    message(STATUS "Find CUDA !")
+else()
+    message(FATAL_ERROR "Not found CUDA!")
+endif()
 #-------coloer
 string(ASCII 27 Esc)
 set(R "${Esc}[0;31m")   #红色
@@ -23,10 +33,11 @@ include_directories(${OPENCV_INCLUDE_DIRS})
 include_directories(${PROJECT_DIR}/src/app/api)
 include_directories(${PROJECT_DIR}/src/hardware/api)
 include_directories(${PROJECT_DIR}/src/process)
+include_directories(${PROJECT_DIR}/src/cuda)
 #C文件路径变量----------------
 set(SOURCE_FILES_HC "")  
 # 使用 file(GLOB_RECURSE) 命令递归查找所有 .cpp 和 .h 文件  
-file(GLOB_RECURSE SOURCE_FILES_HC "${PROJECT_DIR}/src/*.cpp")  
+file(GLOB_RECURSE SOURCE_FILES_HC "${PROJECT_DIR}/src/*.cpp" "${PROJECT_DIR}/src/*.cu")  
 
 add_executable(RM_exe   ${PROJECT_DIR}/src/main.cpp 
                         ${SOURCE_FILES_HC}

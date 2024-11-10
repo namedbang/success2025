@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:36:52
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-09 17:27:27
+ * @LastEditTime: 2024-11-10 14:39:07
  * @FilePath: /success2025/src/hardware/api/camera.cpp
  * @Description:
  *
@@ -192,11 +192,11 @@ void MindCamera_software::camera_read_once(unsigned char camera_id)
             // {
             CameraImageProcess(hCamera, pbyBuffer, g_pRgbBuffer, &sFrameInfo);
 
-            // cv::Mat matImage(
-            //     cvSize(sFrameInfo.iWidth, sFrameInfo.iHeight),
-            //     sFrameInfo.uiMediaType == CAMERA_MEDIA_TYPE_MONO8 ? CV_8UC1 : CV_8UC3,
-            //     g_pRgbBuffer);
-            // this->Picture_p->preImage = matImage; // 更新img
+            cv::Mat matImage(
+                cvSize(sFrameInfo.iWidth, sFrameInfo.iHeight),
+                sFrameInfo.uiMediaType == CAMERA_MEDIA_TYPE_MONO8 ? CV_8UC1 : CV_8UC3,
+                g_pRgbBuffer);
+            this->Picture_p->preImage = matImage; // 更新img
             // imshow("Opencv Demo", matImage);
             // waitKey(0);
             // 在成功调用CameraGetImageBuffer后，必须调用CameraReleaseImageBuffer来释放获得的buffer。

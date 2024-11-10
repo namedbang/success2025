@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-05 14:46:32
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-09 13:57:50
+ * @LastEditTime: 2024-11-10 17:28:10
  * @FilePath: /success2025/src/app/ConfigurationReader.hpp
  * @Description:
  *
@@ -27,6 +27,8 @@ public:
     std::string FPS_show;
     std::string time_show;
     std::string camera_config_path;
+    std::vector<int> HSV_lowerb;
+    std::vector<int> HSV_upperb;
     char *charArray;
 
     ConfigurationReader(std::string Pth)
@@ -45,6 +47,8 @@ public:
         this->enable_show = static_cast<std::string>(fs_read["enable_show"]);
         this->time_show = static_cast<std::string>(fs_read["time_show"]);
         this->camera_config_path = static_cast<std::string>(fs_read["camera_config_path"]);
+        fs_read["HSV_lowerb"] >> this->HSV_lowerb;
+        fs_read["HSV_upperb"] >> this->HSV_upperb;
 
         std::cout << GREEN << "verison :" << this->verison << "\n"
                   << "ros_enable :" << this->ros_enable << "\n"
@@ -53,7 +57,7 @@ public:
                   << "time_show :" << this->camera_config_path << "\n"
                   << "FPS_show :" << this->FPS_show
                   << WHITE << std::endl;
-    }
+        }
     char *stringToCharPointer(const std::string &str)
     {
         // 分配足够的内存来存储字符串和 null 终止符

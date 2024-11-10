@@ -123,6 +123,33 @@ RM_exe/fast:
 	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/build
 .PHONY : RM_exe/fast
 
+src/cuda/inRange_gpu.o: src/cuda/inRange_gpu.cu.o
+
+.PHONY : src/cuda/inRange_gpu.o
+
+# target to build an object file
+src/cuda/inRange_gpu.cu.o:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o
+.PHONY : src/cuda/inRange_gpu.cu.o
+
+src/cuda/inRange_gpu.i: src/cuda/inRange_gpu.cu.i
+
+.PHONY : src/cuda/inRange_gpu.i
+
+# target to preprocess a source file
+src/cuda/inRange_gpu.cu.i:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.i
+.PHONY : src/cuda/inRange_gpu.cu.i
+
+src/cuda/inRange_gpu.s: src/cuda/inRange_gpu.cu.s
+
+.PHONY : src/cuda/inRange_gpu.s
+
+# target to generate assembly for a file
+src/cuda/inRange_gpu.cu.s:
+	$(MAKE) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.s
+.PHONY : src/cuda/inRange_gpu.cu.s
+
 src/hardware/api/camera.o: src/hardware/api/camera.cpp.o
 
 .PHONY : src/hardware/api/camera.o
@@ -213,6 +240,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... RM_exe"
+	@echo "... src/cuda/inRange_gpu.o"
+	@echo "... src/cuda/inRange_gpu.i"
+	@echo "... src/cuda/inRange_gpu.s"
 	@echo "... src/hardware/api/camera.o"
 	@echo "... src/hardware/api/camera.i"
 	@echo "... src/hardware/api/camera.s"
