@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-10 17:38:10
+ * @LastEditTime: 2024-11-10 22:22:33
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         picture->CvPutTextOnUI();
         if (true == picture->ImgShow())
             break;
-        usleep(1000);
+        // usleep(1000);
     }
     delete BsaeCamera;
     delete picture;

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-10 19:35:52
+ * @LastEditTime: 2024-11-10 21:46:03
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -57,7 +57,7 @@ public:
             // 定义文本的线宽（如果为负数或FONT_THICKNESS，则填充文本）
             int thickness = 3;
             // 定义文本颜色（例如，白色）
-            cv::Scalar color(0, 255, 255);
+            cv::Scalar color(255, 255, 255);
             std::ostringstream oss;
             std::string result;
             oss.clear();

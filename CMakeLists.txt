@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(RM)
 
 enable_language(CUDA)#激活CUDA语言支持，CUDA时可选
-# set(CMAKE_CUDA_ARCHITECTURES 72)
+set(CMAKE_CUDA_ARCHITECTURES 72)
 include(CheckLanguage)
 check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)

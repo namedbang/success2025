@@ -389,6 +389,7 @@ CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/openc
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/core/vsx_utils.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/cudafilters.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/cudaimgproc.hpp
+CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/cudaobjdetect.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/dnn.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/dnn/dict.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/dnn/dnn.hpp

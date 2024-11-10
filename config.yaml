@@ -3,7 +3,7 @@ verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
 ###################################
-camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/camera.config"
+camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1056X640_6ms.config"
 HSV_lowerb: [0,151,136]
 HSV_upperb: [40,255,255]
 ########show on picture############
