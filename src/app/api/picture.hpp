@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-08 20:08:50
+ * @LastEditTime: 2024-11-09 16:17:37
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -45,6 +45,8 @@ public:
     }
     void CvPutTextOnUI()
     {
+        if (static_cast<int>(1000 / spendTime) < 80)
+            std::cout << "low_fps_warn  " << static_cast<int>(spendTime) << std::endl;
         if ((Config->enable_show == "true") && !(preImage.empty()))
         {
             std::ostringstream oss;
@@ -52,8 +54,6 @@ public:
                 oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
             if (Config->time_show == "true")
                 oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
-            if (static_cast<int>(1000 / spendTime) < 80)
-                std::cout << "low_fps_warn" << std::endl;
             std::string result = oss.str();
             // 定义文本的位置（图像左下角的坐标）
             cv::Point org(50, 50);

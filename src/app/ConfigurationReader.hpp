@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-05 14:46:32
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-07 15:42:32
+ * @LastEditTime: 2024-11-09 13:57:50
  * @FilePath: /success2025/src/app/ConfigurationReader.hpp
  * @Description:
  *
@@ -26,10 +26,15 @@ public:
     std::string enable_show; // 显示需要开启
     std::string FPS_show;
     std::string time_show;
+    std::string camera_config_path;
+    char *charArray;
 
     ConfigurationReader(std::string Pth)
         : YamlPth(Pth) {} // 读取配置文件地址
-    ~ConfigurationReader() {}
+    ~ConfigurationReader()
+    {
+        delete[] charArray;
+    }
 
     void ConfigurationRead()
     {
@@ -39,13 +44,24 @@ public:
         this->FPS_show = static_cast<std::string>(fs_read["FPS_show"]);
         this->enable_show = static_cast<std::string>(fs_read["enable_show"]);
         this->time_show = static_cast<std::string>(fs_read["time_show"]);
+        this->camera_config_path = static_cast<std::string>(fs_read["camera_config_path"]);
 
         std::cout << GREEN << "verison :" << this->verison << "\n"
                   << "ros_enable :" << this->ros_enable << "\n"
                   << "enable_show :" << this->enable_show << "\n"
                   << "time_show :" << this->time_show << "\n"
+                  << "time_show :" << this->camera_config_path << "\n"
                   << "FPS_show :" << this->FPS_show
                   << WHITE << std::endl;
+    }
+    char *stringToCharPointer(const std::string &str)
+    {
+        // 分配足够的内存来存储字符串和 null 终止符
+        this->charArray = new char[str.length() + 1];
+        // 使用 strcpy 复制内容
+        std::strcpy(this->charArray, str.c_str());
+        // 返回 char*
+        return this->charArray;
     }
 };
 

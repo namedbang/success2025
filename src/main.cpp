@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-08 20:08:56
+ * @LastEditTime: 2024-11-09 17:27:46
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -17,6 +17,7 @@
 #include "./process/process_opencv.hpp"
 
 #include <memory>
+#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
@@ -24,8 +25,8 @@ int main(int argc, char *argv[])
     bool imfom;
     ConfigurationReader *reader_p = new ConfigurationReader("../config.yaml");
 
-    Picture *picture = new Picture(reader_p);         // 创建视频管道
-    BsaeCamera *BsaeCamera = new MindCamera(picture); // 将Mind相机接入管道
+    Picture *picture = new Picture(reader_p);                   // 创建视频管道
+    BsaeCamera *BsaeCamera = new MindCamera(picture, reader_p); // 将Mind相机接入管道
     // chank = BsaeCamera->camera_chank();            // debug时用
     process *process_p = new process_opencv_cuda(picture);
 
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
         picture->CvPutTextOnUI();
         if (true == picture->ImgShow())
             break;
+        usleep(1000);
     }
     delete BsaeCamera;
     delete picture;
