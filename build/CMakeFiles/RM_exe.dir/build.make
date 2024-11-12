@@ -60,15 +60,15 @@ include CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/main.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/RM_exe.dir/src/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/main.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp
+	/usr/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/main.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp
 
 CMakeFiles/RM_exe.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RM_exe.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp > CMakeFiles/RM_exe.dir/src/main.cpp.i
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp > CMakeFiles/RM_exe.dir/src/main.cpp.i
 
 CMakeFiles/RM_exe.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RM_exe.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp -o CMakeFiles/RM_exe.dir/src/main.cpp.s
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp -o CMakeFiles/RM_exe.dir/src/main.cpp.s
 
 CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o: ../src/cuda/inRange_gpu.cu
@@ -86,28 +86,28 @@ CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.s: cmake_force
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o: ../src/hardware/api/camera.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp
+	/usr/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp
 
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp > CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.i
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp > CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.i
 
 CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp -o CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp -o CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s
 
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/process/process_opencv.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp
+	/usr/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp
 
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp > CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp > CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i
 
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp -o CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp -o CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s
 
 # Object files for target RM_exe
 RM_exe_OBJECTS = \
