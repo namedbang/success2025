@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 09:55:47
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-10 17:38:00
+ * @LastEditTime: 2024-11-12 23:21:13
  * @FilePath: /success2025/src/process/process_opencv.hpp
  * @Description:
  *
@@ -13,6 +13,11 @@
 
 #include "../app/api/picture.hpp"
 #include "../app/ConfigurationReader.hpp"
+#include "./enemy_Inform.hpp"
+
+#define HALF_LENGTH_LENGHT 29.5
+#define HALF_LENGTH_WIDTH 29.5
+// 自定义的物体世界坐标，单位为mm
 
 enum PROCESS_state
 {
@@ -25,9 +30,12 @@ class process
 protected:
     Picture *Picture_p;
     ConfigurationReader *Reader;
+    EnemyInform *EnemyInform_p;
+    cv::Point getEuler();
 
 public:
-    process(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr) : Picture_p(Picturep), Reader(Readerp) {}
+    process(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr, EnemyInform *EnemyInform_P = nullptr)
+        : Picture_p(Picturep), Reader(Readerp), EnemyInform_p(EnemyInform_P) {}
     virtual ~process() {}
     virtual PROCESS_state processing() = 0;
 };
@@ -40,10 +48,11 @@ private:
     cv::Scalar *higherFilter;
 
 public:
-    process_opencv_cuda(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr) : process(Picturep, Readerp)
+    process_opencv_cuda(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr, EnemyInform *EnemyInform_P = nullptr)
+        : process(Picturep, Readerp, EnemyInform_P)
     {
-        this->lowerFilter = new cv::Scalar(this->Reader->HSV_lowerb[0], this->Reader->HSV_lowerb[1], this->Reader->HSV_lowerb[2]);
-        this->higherFilter = new cv::Scalar(this->Reader->HSV_upperb[0], this->Reader->HSV_upperb[1], this->Reader->HSV_upperb[2]);
+        this->lowerFilter = new cv::Scalar(this->Reader->HSV_lowerb_red[0], this->Reader->HSV_lowerb_red[1], this->Reader->HSV_lowerb_red[2]);
+        this->higherFilter = new cv::Scalar(this->Reader->HSV_upperb_red[0], this->Reader->HSV_upperb_red[1], this->Reader->HSV_upperb_red[2]);
     }
     ~process_opencv_cuda() {};
     PROCESS_state processing() override;

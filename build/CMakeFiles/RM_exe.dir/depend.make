@@ -235,6 +235,7 @@ CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/app/ConfigurationReader.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/app/api/picture.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/hardware/api/camera.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/main.cpp
+CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/process/enemy_Inform.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: ../src/process/process_opencv.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: /usr/local/include/opencv4/opencv2/calib3d.hpp
 CMakeFiles/RM_exe.dir/src/main.cpp.o: /usr/local/include/opencv4/opencv2/core.hpp
@@ -348,6 +349,7 @@ CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/utils/cout.h
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/app/ConfigurationReader.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/app/api/picture.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/cuda/inRange_gpu.cuh
+CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/process/enemy_Inform.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/process/process_opencv.cpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/process/process_opencv.hpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: /usr/local/include/opencv4/opencv2/calib3d.hpp

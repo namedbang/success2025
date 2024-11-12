@@ -2,10 +2,23 @@
 verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
-###################################
+#################################################################
 camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1056X640_6ms.config"
-HSV_lowerb: [0,151,136]
-HSV_upperb: [40,255,255]
+##***********1280 X 800分辨率下的内参矩阵和畸变矩阵***************##
+imageSize: [ 1280, 800 ]
+cameraMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [2103.05328076317, 1.06885889061209, 625.371784051627, 0., 2103.37080684147, 457.863257247568, 0., 0., 1. ]
+distCoeffs: !!opencv-matrix
+   rows: 5
+   cols: 1
+   dt: d
+   data: [ -0.0720881737322847, -0.00731279929186677,
+       -0.00283467731726698, 0., 4.11438823246245]
+HSV_lowerb_red: [0,151,136]
+HSV_upperb_red: [10,255,255]
 ########show on picture############
 enable_show: "true"
 FPS_show: "true"
