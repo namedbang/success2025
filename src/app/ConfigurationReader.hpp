@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-05 14:46:32
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-12 22:46:42
+ * @LastEditTime: 2024-11-15 20:27:34
  * @FilePath: /success2025/src/app/ConfigurationReader.hpp
  * @Description:
  *
@@ -29,7 +29,7 @@ public:
     std::string camera_config_path;
     std::vector<int> HSV_lowerb_red;
     std::vector<int> HSV_upperb_red;
-    cv::Mat camera_matrix, distort_coefficient;
+    cv::Mat_<double> camera_matrix, distort_coefficient;
     char *charArray;
 
     ConfigurationReader(std::string Pth)

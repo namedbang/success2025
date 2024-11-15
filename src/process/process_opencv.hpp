@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 09:55:47
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-12 23:21:13
+ * @LastEditTime: 2024-11-15 21:27:42
  * @FilePath: /success2025/src/process/process_opencv.hpp
  * @Description:
  *
@@ -15,8 +15,10 @@
 #include "../app/ConfigurationReader.hpp"
 #include "./enemy_Inform.hpp"
 
-#define HALF_LENGTH_LENGHT 29.5
-#define HALF_LENGTH_WIDTH 29.5
+#define HALF_LENGTH_LENGHT 134 / 2
+#define HALF_LENGTH_WIDTH 60 / 2
+
+constexpr float Pi = 3.1415;
 // 自定义的物体世界坐标，单位为mm
 
 enum PROCESS_state
@@ -31,7 +33,7 @@ protected:
     Picture *Picture_p;
     ConfigurationReader *Reader;
     EnemyInform *EnemyInform_p;
-    cv::Point getEuler();
+    PROCESS_state getEuler();
 
 public:
     process(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr, EnemyInform *EnemyInform_P = nullptr)

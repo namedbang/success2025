@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-12 21:33:35
+ * @LastEditTime: 2024-11-15 21:53:38
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -49,10 +49,9 @@ int main(int argc, char *argv[])
 
     while (true)
     { /// 8ms
-
-        BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
         picture->TimeBegin();
-        process_p->processing(); // 处理图像数据
+        BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
+        process_p->processing();                                 // 处理图像数据
         picture->TimeEnd();
         picture->CalculateTime();
         picture->CvPutTextOnUI();
