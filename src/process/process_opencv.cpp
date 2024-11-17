@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 20:01:52
+ * @LastEditTime: 2024-11-17 23:07:49
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -29,8 +29,9 @@ cv::Rect boundRect;
 
 PROCESS_state process_opencv_cuda::processing()
 {
-    // if (!this->Picture_p->preImage.empty())
-    //     return PROCESUNSUCCESS;
+    // std::cout << "1" << std::endl;
+    if (this->Picture_p->preImage.empty())
+        return PROCESUNSUCCESS;
     cv::Rect point_array[20];
     cv::Mat findContour;
     cv::cuda::GpuMat G_image;

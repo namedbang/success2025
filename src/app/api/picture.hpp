@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-10 21:46:03
+ * @LastEditTime: 2024-11-17 22:41:16
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -28,6 +28,8 @@ public:
     cv::Mat endImage;
     char ImgShow() // in while
     {
+        if (endImage.empty())
+            return cv::waitKey(1) == 'q';
         cv::namedWindow("success2025", cv::WINDOW_AUTOSIZE);
         cv::imshow("success2025", endImage);
         return cv::waitKey(1) == 'q';

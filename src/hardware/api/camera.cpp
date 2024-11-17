@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:36:52
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 19:43:35
+ * @LastEditTime: 2024-11-17 22:19:15
  * @FilePath: /success2025/src/hardware/api/camera.cpp
  * @Description:
  *
@@ -184,8 +184,6 @@ void MindCamera_software::camera_read_once(unsigned char camera_id)
 {
     try // 相机读取帧
     {
-        CameraClearBuffer(hCamera);
-        CameraSoftTrigger(hCamera);
         if (CameraGetImageBuffer(hCamera, &sFrameInfo, &pbyBuffer, 1000) == CAMERA_STATUS_SUCCESS)
         {
             // 最大等到1000
@@ -213,6 +211,12 @@ void MindCamera_software::camera_read_once(unsigned char camera_id)
     {
         std::cerr << e << '\n';
     }
+}
+
+void MindCamera_software::camera_software_Trigger()
+{
+    CameraClearBuffer(hCamera);
+    CameraSoftTrigger(hCamera);
 }
 
 bool MindCamera_software::camera_chank()

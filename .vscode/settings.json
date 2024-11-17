@@ -69,6 +69,7 @@
         "dense": "cpp",
         "lu": "cpp",
         "core": "cpp",
-        "cholesky": "cpp"
+        "cholesky": "cpp",
+        "future": "cpp"
     }
 }
