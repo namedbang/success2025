@@ -3,7 +3,7 @@ verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
 #################################################################
-camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1280X640_6ms.config"
+camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/ROI.config"
 ##***********1280 X 800分辨率下的内参矩阵和畸变矩阵***************##
 imageSize: [ 1280, 800 ]
 cameraMatrix: !!opencv-matrix

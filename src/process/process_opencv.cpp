@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-15 22:31:41
+ * @LastEditTime: 2024-11-17 20:01:52
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -12,6 +12,7 @@
 #include "process_opencv.hpp"
 #include "../cuda/inRange_gpu.cuh"
 
+#include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/cudafilters.hpp>
@@ -133,33 +134,22 @@ PROCESS_state process::getEuler()
     };
     if (true == cv::solvePnP(obj, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, this->EnemyInform_p->rvec, this->EnemyInform_p->tvec))
     {
-        // 平移向量比较重要，旋转向量没那么重要了 经过变换，x轴朝右，y轴超前，z轴朝上
-
-        double temp = this->EnemyInform_p->tvec.ptr<double>(0)[1];                                 // x = x
-        this->EnemyInform_p->tvec.ptr<double>(0)[1] = this->EnemyInform_p->tvec.ptr<double>(0)[2]; // y = z
-        this->EnemyInform_p->tvec.ptr<double>(0)[2] = -temp;                                       // z = -y
-
-        cv2eigen(this->EnemyInform_p->tvec, e_T);  // 平移向量没有问题
-        Rodrigues(this->EnemyInform_p->rvec, m_R); // 旋转顺序没有改变
-        cv2eigen(m_R, e_R);
-
-        // std::cout << this->EnemyInform_p->rvec << this->EnemyInform_p->tvec << std::endl;
-        float distance = sqrt(this->EnemyInform_p->tvec.at<double>(0, 0) * this->EnemyInform_p->tvec.at<double>(0, 0) + this->EnemyInform_p->tvec.at<double>(1, 0) * this->EnemyInform_p->tvec.at<double>(1, 0) + this->EnemyInform_p->tvec.at<double>(2, 0) * this->EnemyInform_p->tvec.at<double>(2, 0)) / 10;
-        // std::cout << distance << std::endl;
-        this->EnemyInform_p->yaw = this->EnemyInform_p->rvec.at<double>(0, 2) * 2 * Pi;
-        // std::cout << this->EnemyInform_p->yaw << std::endl;
-
-        cv::putText(this->Picture_p->endImage, std::to_string(distance), this->EnemyInform_p->CenterPoint, 1, 1, cv::Scalar(255, 255, 255));
-
-        // cv::Mat Rvec;
-        // cv::Mat_<float> Tvec;
-        // this->EnemyInform_p->rvec.convertTo(Rvec, CV_32F); // 旋转向量转换格式
-        // this->EnemyInform_p->tvec.convertTo(Tvec, CV_32F); // 平移向量转换格式
-        // cv::Mat_<float> rotMat(3, 3);
-        // Rodrigues(Rvec, rotMat);
-        // cv::Mat P_oc;
-        // P_oc = -rotMat.inv() * Tvec;
-        // std::cout << P_oc << std::endl;
+        // 平移向量比较重要，旋转向量没那么重要了
+        /*
+            y
+            ^
+            |  /z
+            | /
+            |/______>x   //没有人比我更懂形象
+        */
+        this->EnemyInform_p->tvec.ptr<double>(0)[1] = -this->EnemyInform_p->tvec.ptr<double>(0)[1];
+        std::cout << this->EnemyInform_p->tvec << std::endl;
+        this->EnemyInform_p->distance = sqrt(this->EnemyInform_p->tvec.at<double>(0, 0) * this->EnemyInform_p->tvec.at<double>(0, 0) + this->EnemyInform_p->tvec.at<double>(1, 0) * this->EnemyInform_p->tvec.at<double>(1, 0) + this->EnemyInform_p->tvec.at<double>(2, 0) * this->EnemyInform_p->tvec.at<double>(2, 0)) / 10;
+        this->EnemyInform_p->yaw = atan2(this->EnemyInform_p->tvec.at<double>(0, 0), this->EnemyInform_p->tvec.at<double>(0, 2)) / M_PI * 180;
+        std::cout << this->EnemyInform_p->yaw << std::endl;
+        this->EnemyInform_p->pitch = atan2(this->EnemyInform_p->tvec.at<double>(0, 1), sqrt(pow(this->EnemyInform_p->tvec.at<double>(0, 0), 2) + pow(this->EnemyInform_p->tvec.at<double>(0, 2), 2))) / M_PI * 180;
+        cv::putText(this->Picture_p->endImage, std::to_string(this->EnemyInform_p->distance), this->EnemyInform_p->CenterPoint, 1, 1, cv::Scalar(255, 255, 255));
+        std::cout << this->EnemyInform_p->pitch << std::endl;
     }
 
     return PROCESS_state();

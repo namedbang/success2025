@@ -17,6 +17,7 @@ set(CMAKE_CUDA_TARGET_INCLUDE_PATH
   "../src/process"
   "../src/cuda"
   "/usr/local/include/opencv4"
+  "/usr/include/eigen3"
   )
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp" "/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"
@@ -33,6 +34,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../src/process"
   "../src/cuda"
   "/usr/local/include/opencv4"
+  "/usr/include/eigen3"
   )
 
 # Targets to which this target links.

@@ -374,6 +374,9 @@ CUDA_nvToolsExt_LIBRARY:FILEPATH=/usr/local/cuda-11.4/lib64/libnvToolsExt.so
 //Path to a library.
 CUDA_rt_LIBRARY:FILEPATH=/usr/lib/aarch64-linux-gnu/librt.so
 
+//The directory containing a CMake configuration file for Eigen3.
+Eigen3_DIR:PATH=/usr/lib/cmake/eigen3
+
 //Path to a library.
 OS_LIBRARY_libMVSDK:FILEPATH=/usr/lib/libMVSDK.so
 

@@ -26,6 +26,7 @@ message("${B}当前工程文件夹目录: ${PROJECT_DIR}${E}")
 #以上工程相关配置--------------------------------
 #查找第三方包
 find_package(OpenCV 4 REQUIRED)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 #以下头文件-----------------
 include_directories(/usr/include/) #os
 include_directories(${PROJECT_DIR}/include/mind/) #迈德+=
@@ -54,3 +55,4 @@ else()
 endif()
 
 target_link_libraries(${MY_EXECUTABLE} ${OpenCV_LIBS})
+target_link_libraries (${MY_EXECUTABLE} Eigen3::Eigen)

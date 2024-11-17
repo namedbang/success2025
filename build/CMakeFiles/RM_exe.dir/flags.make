@@ -7,11 +7,11 @@ CUDA_FLAGS = -g   -std=c++11
 
 CUDA_DEFINES = 
 
-CUDA_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -isystem=/usr/local/include/opencv4 
+CUDA_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -isystem=/usr/local/include/opencv4 -isystem=/usr/include/eigen3 
 
 CXX_FLAGS = -g  
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -isystem /usr/local/include/opencv4 
+CXX_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 
 
