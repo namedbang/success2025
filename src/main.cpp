@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 23:13:51
+ * @LastEditTime: 2024-11-27 21:20:48
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -17,6 +17,7 @@
 #include "./process/process_opencv.hpp"
 #include "./process/enemy_Inform.hpp"
 #include "./app/ThreadPool.h"
+#include "./process/predict.hpp"
 
 #include <memory>
 #include <unistd.h>
@@ -50,24 +51,16 @@ int main(int argc, char *argv[])
     }
     /*线程池相关*/
     ThreadPool pool(6);
-    std::vector<std::future<PROCESS_state>> results;
 
     while (true)
     { /// 8ms
-        results.clear();
-        for (int i = 0; i < 1; ++i)
-        {
-            results.emplace_back(
-                pool.enqueue(
-                    [process_p]
-                    { return process_p->processing(); }));
-        }
+        auto result = pool.enqueue(
+            [process_p]
+            { return process_p->processing(); }); // 加入任务列表
         picture->TimeBegin();
         BsaeCamera->camera_software_Trigger();
-        for (auto &&result : results)
-            auto re = result.get();
+        auto re = result.get();                                  // 处理图像数据
         BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
-        // process_p->processing();                                 // 处理图像数据
         picture->TimeEnd();
         picture->CalculateTime();
         picture->CvPutTextOnUI();

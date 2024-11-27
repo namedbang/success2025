@@ -23,3 +23,21 @@ HSV_upperb_red: [10,255,255]
 enable_show: "true"
 FPS_show: "true"
 time_show: "true"
+##########卡尔曼预测部分############
+Q : !!opencv-matrix
+   rows: 6
+   cols: 6
+   dt: d
+   data: [1, 0, 0, 0, 0, 0,
+          0, 1, 0, 0, 0, 0,
+          0, 0, 1, 0, 0, 0,
+          0, 0, 0, 1, 0, 0,
+          0, 0, 0, 0, 1, 0,
+          0, 0, 0, 0, 0, 1]
+R : !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [1, 0, 0,
+          0, 1, 0,
+          0, 0, 1,]

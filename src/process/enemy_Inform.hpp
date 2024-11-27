@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-12 21:25:15
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 19:09:00
+ * @LastEditTime: 2024-11-27 21:00:19
  * @FilePath: /success2025/src/process/enemy_Inform.hpp
  * @Description:
  *
@@ -32,10 +32,13 @@ struct EnemyInform
      */
     cv::Mat rvec; // 输出的旋转向量
     cv::Mat tvec; // 输出的平移向量
+    cv::Mat R;    // 旋转矩阵
     cv::Point CenterPoint;
+    // cv::Point3d CenterPoint3d;
     double distance;
-    double yaw;
-    double pitch;
+    double yaw;           // 预测前的yaw
+    double pitch;         // 预测前的pitch
+    bool enemy_exist = 0; // 1 :敌人存在 2：敌人不存在
 };
 
 #endif /* __ENEMY_INFORM_H__ */

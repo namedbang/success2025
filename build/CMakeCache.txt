@@ -44,8 +44,8 @@ CMAKE_CUDA_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CUDA compiler during RELWITHDEBINFO builds.
 CMAKE_CUDA_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
-//CXX compiler
-CMAKE_CXX_COMPILER:STRING=/usr/bin/aarch64-linux-gnu-g++
+//No help, variable specified on the command line.
+CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/aarch64-linux-gnu-g++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -70,8 +70,8 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
-//C compiler
-CMAKE_C_COMPILER:STRING=/usr/bin/aarch64-linux-gnu-gcc
+//No help, variable specified on the command line.
+CMAKE_C_COMPILER:FILEPATH=/usr/bin/aarch64-linux-gnu-gcc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler

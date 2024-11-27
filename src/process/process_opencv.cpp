@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 23:07:49
+ * @LastEditTime: 2024-11-27 21:10:55
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -42,11 +42,11 @@ PROCESS_state process_opencv_cuda::processing()
     G_image.upload(this->Picture_p->preImage);
     cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV);
     inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange);
-    cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);
+    // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);
     // cv::Ptr<cv::cuda::Filter> morph_filter_close = cv::cuda::createMorphologyFilter(cv::MORPH_OPEN, inRange.type(), close_kernel);
-    morph_filter_open->apply(inRange, filter_open);
+    // morph_filter_open->apply(inRange, filter_open);
     // morph_filter_close->apply(filter_open, filter_close);
-    filter_open.download(this->Picture_p->endImage);
+    inRange.download(this->Picture_p->endImage);
     cv::findContours(this->Picture_p->endImage, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
     int index = 0;
     for (int i = 0; i < contours.size(); i++)
@@ -120,7 +120,12 @@ PROCESS_state process_opencv_cuda::processing()
         // if (this->EnemyInform_p->p.empty() == false)
         // {
         this->getEuler();
+        this->EnemyInform_p->enemy_exist = 1; // 敌人存在
         // }
+    }
+    else
+    {
+        this->EnemyInform_p->enemy_exist = 0; // 敌人不存在
     }
     return PROCESSUCCESS;
 }
@@ -139,18 +144,36 @@ PROCESS_state process::getEuler()
         /*
             y
             ^
-            |  /z
-            | /
-            |/______>x   //没有人比我更懂形象
+            |   /z
+            |  /
+            | / ______>x   //没有人比我更懂形象
+            相机
         */
-        this->EnemyInform_p->tvec.ptr<double>(0)[1] = -this->EnemyInform_p->tvec.ptr<double>(0)[1];
-        std::cout << this->EnemyInform_p->tvec << std::endl;
+        /*相机相对坐标*/
+        // std::cout << this->EnemyInform_p->tvec << std::endl;
         this->EnemyInform_p->distance = sqrt(this->EnemyInform_p->tvec.at<double>(0, 0) * this->EnemyInform_p->tvec.at<double>(0, 0) + this->EnemyInform_p->tvec.at<double>(1, 0) * this->EnemyInform_p->tvec.at<double>(1, 0) + this->EnemyInform_p->tvec.at<double>(2, 0) * this->EnemyInform_p->tvec.at<double>(2, 0)) / 10;
         this->EnemyInform_p->yaw = atan2(this->EnemyInform_p->tvec.at<double>(0, 0), this->EnemyInform_p->tvec.at<double>(0, 2)) / M_PI * 180;
         std::cout << this->EnemyInform_p->yaw << std::endl;
-        this->EnemyInform_p->pitch = atan2(this->EnemyInform_p->tvec.at<double>(0, 1), sqrt(pow(this->EnemyInform_p->tvec.at<double>(0, 0), 2) + pow(this->EnemyInform_p->tvec.at<double>(0, 2), 2))) / M_PI * 180;
+        this->EnemyInform_p->pitch = atan2(-this->EnemyInform_p->tvec.at<double>(0, 1), sqrt(pow(this->EnemyInform_p->tvec.at<double>(0, 0), 2) + pow(this->EnemyInform_p->tvec.at<double>(0, 2), 2))) / M_PI * 180;
         cv::putText(this->Picture_p->endImage, std::to_string(this->EnemyInform_p->distance), this->EnemyInform_p->CenterPoint, 1, 1, cv::Scalar(255, 255, 255));
         std::cout << this->EnemyInform_p->pitch << std::endl;
+        /*转换为相对于世界坐标系的坐标*/
+        /* 构建外参矩阵 */
+        /*
+        | R T | * | x |  //R:(3,3);
+        | 0 1 |   | y |  //T:(3,1);
+                  | z |
+                  | 1 |
+        */
+        cv::Rodrigues(this->EnemyInform_p->rvec, this->EnemyInform_p->R);
+        cv::Mat T = cv::Mat::zeros(4, 4, CV_64F); // 齐次变换矩阵（4x4）
+        this->EnemyInform_p->R.copyTo(T(cv::Rect(0, 0, 3, 3)));
+        T.at<double>(0, 3) = this->EnemyInform_p->tvec.at<double>(0, 0); // 填充平移向量部分
+        T.at<double>(1, 3) = this->EnemyInform_p->tvec.at<double>(0, 1);
+        T.at<double>(2, 3) = this->EnemyInform_p->tvec.at<double>(0, 2);
+        T.at<double>(3, 3) = 1.0; // 齐次坐标的最后一行是[0, 0, 0, 1]
+                                  // 相机坐标系中的一个点（齐次坐标）
+        // cv::Mat point_camera = (cv::Mat_<double>(4, 1) << Yx, Yc, Zc, 1.0);
     }
 
     return PROCESS_state();
