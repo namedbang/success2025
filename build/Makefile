@@ -177,6 +177,30 @@ src/hardware/api/camera.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s
 .PHONY : src/hardware/api/camera.cpp.s
 
+src/hardware/uart/Serial_Port_Linux.o: src/hardware/uart/Serial_Port_Linux.c.o
+.PHONY : src/hardware/uart/Serial_Port_Linux.o
+
+# target to build an object file
+src/hardware/uart/Serial_Port_Linux.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o
+.PHONY : src/hardware/uart/Serial_Port_Linux.c.o
+
+src/hardware/uart/Serial_Port_Linux.i: src/hardware/uart/Serial_Port_Linux.c.i
+.PHONY : src/hardware/uart/Serial_Port_Linux.i
+
+# target to preprocess a source file
+src/hardware/uart/Serial_Port_Linux.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.i
+.PHONY : src/hardware/uart/Serial_Port_Linux.c.i
+
+src/hardware/uart/Serial_Port_Linux.s: src/hardware/uart/Serial_Port_Linux.c.s
+.PHONY : src/hardware/uart/Serial_Port_Linux.s
+
+# target to generate assembly for a file
+src/hardware/uart/Serial_Port_Linux.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.s
+.PHONY : src/hardware/uart/Serial_Port_Linux.c.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -200,6 +224,30 @@ src/main.s: src/main.cpp.s
 src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
+
+src/process/predict.o: src/process/predict.cpp.o
+.PHONY : src/process/predict.o
+
+# target to build an object file
+src/process/predict.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/predict.cpp.o
+.PHONY : src/process/predict.cpp.o
+
+src/process/predict.i: src/process/predict.cpp.i
+.PHONY : src/process/predict.i
+
+# target to preprocess a source file
+src/process/predict.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/predict.cpp.i
+.PHONY : src/process/predict.cpp.i
+
+src/process/predict.s: src/process/predict.cpp.s
+.PHONY : src/process/predict.s
+
+# target to generate assembly for a file
+src/process/predict.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/predict.cpp.s
+.PHONY : src/process/predict.cpp.s
 
 src/process/process_opencv.o: src/process/process_opencv.cpp.o
 .PHONY : src/process/process_opencv.o
@@ -225,6 +273,30 @@ src/process/process_opencv.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s
 .PHONY : src/process/process_opencv.cpp.s
 
+src/utils/KalmanFilter/kalman.o: src/utils/KalmanFilter/kalman.cpp.o
+.PHONY : src/utils/KalmanFilter/kalman.o
+
+# target to build an object file
+src/utils/KalmanFilter/kalman.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o
+.PHONY : src/utils/KalmanFilter/kalman.cpp.o
+
+src/utils/KalmanFilter/kalman.i: src/utils/KalmanFilter/kalman.cpp.i
+.PHONY : src/utils/KalmanFilter/kalman.i
+
+# target to preprocess a source file
+src/utils/KalmanFilter/kalman.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.i
+.PHONY : src/utils/KalmanFilter/kalman.cpp.i
+
+src/utils/KalmanFilter/kalman.s: src/utils/KalmanFilter/kalman.cpp.s
+.PHONY : src/utils/KalmanFilter/kalman.s
+
+# target to generate assembly for a file
+src/utils/KalmanFilter/kalman.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.s
+.PHONY : src/utils/KalmanFilter/kalman.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -240,12 +312,21 @@ help:
 	@echo "... src/hardware/api/camera.o"
 	@echo "... src/hardware/api/camera.i"
 	@echo "... src/hardware/api/camera.s"
+	@echo "... src/hardware/uart/Serial_Port_Linux.o"
+	@echo "... src/hardware/uart/Serial_Port_Linux.i"
+	@echo "... src/hardware/uart/Serial_Port_Linux.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/process/predict.o"
+	@echo "... src/process/predict.i"
+	@echo "... src/process/predict.s"
 	@echo "... src/process/process_opencv.o"
 	@echo "... src/process/process_opencv.i"
 	@echo "... src/process/process_opencv.s"
+	@echo "... src/utils/KalmanFilter/kalman.o"
+	@echo "... src/utils/KalmanFilter/kalman.i"
+	@echo "... src/utils/KalmanFilter/kalman.s"
 .PHONY : help
 
 

@@ -70,6 +70,8 @@
         "lu": "cpp",
         "core": "cpp",
         "cholesky": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "serial_port.h": "c",
+        "string.h": "c"
     }
 }

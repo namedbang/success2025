@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-05 14:46:32
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-15 20:27:34
+ * @LastEditTime: 2024-11-28 19:18:36
  * @FilePath: /success2025/src/app/ConfigurationReader.hpp
  * @Description:
  *
@@ -30,6 +30,10 @@ public:
     std::vector<int> HSV_lowerb_red;
     std::vector<int> HSV_upperb_red;
     cv::Mat_<double> camera_matrix, distort_coefficient;
+    cv::Mat_<double> R;
+    cv::Mat_<double> Q;
+    cv::Mat_<double> P;
+    cv::Mat_<double> TVEC;
     char *charArray;
 
     ConfigurationReader(std::string Pth)
@@ -52,7 +56,10 @@ public:
         fs_read["HSV_upperb_red"] >> this->HSV_upperb_red;
         fs_read["cameraMatrix"] >> this->camera_matrix;
         fs_read["distCoeffs"] >> this->distort_coefficient;
-
+        fs_read["R"] >> this->R;
+        fs_read["Q"] >> this->Q;
+        fs_read["P"] >> this->P;
+        fs_read["TVEC"] >> this->TVEC;
         std::cout << GREEN << "verison :" << this->verison << "\n"
                   << "ros_enable :" << this->ros_enable << "\n"
                   << "enable_show :" << this->enable_show << "\n"

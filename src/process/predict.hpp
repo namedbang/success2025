@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:54:16
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-27 21:37:19
+ * @LastEditTime: 2024-11-28 18:53:31
  * @FilePath: /success2025/src/process/predict.hpp
  * @Description:
  *
@@ -23,9 +23,11 @@ private:
 
 public:
     MYKalmanFilter(ConfigurationReader *reader, EnemyInform *enemy) : reader_p(reader),
-                                                                      enemy_p(enemy) {};
+                                                                      enemy_p(enemy) {
+
+                                                                      };
     ~MYKalmanFilter() {}
-    KalmanFilterInit();
+    void KalmanFilterInit();
 };
 
 class predict

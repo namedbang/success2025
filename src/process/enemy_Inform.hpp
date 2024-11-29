@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-12 21:25:15
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-27 21:00:19
+ * @LastEditTime: 2024-11-29 19:53:30
  * @FilePath: /success2025/src/process/enemy_Inform.hpp
  * @Description:
  *
@@ -25,10 +25,10 @@ struct EnemyInform
         cv::Point2d(0, 0)  // 第四个点
     };
     /*
-    1           3
+    1           2
     I           I
     I           I
-    2           4
+    4           3
      */
     cv::Mat rvec; // 输出的旋转向量
     cv::Mat tvec; // 输出的平移向量

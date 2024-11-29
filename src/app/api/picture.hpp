@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 22:41:16
+ * @LastEditTime: 2024-11-29 23:04:43
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -26,12 +26,13 @@ private:
 public:
     cv::Mat preImage;
     cv::Mat endImage;
+    // cv::Mat displayImage;
     char ImgShow() // in while
     {
-        if (endImage.empty())
+        if (preImage.empty())
             return cv::waitKey(1) == 'q';
         cv::namedWindow("success2025", cv::WINDOW_AUTOSIZE);
-        cv::imshow("success2025", endImage);
+        cv::imshow("success2025", preImage);
         return cv::waitKey(1) == 'q';
     }
     void CalculateTime()
@@ -48,9 +49,9 @@ public:
     }
     void CvPutTextOnUI()
     {
-        if (static_cast<int>(1000 / spendTime) < 70)
-            std::cout << "low_fps_warn  " << static_cast<int>(spendTime) << std::endl;
-        if ((Config->enable_show == "true") && !(endImage.empty()))
+        // if (static_cast<int>(1000 / spendTime) < 70)
+        //     std::cout << "low_fps_warn  " << static_cast<int>(spendTime) << std::endl;
+        if ((Config->enable_show == "true") && !(preImage.empty()))
         {
             // 定义字体（例如，HERSHEY_SIMPLEX）
             int fontFace = cv::FONT_HERSHEY_SIMPLEX;
@@ -68,7 +69,7 @@ public:
                 oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
             result = oss.str();
             cv::Point orgFPS(50, 50);
-            cv::putText(endImage, result, orgFPS, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            cv::putText(preImage, result, orgFPS, fontFace, fontScale, color, thickness, cv::LINE_AA);
             oss.clear();
             oss.str("");
             if (Config->time_show == "true")
@@ -76,7 +77,7 @@ public:
             result = oss.str();
             // 定义文本的位置（图像左下角的坐标）
             cv::Point orgTime(50, 100);
-            cv::putText(endImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            cv::putText(preImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
         }
     }
     Picture(ConfigurationReader *Config_p)

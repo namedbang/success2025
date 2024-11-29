@@ -35,10 +35,11 @@ include_directories(${PROJECT_DIR}/src/app/api)
 include_directories(${PROJECT_DIR}/src/hardware/api)
 include_directories(${PROJECT_DIR}/src/process)
 include_directories(${PROJECT_DIR}/src/cuda)
+include_directories(${PROJECT_DIR}/src/hardware/uart)
 #C文件路径变量----------------
 set(SOURCE_FILES_HC "")  
 # 使用 file(GLOB_RECURSE) 命令递归查找所有 .cpp 和 .h 文件  
-file(GLOB_RECURSE SOURCE_FILES_HC "${PROJECT_DIR}/src/*.cpp" "${PROJECT_DIR}/src/*.cu")  
+file(GLOB_RECURSE SOURCE_FILES_HC "${PROJECT_DIR}/src/*.cpp" "${PROJECT_DIR}/src/*.cu" "${PROJECT_DIR}/src/*.c")  
 
 add_executable(RM_exe   ${PROJECT_DIR}/src/main.cpp 
                         ${SOURCE_FILES_HC}
