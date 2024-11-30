@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-29 23:04:43
+ * @LastEditTime: 2024-11-30 20:59:39
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -14,11 +14,13 @@
 #include <opencv2/imgproc/types_c.h>
 #include "opencv2/highgui/highgui.hpp"
 #include "../ConfigurationReader.hpp"
+#include "../../process/enemy_Inform.hpp"
 
 class Picture
 {
 private:
     ConfigurationReader *Config;
+    EnemyInform *EnemyInform_p;
     double T1; // to FPS
     double T2;
     double spendTime;
@@ -26,13 +28,13 @@ private:
 public:
     cv::Mat preImage;
     cv::Mat endImage;
-    // cv::Mat displayImage;
+    cv::Mat displayImage;
     char ImgShow() // in while
     {
-        if (preImage.empty())
+        if (displayImage.empty())
             return cv::waitKey(1) == 'q';
         cv::namedWindow("success2025", cv::WINDOW_AUTOSIZE);
-        cv::imshow("success2025", preImage);
+        cv::imshow("success2025", displayImage);
         return cv::waitKey(1) == 'q';
     }
     void CalculateTime()
@@ -69,7 +71,7 @@ public:
                 oss << "FPS :  " << static_cast<int>(1000 / spendTime) << "   ";
             result = oss.str();
             cv::Point orgFPS(50, 50);
-            cv::putText(preImage, result, orgFPS, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            cv::putText(displayImage, result, orgFPS, fontFace, fontScale, color, thickness, cv::LINE_AA);
             oss.clear();
             oss.str("");
             if (Config->time_show == "true")
@@ -77,11 +79,17 @@ public:
             result = oss.str();
             // 定义文本的位置（图像左下角的坐标）
             cv::Point orgTime(50, 100);
-            cv::putText(preImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            cv::putText(displayImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
+            for (int i = 0; i < 4; i++) // 画四个点
+            {
+                cv::line(this->displayImage, this->EnemyInform_p->p[i % 4], this->EnemyInform_p->p[(i + 1) % 4], cv::Scalar(255, 255, 255), 5);
+                cv::putText(this->displayImage, std::to_string(i), this->EnemyInform_p->p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
+            }
+            cv::circle(this->displayImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
         }
     }
-    Picture(ConfigurationReader *Config_p)
-        : Config(Config_p) {}
+    Picture(ConfigurationReader *Config_p, EnemyInform *EnemyInform_p)
+        : Config(Config_p), EnemyInform_p(EnemyInform_p) {}
     ~Picture() = default;
 };
 

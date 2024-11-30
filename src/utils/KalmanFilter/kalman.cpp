@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:51:14
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-27 22:04:15
+ * @LastEditTime: 2024-11-30 19:53:34
  * @FilePath: /success2025/src/utils/KalmanFilter/kalman.cpp
  * @Description:
  *
@@ -19,6 +19,8 @@
 #include <stdexcept>
 
 #include "./kalman.hpp"
+
+using namespace Kalman;
 
 KalmanFilter::KalmanFilter(
     double dt,

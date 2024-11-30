@@ -2,20 +2,22 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:56:21
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-28 18:57:58
+ * @LastEditTime: 2024-11-30 20:57:48
  * @FilePath: /success2025/src/process/predict.cpp
  * @Description:
  *
  * Copyright (c) 2024 by CDTU-Success, All Rights Reserved.
  */
 #include "./predict.hpp"
+#include "../utils/KalmanFilter/kalman.hpp"
+// #include "predict.hpp"
 
 void MYKalmanFilter::KalmanFilterInit()
 {
     int n = 6;            // Number of states
     int m = 3;            // Number of measurements
     double dt = 1.0 / 30; // Time step 预测步长
-
+    double t = 0;
     // Discrete LTI projectile motion, measuring position only
     Eigen::MatrixXd A(n, n); // System dynamics matrix          系统状态转移矩阵
     Eigen::MatrixXd C(m, n); // Output matrix                   输出矩阵（测量转移矩阵）
@@ -30,6 +32,7 @@ void MYKalmanFilter::KalmanFilterInit()
         0, 0, 0, 1, 0, 0,
         0, 0, 0, 0, 1, 0,
         0, 0, 0, 0, 0, 1;
+
     C << 1, 0, 0, 0, 0, 0,
         0, 1, 0, 0, 0, 0,
         0, 0, 1, 0, 0, 0;
@@ -41,4 +44,25 @@ void MYKalmanFilter::KalmanFilterInit()
     std::copy(reader_p->Q.ptr<double>(0), reader_p->Q.ptr<double>(0) + reader_p->Q.total(), Q.data()); // Q
     std::copy(reader_p->R.ptr<double>(0), reader_p->R.ptr<double>(0) + reader_p->R.total(), R.data()); // R
     std::copy(reader_p->P.ptr<double>(0), reader_p->P.ptr<double>(0) + reader_p->P.total(), P.data()); // P
+
+    std::cout << "A: \n"
+              << A << std::endl;
+    std::cout << "C: \n"
+              << C << std::endl;
+    std::cout << "Q: \n"
+              << Q << std::endl;
+    std::cout << "R: \n"
+              << R << std::endl;
+    std::cout << "P: \n"
+              << P << std::endl;
+    this->kf = new KalmanFilter(dt, A, C, Q, R, P);
+    // kf->init(t,xyzV2Eigen(this->enemy_p->Xw,this->enemy_p->Yw,this->enemy_p->Zw))
+    // return kf;
+}
+
+Eigen::MatrixXd MYKalmanFilter::xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz)
+{
+    Eigen::MatrixXd X(6, 1);
+    X << x, y, z, vx, vy, vz;
+    return X;
 }

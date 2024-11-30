@@ -1,91 +1,102 @@
+/*
+ * @Author: bangbang 1789228622@qq.com
+ * @Date: 2024-11-27 22:25:20
+ * @LastEditors: bangbang 1789228622@qq.com
+ * @LastEditTime: 2024-11-30 19:51:43
+ * @FilePath: /success2025/src/utils/KalmanFilter/kalman.hpp
+ * @Description:
+ *
+ * Copyright (c) 2024 by CDTU-Success, All Rights Reserved.
+ */
 /**
-* Kalman filter implementation using Eigen. Based on the following
-* introductory paper:
-*
-*     http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
-*
-* @author: Hayk Martirosyan
-* @date: 2014.11.15
-*/
+ * Kalman filter implementation using Eigen. Based on the following
+ * introductory paper:
+ *
+ *     http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
+ *
+ * @author: Hayk Martirosyan
+ * @date: 2014.11.15
+ */
 
 #include <Eigen/Dense>
 
 #pragma once
+namespace Kalman
+{
+  class KalmanFilter
+  {
 
-class KalmanFilter {
+  public:
+    /**
+     * Create a Kalman filter with the specified matrices.
+     *   A - System dynamics matrix
+     *   C - Output matrix
+     *   Q - Process noise covariance
+     *   R - Measurement noise covariance
+     *   P - Estimate error covariance
+     */
+    KalmanFilter(
+        double dt,
+        const Eigen::MatrixXd &A,
+        const Eigen::MatrixXd &C,
+        const Eigen::MatrixXd &Q,
+        const Eigen::MatrixXd &R,
+        const Eigen::MatrixXd &P);
 
-public:
+    /**
+     * Create a blank estimator.
+     */
+    KalmanFilter();
 
-  /**
-  * Create a Kalman filter with the specified matrices.
-  *   A - System dynamics matrix
-  *   C - Output matrix
-  *   Q - Process noise covariance
-  *   R - Measurement noise covariance
-  *   P - Estimate error covariance
-  */
-  KalmanFilter(
-      double dt,
-      const Eigen::MatrixXd& A,
-      const Eigen::MatrixXd& C,
-      const Eigen::MatrixXd& Q,
-      const Eigen::MatrixXd& R,
-      const Eigen::MatrixXd& P
-  );
+    /**
+     * Initialize the filter with initial states as zero.
+     */
+    void init();
 
-  /**
-  * Create a blank estimator.
-  */
-  KalmanFilter();
+    /**
+     * Initialize the filter with a guess for initial states.
+     */
+    void init(double t0, const Eigen::VectorXd &x0);
 
-  /**
-  * Initialize the filter with initial states as zero.
-  */
-  void init();
+    /**
+     * Update the estimated state based on measured values. The
+     * time step is assumed to remain constant.
+     */
+    void update(const Eigen::VectorXd &y);
 
-  /**
-  * Initialize the filter with a guess for initial states.
-  */
-  void init(double t0, const Eigen::VectorXd& x0);
+    /**
+     * Update the estimated state based on measured values,
+     * using the given time step and dynamics matrix.
+     */
+    void update(const Eigen::VectorXd &y, double dt, const Eigen::MatrixXd A);
 
-  /**
-  * Update the estimated state based on measured values. The
-  * time step is assumed to remain constant.
-  */
-  void update(const Eigen::VectorXd& y);
+    /**
+     * Return the current state and time.
+     */
+    Eigen::VectorXd state() { return x_hat; };
+    double time() { return t; };
 
-  /**
-  * Update the estimated state based on measured values,
-  * using the given time step and dynamics matrix.
-  */
-  void update(const Eigen::VectorXd& y, double dt, const Eigen::MatrixXd A);
+  private:
+    // Matrices for computation
+    Eigen::MatrixXd A, C, Q, R, P, K, P0;
 
-  /**
-  * Return the current state and time.
-  */
-  Eigen::VectorXd state() { return x_hat; };
-  double time() { return t; };
+    // System dimensions
+    int m, n;
 
-private:
+    // Initial and current time
+    double t0, t;
 
-  // Matrices for computation
-  Eigen::MatrixXd A, C, Q, R, P, K, P0;
+    // Discrete time step
+    double dt;
 
-  // System dimensions
-  int m, n;
+    // Is the filter initialized?
+    bool initialized;
 
-  // Initial and current time
-  double t0, t;
+    // n-size identity
+    Eigen::MatrixXd I;
 
-  // Discrete time step
-  double dt;
+    // Estimated states
+    Eigen::VectorXd x_hat, x_hat_new;
+  };
 
-  // Is the filter initialized?
-  bool initialized;
-
-  // n-size identity
-  Eigen::MatrixXd I;
-
-  // Estimated states
-  Eigen::VectorXd x_hat, x_hat_new;
-};
+}

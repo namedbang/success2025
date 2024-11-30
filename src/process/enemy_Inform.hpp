@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-12 21:25:15
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-29 19:53:30
+ * @LastEditTime: 2024-11-30 20:25:34
  * @FilePath: /success2025/src/process/enemy_Inform.hpp
  * @Description:
  *
@@ -36,8 +36,18 @@ struct EnemyInform
     cv::Point CenterPoint;
     // cv::Point3d CenterPoint3d;
     double distance;
-    double yaw;           // 预测前的yaw
-    double pitch;         // 预测前的pitch
+    double yaw;   // 预测前的yaw
+    double pitch; // 预测前的pitch
+    /*世界坐标系下------------------------- */
+    double yaw_world;   // 预测前的yaw世界坐标系
+    double pitch_world; // 预测前的pitch世界坐标系
+    double Xw;
+    double Yw;
+    double Zw;
+    double Xvw;
+    double Yvw;
+    double Zvw;
+    /*世界坐标系下------------------------- */
     bool enemy_exist = 0; // 1 :敌人存在 2：敌人不存在
 };
 
