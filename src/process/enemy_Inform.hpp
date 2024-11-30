@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-12 21:25:15
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 20:25:34
+ * @LastEditTime: 2024-12-01 01:57:00
  * @FilePath: /success2025/src/process/enemy_Inform.hpp
  * @Description:
  *
@@ -41,14 +41,17 @@ struct EnemyInform
     /*世界坐标系下------------------------- */
     double yaw_world;   // 预测前的yaw世界坐标系
     double pitch_world; // 预测前的pitch世界坐标系
-    double Xw;
-    double Yw;
-    double Zw;
+    double Xw = 0;
+    double Yw = 0;
+    double Zw = 0;
     double Xvw;
     double Yvw;
     double Zvw;
     /*世界坐标系下------------------------- */
     bool enemy_exist = 0; // 1 :敌人存在 2：敌人不存在
+    /*kalman*/
+    double yaw_kalman;
+    double pitch_kalman;
 };
 
 #endif /* __ENEMY_INFORM_H__ */

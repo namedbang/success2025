@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:56:21
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 20:57:48
+ * @LastEditTime: 2024-12-01 01:07:39
  * @FilePath: /success2025/src/process/predict.cpp
  * @Description:
  *
@@ -10,7 +10,8 @@
  */
 #include "./predict.hpp"
 #include "../utils/KalmanFilter/kalman.hpp"
-// #include "predict.hpp"
+#include "Eigen/Dense"
+#include "predict.hpp"
 
 void MYKalmanFilter::KalmanFilterInit()
 {
@@ -56,13 +57,27 @@ void MYKalmanFilter::KalmanFilterInit()
     std::cout << "P: \n"
               << P << std::endl;
     this->kf = new KalmanFilter(dt, A, C, Q, R, P);
-    // kf->init(t,xyzV2Eigen(this->enemy_p->Xw,this->enemy_p->Yw,this->enemy_p->Zw))
+    // kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, this->enemy_p->Xvw, this->enemy_p->Yvw, this->enemy_p->Zvw));
+    kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, 1, 1, 1));
+
     // return kf;
 }
 
-Eigen::MatrixXd MYKalmanFilter::xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz)
+void MYKalmanFilter::KalmanUpdate(Eigen::VectorXd &y)
 {
-    Eigen::MatrixXd X(6, 1);
+    this->kf->update(y);
+}
+
+Eigen::VectorXd MYKalmanFilter::xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz)
+{
+    Eigen::VectorXd X(6);
     X << x, y, z, vx, vy, vz;
+    return X;
+}
+
+Eigen::VectorXd MYKalmanFilter::xyzV2Eigen(double x, double y, double z)
+{
+    Eigen::VectorXd X(3);
+    X << x, y, z;
     return X;
 }

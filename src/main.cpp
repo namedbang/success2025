@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 22:36:33
+ * @LastEditTime: 2024-12-01 06:47:19
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -28,17 +28,41 @@
 #include <chrono>
 
 // using namespace Kalman;
+MYKalmanFilter *Filter;
+EnemyInform *EnemyInform_p;
+Serial_Port_infom Uart_inf;
+ConfigurationReader *reader_p;
+extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 
 class TimerForKalman : public CppTimer
 { //
-
     void timerEvent()
     {
-        // std::cout << "1" << std::endl;
+        // if (EnemyInform_p->enemy_exist == 1)
+        // {
+        std::lock_guard<std::mutex> lock(mtx_k); // 加锁
+        Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw);
+        Filter->KalmanUpdate(y);
+        Eigen::MatrixXd R_eigen(3, 3);
+        std::copy(reader_p->R.ptr<double>(0), reader_p->R.ptr<double>(0) + reader_p->R.total(), R_eigen.data()); // R
+
+        Eigen::Vector3d mindXYZ = R_eigen.inverse() * y;
+        // Eigen::Vector3d mindXYZ = R_eigen. * y;
+        EnemyInform_p->yaw_kalman = atan2(mindXYZ(0), mindXYZ(2)) / M_PI * 180;
+        // std::cout << this->EnemyInform_p->yaw << std::endl;
+        EnemyInform_p->pitch_kalman = atan2(-mindXYZ(1), sqrt(pow(mindXYZ(0), 2) + pow(mindXYZ(2), 2))) / M_PI * 180;
+
+        /*debug------------------------------------ */
+        char buffer[30];
+        memset(buffer, 0, sizeof(buffer));
+        // 打印 y 向量的 x, y, z 分量
+        sprintf(buffer, " :%.2f, %.2f, %.2f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, mindXYZ(2)); // y(0), y(1), y(2) 分别是 x, y, z
+        SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
+        /*debug------------------------------------ */
+        // }
     }
 };
 
-Serial_Port_infom Uart_inf;
 int main(int argc, char *argv[])
 {
     /*打开串口*/
@@ -47,15 +71,15 @@ int main(int argc, char *argv[])
 
     /*配置文件的读取 */
     bool imfom;
-    ConfigurationReader *reader_p = new ConfigurationReader("../config.yaml");
+    reader_p = new ConfigurationReader("../config.yaml");
     reader_p->ConfigurationRead();
     /*相机视频初始化 */
-    EnemyInform *EnemyInform_p = new EnemyInform();
+    EnemyInform_p = new EnemyInform();                                   // 敌人信息初始化
     Picture *picture = new Picture(reader_p, EnemyInform_p);             // 创建视频管道
     BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
     // chank = BsaeCamera->camera_chank();                               // debug时用
     /*kalman 初始化*/
-    MYKalmanFilter *Filter = new MYKalmanFilter(reader_p, EnemyInform_p);
+    Filter = new MYKalmanFilter(reader_p, EnemyInform_p);
     Filter->KalmanFilterInit();
 
     process *process_p = new process_opencv_cuda(picture, reader_p, EnemyInform_p, Filter); // 将视频数据传入处理类
@@ -74,9 +98,9 @@ int main(int argc, char *argv[])
         return 0;
     }
     TimerForKalman KalmanTimer;
-    KalmanTimer.startms(1000);
+    KalmanTimer.startms(10);
     /*线程池相关*/
-    ThreadPool pool(1);
+    ThreadPool pool(2);
 
     while (true)
     { /// 8ms

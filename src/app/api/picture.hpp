@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 20:59:39
+ * @LastEditTime: 2024-12-01 00:15:59
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -80,12 +80,15 @@ public:
             // 定义文本的位置（图像左下角的坐标）
             cv::Point orgTime(50, 100);
             cv::putText(displayImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
-            for (int i = 0; i < 4; i++) // 画四个点
+            if (this->EnemyInform_p->enemy_exist == 1)
             {
-                cv::line(this->displayImage, this->EnemyInform_p->p[i % 4], this->EnemyInform_p->p[(i + 1) % 4], cv::Scalar(255, 255, 255), 5);
-                cv::putText(this->displayImage, std::to_string(i), this->EnemyInform_p->p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
+                for (int i = 0; i < 4; i++) // 画四个点
+                {
+                    cv::line(this->displayImage, this->EnemyInform_p->p[i % 4], this->EnemyInform_p->p[(i + 1) % 4], cv::Scalar(255, 255, 255), 5);
+                    cv::putText(this->displayImage, std::to_string(i), this->EnemyInform_p->p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
+                }
+                cv::circle(this->displayImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
             }
-            cv::circle(this->displayImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
         }
     }
     Picture(ConfigurationReader *Config_p, EnemyInform *EnemyInform_p)

@@ -6,19 +6,19 @@
 # compile CXX with /usr/bin/aarch64-linux-gnu-g++
 C_DEFINES = 
 
-C_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3
+C_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart -I/home/gyxy/Desktop/workspeaseMY/success2025/src/utils -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3
 
 C_FLAGS = -g
 
 CUDA_DEFINES = 
 
-CUDA_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart -isystem=/usr/local/include/opencv4 -isystem=/usr/include/eigen3
+CUDA_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart -I/home/gyxy/Desktop/workspeaseMY/success2025/src/utils -isystem=/usr/local/include/opencv4 -isystem=/usr/include/eigen3
 
 CUDA_FLAGS = -g --generate-code=arch=compute_72,code=[compute_72,sm_72] -std=c++14
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3
+CXX_INCLUDES = -I/home/gyxy/Desktop/workspeaseMY/success2025/include/mind -I/home/gyxy/Desktop/workspeaseMY/success2025/src/app/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api -I/home/gyxy/Desktop/workspeaseMY/success2025/src/process -I/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda -I/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart -I/home/gyxy/Desktop/workspeaseMY/success2025/src/utils -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3
 
 CXX_FLAGS = -g
 

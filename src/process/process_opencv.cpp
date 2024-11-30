@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 22:45:33
+ * @LastEditTime: 2024-12-01 06:29:37
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -13,6 +13,7 @@
 #include "../cuda/inRange_gpu.cuh"
 #include "../hardware/uart/Serial_Port.h"
 #include "./predict.hpp"
+#include "../utils/LowPassFilter.hpp"
 
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
@@ -39,6 +40,8 @@ cv::Mat close_kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5))
 std::vector<cv::Vec4i> hierarchy;
 std::vector<std::vector<cv::Point>> contours;
 cv::Rect boundRect;
+LowPassFilter lpf;
+std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 
 bool compareClockwise(const cv::Point2f &p1, const cv::Point2f &p2, const cv::Point2f &center)
 {
@@ -268,7 +271,7 @@ PROCESS_state process::getEuler()
     /*这里必须要说一下，不知道为什么只有上面的错的（*****这个位置）才能得出不跳变的旋转向量*/
     /*有大神帮忙解释以下哇，不然我需要做两次pnp，我真的，卡一下午了*/
     // if (true == cv::solvePnP(obj, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, Trvec, temp_tvec, false, cv::SOLVEPNP_IPPE_SQUARE))
-    if (true == cv::solvePnP(obj, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, this->EnemyInform_p->rvec, temp_tvec, false))
+    if (true == cv::solvePnP(obj, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, this->EnemyInform_p->rvec, temp_tvec, false, cv::SOLVEPNP_IPPE))
     {
         // cv::solvePnP(obj_fR, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, this->EnemyInform_p->rvec, Ttvec, false, cv::SOLVEPNP_IPPE_SQUARE);
         // 平移向量比较重要，旋转向量没那么重要了以下是pnp后的平移向量[x,y,z]
@@ -280,9 +283,12 @@ PROCESS_state process::getEuler()
             | / ______>x   //没有人比我更懂形象
             相机
         */
-        // 朝坐标轴发射方向看去，顺时针负为逆时针为正
+        // 朝坐标轴发射方向看去，顺时针正为逆时针为负
         /*相机相对坐标*/ /*转换为相对于世界坐标系的坐标*/
         this->EnemyInform_p->tvec = this->CoordinateSystemChange(temp_tvec);
+        this->EnemyInform_p->rvec.at<double>(0, 0) = 0; // 不需要x轴方向的旋转，其偏差过的，pnp问题透视问题
+        // https://github.com/opencv/opencv/issues/8813 pnp算法问题，不是错误
+
         // std::cout << this->EnemyInform_p->tvec << std::endl;
         /*debug------------------------------------ */
         // char buffer[100];
@@ -320,6 +326,7 @@ PROCESS_state process::getEuler()
                                                                                   // 应用齐次变换矩阵将点从相机坐标系转换到世界坐标系
         cv::Mat point_world = T.inv() * point_camera;
         // cv::Mat point_world = T * point_camera;
+        std::lock_guard<std::mutex> lock(mtx_k); // 加锁
         this->EnemyInform_p->Xw = point_world.at<double>(0, 0);
         this->EnemyInform_p->Yw = point_world.at<double>(1, 0);
 
@@ -334,7 +341,10 @@ PROCESS_state process::getEuler()
         // sprintf(buffer, " :%.2f,%.2f,%.2f\n", this->EnemyInform_p->Xw, this->EnemyInform_p->Yw, this->EnemyInform_p->Zw);
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
         // std::cout << Xw << ", " << Yw << ", " << Zw << std::endl;
-
+        // char buffer[30];
+        // memset(buffer, 0, sizeof(buffer));
+        // sprintf(buffer, " :%.2f,%.2f\n", this->EnemyInform_p->yaw, this->EnemyInform_p->pitch);
+        // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
         // char buffer[30];
         // memset(buffer, 0, sizeof(buffer));
         // sprintf(buffer, " :%.2f,%.2f\n", this->EnemyInform_p->yaw_world, this->EnemyInform_p->pitch_world);
@@ -416,7 +426,7 @@ void process::MeasureSpeed(const double x, const double y, const double z)
 
         // 计算时间差（以毫秒为单位）
         auto duration = duration_cast<milliseconds>(lastNode.timestamp - secondLastNode.timestamp);
-        long long timeDiff = duration.count(); // 时间差（毫秒）
+        float timeDiff = duration.count(); // 时间差（毫秒）
 
         // 计算各个方向上的位移
         float displacement_x = lastNode.position.x - secondLastNode.position.x;
@@ -427,18 +437,28 @@ void process::MeasureSpeed(const double x, const double y, const double z)
         // 计算速度：速度 = 位移 / 时间差
         if (timeDiff > 0)
         {
-            // float velocity_x = displacement_x / timeDiff * 1000; // x轴速度（单位：单位/秒）
-            // float velocity_y = displacement_y / timeDiff * 1000; // y轴速度（单位：单位/秒）
-            // float velocity_z = displacement_z / timeDiff * 1000; // z轴速度（单位：单位/秒）
-            float velocity_x = displacement_x / timeDiff; // x轴速度（单位：mm/ms）
-            float velocity_y = displacement_y / timeDiff; // y轴速度（单位：mm/ms）
-            float velocity_z = displacement_z / timeDiff; // z轴速度（单位：mm/ms）
+            float velocity_x = displacement_x / timeDiff * 1000; // x轴速度（单位：mm/s）
+            float velocity_y = displacement_y / timeDiff * 1000; // y轴速度（单位：mm/s）
+            float velocity_z = displacement_z / timeDiff * 1000; // z轴速度（单位：mm/s）
+                                                                 // float velocity_x = displacement_x / timeDiff; // x轴速度（单位：mm/ms）
+                                                                 // float velocity_y = displacement_y / timeDiff; // y轴速度（单位：mm/ms）
+                                                                 // float velocity_z = displacement_z / timeDiff; // z轴速度（单位：mm/ms）
+            auto X_X = lpf.update(velocity_x, timeDiff / 1000, 1);
+            auto Y_Y = lpf.update(velocity_y, timeDiff / 1000, 1);
+            auto Z_Z = lpf.update(velocity_z, timeDiff / 1000, 1);
 
+            this->EnemyInform_p->Xvw = X_X;
+            this->EnemyInform_p->Yvw = Y_Y;
+            this->EnemyInform_p->Zvw = Z_Z;
             /*debug------------------------------------ */
-            cout << timeDiff << "  "
-                 << velocity_x << "  "
-                 << velocity_y << "  "
-                 << velocity_z << endl;
+            // cout << timeDiff << "  "
+            //      << velocity_x << "  "
+            //      << velocity_y << "  "
+            //      << velocity_z << endl;
+            // char buffer[50];
+            // memset(buffer, 0, sizeof(buffer));
+            // sprintf(buffer, " :%f,%f,%f\n", X_X, velocity_z, Z_Z);
+            // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
             /*debug------------------------------------ */
         }
         else

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 09:55:47
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 22:04:05
+ * @LastEditTime: 2024-12-01 04:41:59
  * @FilePath: /success2025/src/process/process_opencv.hpp
  * @Description:
  *
@@ -21,8 +21,8 @@
 // #define HALF_LENGTH_LENGHT 134 / 2
 // #define HALF_LENGTH_WIDTH 60 / 2
 /*大装甲板*/
-#define HALF_LENGTH_LENGHT 226 / 2
-#define HALF_LENGTH_WIDTH 60 / 2
+#define HALF_LENGTH_LENGHT 221 / 2
+#define HALF_LENGTH_WIDTH 56 / 2
 
 constexpr int max_size = 2;
 constexpr float Pi = 3.1415;
