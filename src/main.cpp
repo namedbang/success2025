@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 06:47:19
+ * @LastEditTime: 2024-12-02 19:09:12
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -38,28 +38,30 @@ class TimerForKalman : public CppTimer
 { //
     void timerEvent()
     {
-        // if (EnemyInform_p->enemy_exist == 1)
-        // {
         std::lock_guard<std::mutex> lock(mtx_k); // 加锁
         Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw);
         Filter->KalmanUpdate(y);
-        Eigen::MatrixXd R_eigen(3, 3);
-        std::copy(reader_p->R.ptr<double>(0), reader_p->R.ptr<double>(0) + reader_p->R.total(), R_eigen.data()); // R
+        if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
+        {
+            cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<     //
+                                        Filter->kf->state()(0),   //
+                                    Filter->kf->state()(1),       //
+                                    Filter->kf->state()(2), 1.0); //
+                                                                  // 应用齐次变换矩阵将点从世界坐标系转换到相机坐标系
+            cv::Mat point_world = EnemyInform_p->T * point_camera;
+            auto Xw = point_world.at<double>(0, 0);
+            auto Yw = point_world.at<double>(1, 0);
+            auto Zw = point_world.at<double>(2, 0);
+            EnemyInform_p->yaw_kalman = atan2(Xw, Zw) / M_PI * 180;
+            EnemyInform_p->pitch_kalman = atan2(-Yw, sqrt(pow(Xw, 2) + pow(Zw, 2))) / M_PI * 180;
 
-        Eigen::Vector3d mindXYZ = R_eigen.inverse() * y;
-        // Eigen::Vector3d mindXYZ = R_eigen. * y;
-        EnemyInform_p->yaw_kalman = atan2(mindXYZ(0), mindXYZ(2)) / M_PI * 180;
-        // std::cout << this->EnemyInform_p->yaw << std::endl;
-        EnemyInform_p->pitch_kalman = atan2(-mindXYZ(1), sqrt(pow(mindXYZ(0), 2) + pow(mindXYZ(2), 2))) / M_PI * 180;
-
-        /*debug------------------------------------ */
-        char buffer[30];
-        memset(buffer, 0, sizeof(buffer));
-        // 打印 y 向量的 x, y, z 分量
-        sprintf(buffer, " :%.2f, %.2f, %.2f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, mindXYZ(2)); // y(0), y(1), y(2) 分别是 x, y, z
-        SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
-        /*debug------------------------------------ */
-        // }
+            /*debug------------------------------------ */
+            char buffer[100];
+            memset(buffer, 0, sizeof(buffer));
+            sprintf(buffer, " :%f,%f,%f,%f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, EnemyInform_p->yaw, EnemyInform_p->pitch); // y(0), y(1), y(2) 分别是 x, y, z
+            SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
+            /*debug------------------------------------ */
+        }
     }
 };
 

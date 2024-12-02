@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:56:21
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 01:07:39
+ * @LastEditTime: 2024-12-02 19:40:49
  * @FilePath: /success2025/src/process/predict.cpp
  * @Description:
  *
@@ -15,9 +15,9 @@
 
 void MYKalmanFilter::KalmanFilterInit()
 {
-    int n = 6;            // Number of states
-    int m = 3;            // Number of measurements
-    double dt = 1.0 / 30; // Time step 预测步长
+    int n = 6;      // Number of states
+    int m = 3;      // Number of measurements
+    double dt = 10; // Time step 预测步长
     double t = 0;
     // Discrete LTI projectile motion, measuring position only
     Eigen::MatrixXd A(n, n); // System dynamics matrix          系统状态转移矩阵
@@ -80,4 +80,14 @@ Eigen::VectorXd MYKalmanFilter::xyzV2Eigen(double x, double y, double z)
     Eigen::VectorXd X(3);
     X << x, y, z;
     return X;
+}
+
+cv::Mat MYKalmanFilter::xyzV2Mat4(double x, double y, double z)
+{
+    cv::Mat point_camera = (cv::Mat_<double>(4, 1)
+                                << x,
+                            y,
+                            z, 1.0);
+    // 应用齐次变换矩阵将点从相机坐标系转换到世界坐标系
+    return point_camera;
 }

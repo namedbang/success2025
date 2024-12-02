@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:54:16
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 01:01:47
+ * @LastEditTime: 2024-12-02 16:00:11
  * @FilePath: /success2025/src/process/predict.hpp
  * @Description:
  *
@@ -53,10 +53,11 @@ class MYKalmanFilter
 private:
     ConfigurationReader *reader_p;
     EnemyInform *enemy_p;
-    Kalman::KalmanFilter *kf;
+
     Eigen::VectorXd y;
 
 public:
+    Kalman::KalmanFilter *kf;
     MYKalmanFilter(ConfigurationReader *reader, EnemyInform *enemy) : reader_p(reader),
                                                                       enemy_p(enemy), y(3) {
 
@@ -69,6 +70,7 @@ public:
     void KalmanUpdate(Eigen::VectorXd &y);
     Eigen::VectorXd xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz);
     Eigen::VectorXd xyzV2Eigen(double x, double y, double z);
+    cv::Mat xyzV2Mat4(double x, double y, double z);
 };
 
 class predict

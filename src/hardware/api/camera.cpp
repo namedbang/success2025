@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:36:52
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-29 22:56:05
+ * @LastEditTime: 2024-12-02 14:45:51
  * @FilePath: /success2025/src/hardware/api/camera.cpp
  * @Description:
  *
@@ -190,15 +190,10 @@ void MindCamera_software::camera_read_once(unsigned char camera_id)
             // {
             CameraImageProcess(hCamera, pbyBuffer, g_pRgbBuffer, &sFrameInfo);
 
-            // 注意：这里我们假设 g_pRgbBuffer 的大小已经足够存储 sFrameInfo 指定的图像数据
-            // 并且其格式与 sFrameInfo.uiMediaType 相匹配
-            // 我们只是重新构造 g_matImage 的头部来引用这个缓冲区
             this->Picture_p->preImage = cv::Mat(
                 cv::Size(sFrameInfo.iWidth, sFrameInfo.iHeight),
                 sFrameInfo.uiMediaType == CAMERA_MEDIA_TYPE_MONO8 ? CV_8UC1 : CV_8UC3,
                 g_pRgbBuffer);
-            // .clone(); // 注意：这里的 clone() 实际上是不必要的，因为我们只是重新构造了头部
-            //           // 但是为了清晰起见，我暂时保留它。在实际应用中，应该去掉它。
 
             // imshow("Opencv Demo", matImage);
             // waitKey(0);

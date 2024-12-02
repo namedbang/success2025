@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 06:29:37
+ * @LastEditTime: 2024-12-02 18:38:09
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -310,44 +310,46 @@ PROCESS_state process::getEuler()
                   | z |
                   | 1 |
         */
+        std::lock_guard<std::mutex> lock(mtx_k); // 加锁--------------------------------------------
         cv::Rodrigues(this->EnemyInform_p->rvec, this->EnemyInform_p->R);
-        cv::Mat T = cv::Mat::zeros(4, 4, CV_64F); // 齐次变换矩阵（4x4）
-        this->EnemyInform_p->R.copyTo(T(cv::Rect(0, 0, 3, 3)));
-        T.at<double>(0, 3) = 0; // 填充平移向量部分
-        T.at<double>(1, 3) = 0;
-        T.at<double>(2, 3) = 0;
-        T.at<double>(3, 3) = 1.0; // 齐次坐标的最后一行是[0, 0, 0, 1]
-                                  // 相机坐标系中的一个点（齐次坐标）
+        this->EnemyInform_p->T = cv::Mat::zeros(4, 4, CV_64F); // 齐次变换矩阵（4x4）
+        this->EnemyInform_p->R.copyTo(this->EnemyInform_p->T(cv::Rect(0, 0, 3, 3)));
+        this->EnemyInform_p->T.at<double>(0, 3) = 0; // 填充平移向量部分
+        this->EnemyInform_p->T.at<double>(1, 3) = 0;
+        this->EnemyInform_p->T.at<double>(2, 3) = 0;
+        this->EnemyInform_p->T.at<double>(3, 3) = 1.0; // 齐次坐标的最后一行是[0, 0, 0, 1]
+                                                       // 相机坐标系中的一个点（齐次坐标）
 
         cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<                         //
                                     this->EnemyInform_p->tvec.at<double>(0, 0),   //
                                 this->EnemyInform_p->tvec.at<double>(0, 1),       //
                                 this->EnemyInform_p->tvec.at<double>(0, 2), 1.0); //
                                                                                   // 应用齐次变换矩阵将点从相机坐标系转换到世界坐标系
-        cv::Mat point_world = T.inv() * point_camera;
+        cv::Mat point_world = this->EnemyInform_p->T.inv() * point_camera;
         // cv::Mat point_world = T * point_camera;
-        std::lock_guard<std::mutex> lock(mtx_k); // 加锁
+
         this->EnemyInform_p->Xw = point_world.at<double>(0, 0);
         this->EnemyInform_p->Yw = point_world.at<double>(1, 0);
-
         this->EnemyInform_p->Zw = point_world.at<double>(2, 0);
 
         this->EnemyInform_p->yaw_world = atan2(this->EnemyInform_p->Xw, this->EnemyInform_p->Zw) / M_PI * 180;
         this->EnemyInform_p->pitch_world = atan2(-this->EnemyInform_p->Yw, sqrt(pow(this->EnemyInform_p->Xw, 2) + pow(this->EnemyInform_p->Zw, 2))) / M_PI * 180;
 
         /*debug------------------------------------ */
-        // char buffer[30];
+        // char buffer[100];
         // memset(buffer, 0, sizeof(buffer));
-        // sprintf(buffer, " :%.2f,%.2f,%.2f\n", this->EnemyInform_p->Xw, this->EnemyInform_p->Yw, this->EnemyInform_p->Zw);
+        // sprintf(buffer, " :%f,%f,%f\n", this->EnemyInform_p->Xw, this->EnemyInform_p->Yw, this->EnemyInform_p->Zw);
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
         // std::cout << Xw << ", " << Yw << ", " << Zw << std::endl;
-        // char buffer[30];
+
+        // char buffer[100];
         // memset(buffer, 0, sizeof(buffer));
-        // sprintf(buffer, " :%.2f,%.2f\n", this->EnemyInform_p->yaw, this->EnemyInform_p->pitch);
+        // sprintf(buffer, " :%f,%f\n", this->EnemyInform_p->yaw, this->EnemyInform_p->pitch);
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
-        // char buffer[30];
+
+        // char buffer[100];
         // memset(buffer, 0, sizeof(buffer));
-        // sprintf(buffer, " :%.2f,%.2f\n", this->EnemyInform_p->yaw_world, this->EnemyInform_p->pitch_world);
+        // sprintf(buffer, " :%f,%f\n", this->EnemyInform_p->yaw_world, this->EnemyInform_p->pitch_world);
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
         /*debug------------------------------------ */
         /*测速 两点之间的速度*/

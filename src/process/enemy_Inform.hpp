@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-12 21:25:15
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 01:57:00
+ * @LastEditTime: 2024-12-02 18:32:08
  * @FilePath: /success2025/src/process/enemy_Inform.hpp
  * @Description:
  *
@@ -33,6 +33,7 @@ struct EnemyInform
     cv::Mat rvec; // 输出的旋转向量
     cv::Mat tvec; // 输出的平移向量
     cv::Mat R;    // 旋转矩阵
+    cv::Mat T;
     cv::Point CenterPoint;
     // cv::Point3d CenterPoint3d;
     double distance;
