@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-05 18:41:05
+ * @LastEditTime: 2024-12-06 02:31:30
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -40,6 +40,7 @@ Serial_Port_infom Uart_inf;
 // canbus bus("can0");
 ConfigurationReader *reader_p;
 GM6020 *motor_control;
+Picture *picture;
 extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 
 class TimerForKalman : public CppTimer
@@ -48,7 +49,10 @@ class TimerForKalman : public CppTimer
     {
         std::lock_guard<std::mutex> lock(mtx_k);                                                         // 加锁
         Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw); // 打包
-        Filter->KalmanUpdate(y, 100, 1);
+        if (reader_p->Debug_Kalman == "true" && reader_p->Debug_Kalman_AdvantceTime != 0)
+            Filter->KalmanUpdate(y, reader_p->Debug_Kalman_AdvantceTime, 1);
+        else
+            Filter->KalmanUpdate(y, 0, 1);
         if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
         {
             cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<     //
@@ -63,12 +67,15 @@ class TimerForKalman : public CppTimer
             EnemyInform_p->yaw_kalman = atan2(Xw, Zw) / M_PI * 180;
             EnemyInform_p->pitch_kalman = atan2(-Yw, sqrt(pow(Xw, 2) + pow(Zw, 2))) / M_PI * 180;
 
-            /*debug------------------------------------ */
-            char buffer[100];
-            memset(buffer, 0, sizeof(buffer));
-            sprintf(buffer, " :%f,%f,%f,%f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, EnemyInform_p->yaw, EnemyInform_p->pitch); // y(0), y(1), y(2) 分别是 x, y, z
-            SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
-            /*debug------------------------------------ */
+            /*debug-------------------------------------------------------------------------------- */
+            if (reader_p->Debug_Kalman == "true")
+            {
+                char buffer[100];
+                memset(buffer, 0, sizeof(buffer));
+                sprintf(buffer, " :%f,%f,%f,%f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, EnemyInform_p->yaw, EnemyInform_p->pitch); // y(0), y(1), y(2) 分别是 x, y, z
+                SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
+            }
+            /*debug-------------------------------------------------------------------------------- */
         }
     }
 };
@@ -84,7 +91,7 @@ class TimerFor6020 : public CppTimer
 int main(int argc, char *argv[])
 {
     /*打开串口----------------------------------------*/
-    initialize_serial_port_info(&Uart_inf);
+    initialize_serial_port_info(&Uart_inf); // debug串口
     int uart = SerialPortOpen(Uart_inf.Uart, 115200, SERIAL_PORT_PARITY_NONE, &Uart_inf.UID0);
     /*打开can----------------------------------------*/
     // 设置 CAN 接口名称
@@ -100,7 +107,7 @@ int main(int argc, char *argv[])
     reader_p->ConfigurationRead();
     /*相机视频初始化 */
     EnemyInform_p = new EnemyInform();                                   // 敌人信息初始化
-    Picture *picture = new Picture(reader_p, EnemyInform_p);             // 创建视频管道
+    picture = new Picture(reader_p, EnemyInform_p);                      // 创建视频管道
     BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
     // chank = BsaeCamera->camera_chank();                               // debug时用
     /*kalman 初始化*/
@@ -135,7 +142,7 @@ int main(int argc, char *argv[])
     ThreadPool pool(2);
 
     while (true)
-    {   /// 8ms
+    { /// 8ms
         /*debug------------------------------------ */
         // unsigned char temp = 0x01;
         // SerialPortWriteByte(Uart_inf.UID0, temp);

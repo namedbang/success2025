@@ -2,6 +2,10 @@
 verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
+#------Debug-------#
+Debug_FPS: "false"
+Debug_Kalman: "true"
+Debug_Can: "false"
 #################################################################
 camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1280X1240_6ms.config"
 ##***********1280 X 800分辨率下的内参矩阵和畸变矩阵***************##
@@ -24,23 +28,24 @@ enable_show: "true"
 FPS_show: "true"
 time_show: "true"
 ##########卡尔曼预测部分############
+Debug_Kalman_AdvantceTime: 0
 Q : !!opencv-matrix
    rows: 6
    cols: 6
    dt: d
-   data: [0.0001, 0, 0, 0, 0, 0,
-          0, 0.0001, 0, 0, 0, 0,
-          0, 0, 0.0001, 0, 0, 0,
-          0, 0, 0, 0.0001, 0, 0,
-          0, 0, 0, 0, 0.0001, 0,
-          0, 0, 0, 0, 0, 0.0001]
+   data: [0.1, 0, 0, 0, 0, 0,
+          0, 0.1, 0, 0, 0, 0,
+          0, 0, 0.1, 0, 0, 0,
+          0, 0, 0, 0.1, 0, 0,
+          0, 0, 0, 0, 0.1, 0,
+          0, 0, 0, 0, 0, 0.1]
 R : !!opencv-matrix
    rows: 3
    cols: 3
    dt: d
-   data: [100, 0, 0,
-          0, 100, 0,
-          0, 0, 100]
+   data: [1000, 0, 0,
+          0, 1000, 0,
+          0, 0, 1000]
 ##初始协方差
 P : !!opencv-matrix
    rows: 6
@@ -60,3 +65,4 @@ TVEC : !!opencv-matrix
    data: [0,
           0,
           0]
+####################################################

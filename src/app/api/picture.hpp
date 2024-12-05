@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 00:15:59
+ * @LastEditTime: 2024-12-06 02:17:42
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -15,6 +15,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "../ConfigurationReader.hpp"
 #include "../../process/enemy_Inform.hpp"
+#include "../../hardware/uart/Serial_Port.h"
 
 class Picture
 {
@@ -23,9 +24,9 @@ private:
     EnemyInform *EnemyInform_p;
     double T1; // to FPS
     double T2;
-    double spendTime;
 
 public:
+    double spendTime;
     cv::Mat preImage;
     cv::Mat endImage;
     cv::Mat displayImage;
@@ -77,6 +78,15 @@ public:
             if (Config->time_show == "true")
                 oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
             result = oss.str();
+            /*debug------------------------------------------------------------------------------------------------ */
+            if (this->Config->Debug_FPS == "true")
+            {
+                char buffer[20];
+                memset(buffer, 0, sizeof(buffer));
+                sprintf(buffer, " :%f,%d\n", spendTime, static_cast<int>(1000 / spendTime)); // y(0), y(1), y(2) 分别是 x, y, z
+                SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
+            }
+            /*debug------------------------------------------------------------------------------------------------ */
             // 定义文本的位置（图像左下角的坐标）
             cv::Point orgTime(50, 100);
             cv::putText(displayImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);

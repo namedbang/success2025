@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-12-03 13:15:10
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-04 11:55:27
+ * @LastEditTime: 2024-12-06 01:26:53
  * @FilePath: /success2025/src/hardware/can/can.cpp
  * @Description:
  *
@@ -61,9 +61,10 @@ void GM6020::GM6020_read()
         {
         case 0x205:
             GMList[0]->rotor_angle = ((rx_data[0] << 8) | rx_data[1]) * 180 / 8192; // 电机转子角度
-            GMList[0]->rotor_speed = ((rx_data[2] << 8) | rx_data[3]);              // 电机转子速度
-            GMList[0]->torque_current = ((rx_data[4] << 8) | rx_data[5]);           // 电机扭矩电流
-            GMList[0]->temp = rx_data[6];                                           // 电机温度
+            // GMList[0]->rotor_angle = ((rx_data[0] << 8) | rx_data[1]);    // 电机转子角度
+            GMList[0]->rotor_speed = ((rx_data[2] << 8) | rx_data[3]);    // 电机转子速度
+            GMList[0]->torque_current = ((rx_data[4] << 8) | rx_data[5]); // 电机扭矩电流
+            GMList[0]->temp = rx_data[6];                                 // 电机温度
 
             /*debug------------------------------------ */
             // char buffer[50];
