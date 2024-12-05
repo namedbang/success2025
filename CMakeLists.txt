@@ -36,6 +36,7 @@ include_directories(${PROJECT_DIR}/src/hardware/api)
 include_directories(${PROJECT_DIR}/src/process)
 include_directories(${PROJECT_DIR}/src/cuda)
 include_directories(${PROJECT_DIR}/src/hardware/uart)
+include_directories(${PROJECT_DIR}/src/hardware/can)
 include_directories(${PROJECT_DIR}/src/utils)
 #C文件路径变量----------------
 set(SOURCE_FILES_HC "")  

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:54:16
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-02 16:00:11
+ * @LastEditTime: 2024-12-04 11:27:37
  * @FilePath: /success2025/src/process/predict.hpp
  * @Description:
  *
@@ -23,6 +23,8 @@
 using namespace std;
 using namespace chrono;
 using namespace Kalman;
+
+constexpr uint16_t Kalman_cycle = 10;
 
 // 三维位置结构体
 struct Position
@@ -67,7 +69,7 @@ public:
         delete this->kf;
     }
     void KalmanFilterInit();
-    void KalmanUpdate(Eigen::VectorXd &y);
+    void KalmanUpdate(Eigen::VectorXd &y, uint64_t adtime, uint8_t reset = 1);
     Eigen::VectorXd xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz);
     Eigen::VectorXd xyzV2Eigen(double x, double y, double z);
     cv::Mat xyzV2Mat4(double x, double y, double z);

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:56:21
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-02 19:40:49
+ * @LastEditTime: 2024-12-05 16:01:54
  * @FilePath: /success2025/src/process/predict.cpp
  * @Description:
  *
@@ -58,14 +58,16 @@ void MYKalmanFilter::KalmanFilterInit()
               << P << std::endl;
     this->kf = new KalmanFilter(dt, A, C, Q, R, P);
     // kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, this->enemy_p->Xvw, this->enemy_p->Yvw, this->enemy_p->Zvw));
-    kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, 1, 1, 1));
+    kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, 10000, 10000, 10000));
 
     // return kf;
 }
 
-void MYKalmanFilter::KalmanUpdate(Eigen::VectorXd &y)
+void MYKalmanFilter::KalmanUpdate(Eigen::VectorXd &y, uint64_t adtime, uint8_t reset)
 {
-    this->kf->update(y);
+    uint64_t adpower = adtime / Kalman_cycle; // 单位ms
+    this->kf->update(y, adpower, reset);
+    // this->kf->update(y);
 }
 
 Eigen::VectorXd MYKalmanFilter::xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz)

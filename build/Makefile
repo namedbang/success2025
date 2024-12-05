@@ -177,6 +177,54 @@ src/hardware/api/camera.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.s
 .PHONY : src/hardware/api/camera.cpp.s
 
+src/hardware/can/can.o: src/hardware/can/can.cpp.o
+.PHONY : src/hardware/can/can.o
+
+# target to build an object file
+src/hardware/can/can.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o
+.PHONY : src/hardware/can/can.cpp.o
+
+src/hardware/can/can.i: src/hardware/can/can.cpp.i
+.PHONY : src/hardware/can/can.i
+
+# target to preprocess a source file
+src/hardware/can/can.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.i
+.PHONY : src/hardware/can/can.cpp.i
+
+src/hardware/can/can.s: src/hardware/can/can.cpp.s
+.PHONY : src/hardware/can/can.s
+
+# target to generate assembly for a file
+src/hardware/can/can.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.s
+.PHONY : src/hardware/can/can.cpp.s
+
+src/hardware/can/canbus.o: src/hardware/can/canbus.cpp.o
+.PHONY : src/hardware/can/canbus.o
+
+# target to build an object file
+src/hardware/can/canbus.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o
+.PHONY : src/hardware/can/canbus.cpp.o
+
+src/hardware/can/canbus.i: src/hardware/can/canbus.cpp.i
+.PHONY : src/hardware/can/canbus.i
+
+# target to preprocess a source file
+src/hardware/can/canbus.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.i
+.PHONY : src/hardware/can/canbus.cpp.i
+
+src/hardware/can/canbus.s: src/hardware/can/canbus.cpp.s
+.PHONY : src/hardware/can/canbus.s
+
+# target to generate assembly for a file
+src/hardware/can/canbus.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.s
+.PHONY : src/hardware/can/canbus.cpp.s
+
 src/hardware/uart/Serial_Port_Linux.o: src/hardware/uart/Serial_Port_Linux.c.o
 .PHONY : src/hardware/uart/Serial_Port_Linux.o
 
@@ -336,6 +384,12 @@ help:
 	@echo "... src/hardware/api/camera.o"
 	@echo "... src/hardware/api/camera.i"
 	@echo "... src/hardware/api/camera.s"
+	@echo "... src/hardware/can/can.o"
+	@echo "... src/hardware/can/can.i"
+	@echo "... src/hardware/can/can.s"
+	@echo "... src/hardware/can/canbus.o"
+	@echo "... src/hardware/can/canbus.i"
+	@echo "... src/hardware/can/canbus.s"
 	@echo "... src/hardware/uart/Serial_Port_Linux.o"
 	@echo "... src/hardware/uart/Serial_Port_Linux.i"
 	@echo "... src/hardware/uart/Serial_Port_Linux.s"

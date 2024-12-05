@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-02 19:09:12
+ * @LastEditTime: 2024-12-05 18:41:05
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -22,25 +22,33 @@
 #include "./utils/CppTimer.h"
 #include "./process/predict.hpp"
 #include "./utils/KalmanFilter/kalman.hpp"
+#include "./hardware/can/canbus.hpp"
+#include "./hardware/can/can.hpp"
 
 #include <memory>
 #include <unistd.h>
 #include <chrono>
+#include <thread>
 
 // using namespace Kalman;
+using namespace std;
+using namespace wlp;
+
 MYKalmanFilter *Filter;
 EnemyInform *EnemyInform_p;
 Serial_Port_infom Uart_inf;
+// canbus bus("can0");
 ConfigurationReader *reader_p;
+GM6020 *motor_control;
 extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 
 class TimerForKalman : public CppTimer
 { //
     void timerEvent()
     {
-        std::lock_guard<std::mutex> lock(mtx_k); // 加锁
-        Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw);
-        Filter->KalmanUpdate(y);
+        std::lock_guard<std::mutex> lock(mtx_k);                                                         // 加锁
+        Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw); // 打包
+        Filter->KalmanUpdate(y, 100, 1);
         if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
         {
             cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<     //
@@ -65,12 +73,27 @@ class TimerForKalman : public CppTimer
     }
 };
 
+class TimerFor6020 : public CppTimer
+{ //
+    void timerEvent()
+    {
+        motor_control->GM6020_read();
+    }
+};
+
 int main(int argc, char *argv[])
 {
-    /*打开串口*/
+    /*打开串口----------------------------------------*/
     initialize_serial_port_info(&Uart_inf);
     int uart = SerialPortOpen(Uart_inf.Uart, 115200, SERIAL_PORT_PARITY_NONE, &Uart_inf.UID0);
-
+    /*打开can----------------------------------------*/
+    // 设置 CAN 接口名称
+    char can_interface[] = "can0";
+    // 设置电机数量和电机 ID
+    int GM6020_number = 1;          // 电机数量
+    uint16_t motor_ids[] = {0x205}; // 电机 ID（例如：0x201, 0x202, 0x203）
+    motor_control = new GM6020(can_interface, GM6020_number, motor_ids[0]);
+    motor_control->GM6020_init();
     /*配置文件的读取 */
     bool imfom;
     reader_p = new ConfigurationReader("../config.yaml");
@@ -93,22 +116,30 @@ int main(int argc, char *argv[])
     else
     {
         std::cout << "相机初始化失败" << std::endl;
+        delete motor_control;
         delete BsaeCamera;
         delete picture;
         delete process_p;
         delete reader_p;
+
         return 0;
     }
+
+    /*线程相关*/
     TimerForKalman KalmanTimer;
-    KalmanTimer.startms(10);
-    /*线程池相关*/
+    KalmanTimer.startms(Kalman_cycle);
+    TimerFor6020 GM6020Timer;
+    GM6020Timer.startms(1);
+    // std::thread t1(timerEvent6020);
+    // t1.detach();
     ThreadPool pool(2);
 
     while (true)
-    { /// 8ms
+    {   /// 8ms
+        /*debug------------------------------------ */
         // unsigned char temp = 0x01;
         // SerialPortWriteByte(Uart_inf.UID0, temp);
-
+        /*debug------------------------------------ */
         auto result = pool.enqueue(
             [process_p]
             { return process_p->processing(); }); // 加入任务列表
@@ -120,11 +151,13 @@ int main(int argc, char *argv[])
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
         picture->CvPutTextOnUI();
-        if (true == picture->ImgShow())
-            break;
+        // if (true == picture->ImgShow())
+        //     break;
         // usleep(1000);
     }
     KalmanTimer.stop();
+    GM6020Timer.stop();
+    delete motor_control;
     delete BsaeCamera;
     delete picture;
     delete process_p;

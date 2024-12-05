@@ -11,6 +11,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart/Serial_Port_Linux.c" "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda/inRange_gpu.cu" "CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o" "gcc" "CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp" "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o.d"
+  "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/can/can.cpp" "CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o.d"
+  "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/can/canbus.cpp" "CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/main.cpp" "CMakeFiles/RM_exe.dir/src/main.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/main.cpp.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/process/predict.cpp" "CMakeFiles/RM_exe.dir/src/process/predict.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/process/predict.cpp.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp" "CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o.d"

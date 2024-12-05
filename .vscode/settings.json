@@ -72,6 +72,7 @@
         "cholesky": "cpp",
         "future": "cpp",
         "serial_port.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "*.txx": "cpp"
     }
 }

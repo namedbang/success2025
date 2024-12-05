@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 22:25:20
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-30 19:51:43
+ * @LastEditTime: 2024-12-05 18:15:29
  * @FilePath: /success2025/src/utils/KalmanFilter/kalman.hpp
  * @Description:
  *
@@ -64,6 +64,7 @@ namespace Kalman
      */
     void update(const Eigen::VectorXd &y);
 
+    void update(const Eigen::VectorXd &y, uint64_t adpower, uint8_t reset);
     /**
      * Update the estimated state based on measured values,
      * using the given time step and dynamics matrix.
@@ -73,7 +74,7 @@ namespace Kalman
     /**
      * Return the current state and time.
      */
-    Eigen::VectorXd state() { return x_hat; };
+    Eigen::VectorXd state() { return x_hat_out; };
     double time() { return t; };
 
   private:
@@ -96,7 +97,7 @@ namespace Kalman
     Eigen::MatrixXd I;
 
     // Estimated states
-    Eigen::VectorXd x_hat, x_hat_new;
+    Eigen::VectorXd x_hat, x_hat_new, x_hat_out;
   };
 
 }
