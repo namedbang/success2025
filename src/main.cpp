@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-15 17:01:17
+ * @LastEditTime: 2024-12-15 19:31:37
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     motor_control->GM6020_init();
     /*配置文件的读取 */
     bool imfom;
-    reader_p = new ConfigurationReader("../config.yaml");
+    reader_p = new ConfigurationReader("/home/gyxy/Desktop/workspeaseMY/success2025/config.yaml");
     reader_p->ConfigurationRead();
     /*相机视频初始化 */
     EnemyInform_p = new EnemyInform();                                   // 敌人信息初始化
