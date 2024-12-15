@@ -27,10 +27,13 @@ message("${B}当前工程文件夹目录: ${PROJECT_DIR}${E}")
 #查找第三方包
 find_package(OpenCV 4 REQUIRED)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GST REQUIRED gstreamer-1.0)
+pkg_check_modules(GSTAPP REQUIRED gstreamer-app-1.0)
 #以下头文件-----------------
 include_directories(/usr/include/) #os
 include_directories(${PROJECT_DIR}/include/mind/) #迈德+=
-include_directories(${OPENCV_INCLUDE_DIRS})
+include_directories(${OPENCV_INCLUDE_DIRS} ${GST_INCLUDE_DIRS} ${GSTAPP_INCLUDE_DIRS})
 include_directories(${PROJECT_DIR}/src/app/api)
 include_directories(${PROJECT_DIR}/src/hardware/api)
 include_directories(${PROJECT_DIR}/src/process)
@@ -57,5 +60,5 @@ else()
     message(FATAL_ERROR "${R}Library of libMVSDK not found${E}")
 endif()
 
-target_link_libraries(${MY_EXECUTABLE} ${OpenCV_LIBS})
+target_link_libraries(${MY_EXECUTABLE} ${OpenCV_LIBS} ${GST_LIBRARIES} ${GSTAPP_LIBRARIES})
 target_link_libraries (${MY_EXECUTABLE} Eigen3::Eigen)

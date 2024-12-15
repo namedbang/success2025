@@ -383,6 +383,9 @@ OS_LIBRARY_libMVSDK:FILEPATH=/usr/lib/libMVSDK.so
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/usr/local/lib/cmake/opencv4
 
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
+
 //Value Computed by CMake
 RM_BINARY_DIR:STATIC=/home/gyxy/Desktop/workspeaseMY/success2025/build
 
@@ -391,6 +394,30 @@ RM_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 RM_SOURCE_DIR:STATIC=/home/gyxy/Desktop/workspeaseMY/success2025
+
+//Path to a library.
+pkgcfg_lib_GSTAPP_glib-2.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libglib-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GSTAPP_gobject-2.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libgobject-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GSTAPP_gstapp-1.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libgstapp-1.0.so
+
+//Path to a library.
+pkgcfg_lib_GSTAPP_gstbase-1.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libgstbase-1.0.so
+
+//Path to a library.
+pkgcfg_lib_GSTAPP_gstreamer-1.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libgstreamer-1.0.so
+
+//Path to a library.
+pkgcfg_lib_GST_glib-2.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libglib-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GST_gobject-2.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libgobject-2.0.so
+
+//Path to a library.
+pkgcfg_lib_GST_gstreamer-1.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libgstreamer-1.0.so
 
 
 ########################
@@ -663,6 +690,101 @@ CUDA_run_nvcc:INTERNAL=/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/
 FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda-11.4][/usr/local/cuda-11.4/bin/nvcc][/usr/local/cuda-11.4/include][/usr/local/cuda-11.4/lib64/libcudart_static.a][v11.4(11.4)]
 //Details about finding OpenCV
 FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/usr/local][v4.6.0(4)]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.1()]
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
+GSTAPP_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-1.0;-I/usr/include/glib-2.0;-I/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GSTAPP_CFLAGS_I:INTERNAL=
+GSTAPP_CFLAGS_OTHER:INTERNAL=-pthread
+GSTAPP_FOUND:INTERNAL=1
+GSTAPP_INCLUDEDIR:INTERNAL=/usr/include/gstreamer-1.0
+GSTAPP_INCLUDE_DIRS:INTERNAL=/usr/include/gstreamer-1.0;/usr/include/glib-2.0;/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GSTAPP_LDFLAGS:INTERNAL=-lgstapp-1.0;-lgstbase-1.0;-lgstreamer-1.0;-lgobject-2.0;-lglib-2.0
+GSTAPP_LDFLAGS_OTHER:INTERNAL=
+GSTAPP_LIBDIR:INTERNAL=/usr/lib/aarch64-linux-gnu
+GSTAPP_LIBRARIES:INTERNAL=gstapp-1.0;gstbase-1.0;gstreamer-1.0;gobject-2.0;glib-2.0
+GSTAPP_LIBRARY_DIRS:INTERNAL=
+GSTAPP_LIBS:INTERNAL=
+GSTAPP_LIBS_L:INTERNAL=
+GSTAPP_LIBS_OTHER:INTERNAL=
+GSTAPP_LIBS_PATHS:INTERNAL=
+GSTAPP_MODULE_NAME:INTERNAL=gstreamer-app-1.0
+GSTAPP_PREFIX:INTERNAL=/usr
+GSTAPP_STATIC_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-1.0;-I/usr/include/glib-2.0;-I/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GSTAPP_STATIC_CFLAGS_I:INTERNAL=
+GSTAPP_STATIC_CFLAGS_OTHER:INTERNAL=-pthread
+GSTAPP_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/gstreamer-1.0;/usr/include/glib-2.0;/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GSTAPP_STATIC_LDFLAGS:INTERNAL=-lgstapp-1.0;-lgstbase-1.0;-lgstreamer-1.0;-lgmodule-2.0;-pthread;-ldl;-lgobject-2.0;-pthread;-lffi;-lglib-2.0;-pthread;-lpcre;-pthread
+GSTAPP_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
+GSTAPP_STATIC_LIBDIR:INTERNAL=
+GSTAPP_STATIC_LIBRARIES:INTERNAL=gstapp-1.0;gstbase-1.0;gstreamer-1.0;gmodule-2.0;dl;gobject-2.0;ffi;glib-2.0;pcre
+GSTAPP_STATIC_LIBRARY_DIRS:INTERNAL=
+GSTAPP_STATIC_LIBS:INTERNAL=
+GSTAPP_STATIC_LIBS_L:INTERNAL=
+GSTAPP_STATIC_LIBS_OTHER:INTERNAL=
+GSTAPP_STATIC_LIBS_PATHS:INTERNAL=
+GSTAPP_VERSION:INTERNAL=1.16.3
+GSTAPP_gstreamer-app-1.0_INCLUDEDIR:INTERNAL=
+GSTAPP_gstreamer-app-1.0_LIBDIR:INTERNAL=
+GSTAPP_gstreamer-app-1.0_PREFIX:INTERNAL=
+GSTAPP_gstreamer-app-1.0_VERSION:INTERNAL=
+GST_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-1.0;-I/usr/include/glib-2.0;-I/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GST_CFLAGS_I:INTERNAL=
+GST_CFLAGS_OTHER:INTERNAL=-pthread
+GST_FOUND:INTERNAL=1
+GST_INCLUDEDIR:INTERNAL=/usr/include/gstreamer-1.0
+GST_INCLUDE_DIRS:INTERNAL=/usr/include/gstreamer-1.0;/usr/include/glib-2.0;/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GST_LDFLAGS:INTERNAL=-lgstreamer-1.0;-lgobject-2.0;-lglib-2.0
+GST_LDFLAGS_OTHER:INTERNAL=
+GST_LIBDIR:INTERNAL=/usr/lib/aarch64-linux-gnu
+GST_LIBRARIES:INTERNAL=gstreamer-1.0;gobject-2.0;glib-2.0
+GST_LIBRARY_DIRS:INTERNAL=
+GST_LIBS:INTERNAL=
+GST_LIBS_L:INTERNAL=
+GST_LIBS_OTHER:INTERNAL=
+GST_LIBS_PATHS:INTERNAL=
+GST_MODULE_NAME:INTERNAL=gstreamer-1.0
+GST_PREFIX:INTERNAL=/usr
+GST_STATIC_CFLAGS:INTERNAL=-pthread;-I/usr/include/gstreamer-1.0;-I/usr/include/glib-2.0;-I/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GST_STATIC_CFLAGS_I:INTERNAL=
+GST_STATIC_CFLAGS_OTHER:INTERNAL=-pthread
+GST_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/gstreamer-1.0;/usr/include/glib-2.0;/usr/lib/aarch64-linux-gnu/glib-2.0/include
+GST_STATIC_LDFLAGS:INTERNAL=-lgstreamer-1.0;-lgmodule-2.0;-pthread;-ldl;-lgobject-2.0;-pthread;-lffi;-lglib-2.0;-pthread;-lpcre;-pthread
+GST_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
+GST_STATIC_LIBDIR:INTERNAL=
+GST_STATIC_LIBRARIES:INTERNAL=gstreamer-1.0;gmodule-2.0;dl;gobject-2.0;ffi;glib-2.0;pcre
+GST_STATIC_LIBRARY_DIRS:INTERNAL=
+GST_STATIC_LIBS:INTERNAL=
+GST_STATIC_LIBS_L:INTERNAL=
+GST_STATIC_LIBS_OTHER:INTERNAL=
+GST_STATIC_LIBS_PATHS:INTERNAL=
+GST_VERSION:INTERNAL=1.16.3
+GST_gstreamer-1.0_INCLUDEDIR:INTERNAL=
+GST_gstreamer-1.0_LIBDIR:INTERNAL=
+GST_gstreamer-1.0_PREFIX:INTERNAL=
+GST_gstreamer-1.0_VERSION:INTERNAL=
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+__pkg_config_arguments_GST:INTERNAL=REQUIRED;gstreamer-1.0
+__pkg_config_arguments_GSTAPP:INTERNAL=REQUIRED;gstreamer-app-1.0
+__pkg_config_checked_GST:INTERNAL=1
+__pkg_config_checked_GSTAPP:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSTAPP_glib-2.0
+pkgcfg_lib_GSTAPP_glib-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSTAPP_gobject-2.0
+pkgcfg_lib_GSTAPP_gobject-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSTAPP_gstapp-1.0
+pkgcfg_lib_GSTAPP_gstapp-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSTAPP_gstbase-1.0
+pkgcfg_lib_GSTAPP_gstbase-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSTAPP_gstreamer-1.0
+pkgcfg_lib_GSTAPP_gstreamer-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_glib-2.0
+pkgcfg_lib_GST_glib-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_gobject-2.0
+pkgcfg_lib_GST_gobject-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_gstreamer-1.0
+pkgcfg_lib_GST_gstreamer-1.0-ADVANCED:INTERNAL=1
+prefix_result:INTERNAL=/usr/lib/aarch64-linux-gnu
 

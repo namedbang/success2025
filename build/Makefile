@@ -129,6 +129,30 @@ RM_exe/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/build
 .PHONY : RM_exe/fast
 
+src/RTSP/RTSPStreamer.o: src/RTSP/RTSPStreamer.cpp.o
+.PHONY : src/RTSP/RTSPStreamer.o
+
+# target to build an object file
+src/RTSP/RTSPStreamer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/RTSP/RTSPStreamer.cpp.o
+.PHONY : src/RTSP/RTSPStreamer.cpp.o
+
+src/RTSP/RTSPStreamer.i: src/RTSP/RTSPStreamer.cpp.i
+.PHONY : src/RTSP/RTSPStreamer.i
+
+# target to preprocess a source file
+src/RTSP/RTSPStreamer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/RTSP/RTSPStreamer.cpp.i
+.PHONY : src/RTSP/RTSPStreamer.cpp.i
+
+src/RTSP/RTSPStreamer.s: src/RTSP/RTSPStreamer.cpp.s
+.PHONY : src/RTSP/RTSPStreamer.s
+
+# target to generate assembly for a file
+src/RTSP/RTSPStreamer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/RTSP/RTSPStreamer.cpp.s
+.PHONY : src/RTSP/RTSPStreamer.cpp.s
+
 src/cuda/inRange_gpu.o: src/cuda/inRange_gpu.cu.o
 .PHONY : src/cuda/inRange_gpu.o
 
@@ -402,6 +426,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... RM_exe"
+	@echo "... src/RTSP/RTSPStreamer.o"
+	@echo "... src/RTSP/RTSPStreamer.i"
+	@echo "... src/RTSP/RTSPStreamer.s"
 	@echo "... src/cuda/inRange_gpu.o"
 	@echo "... src/cuda/inRange_gpu.i"
 	@echo "... src/cuda/inRange_gpu.s"

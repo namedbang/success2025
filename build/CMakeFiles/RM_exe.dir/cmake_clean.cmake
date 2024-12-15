@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/RM_exe.dir/src/RTSP/RTSPStreamer.cpp.o"
+  "CMakeFiles/RM_exe.dir/src/RTSP/RTSPStreamer.cpp.o.d"
   "CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o"
   "CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o.d"
   "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o"

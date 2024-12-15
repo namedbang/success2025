@@ -29,6 +29,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/FindCUDA/select_compute_arch.cmake"
   "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake"
   "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/FindPackageMessage.cmake"
+  "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/FindPkgConfig.cmake"
   "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/FindThreads.cmake"
   "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake"
   "/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake"

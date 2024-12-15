@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-15 19:31:37
+ * @LastEditTime: 2024-12-16 00:11:52
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -24,6 +24,7 @@
 #include "./utils/KalmanFilter/kalman.hpp"
 #include "./hardware/can/canbus.hpp"
 #include "./hardware/can/can.hpp"
+#include "./RTSP/RTSPStreamer.hpp"
 extern "C"
 {
 #include "./hardware/uart/modbus.h"
@@ -114,6 +115,11 @@ int main(int argc, char *argv[])
     picture = new Picture(reader_p, EnemyInform_p);                      // 创建视频管道
     BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
     // chank = BsaeCamera->camera_chank();                               // debug时用
+    /*rtsp*/
+    // std::string rtsp_url = "rtsp://192.168.137.4:554/live"; // RTSP 服务器地址
+    RTSPStreamer streamer("rtsp://192.168.137.4:8554/live");
+    streamer.start_stream();           // 启动推流线程
+    streamer.start_frame_generation(); // 启动帧生成线程
     /*kalman 初始化*/
     Filter = new MYKalmanFilter(reader_p, EnemyInform_p);
     Filter->KalmanFilterInit();
@@ -157,6 +163,7 @@ int main(int argc, char *argv[])
         picture->TimeEnd();
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
+        // streamer.push_frame(picture->displayImage);
         picture->CvPutTextOnUI();
         // if (true == picture->ImgShow())
         //     break;
