@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-08 22:37:14
+ * @LastEditTime: 2024-12-15 17:01:17
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -24,7 +24,10 @@
 #include "./utils/KalmanFilter/kalman.hpp"
 #include "./hardware/can/canbus.hpp"
 #include "./hardware/can/can.hpp"
-
+extern "C"
+{
+#include "./hardware/uart/modbus.h"
+}
 #include <memory>
 #include <unistd.h>
 #include <chrono>
@@ -66,7 +69,7 @@ class TimerForKalman : public CppTimer
             auto Zw = point_world.at<double>(2, 0);
             EnemyInform_p->yaw_kalman = atan2(Xw, Zw) / M_PI * 180;
             EnemyInform_p->pitch_kalman = atan2(-Yw, sqrt(pow(Xw, 2) + pow(Zw, 2))) / M_PI * 180;
-
+            modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman), static_cast<float>(EnemyInform_p->pitch_kalman));
             /*debug-------------------------------------------------------------------------------- */
             if (reader_p->Debug_Kalman == "true")
             {
@@ -93,6 +96,7 @@ int main(int argc, char *argv[])
     /*打开串口----------------------------------------*/
     initialize_serial_port_info(&Uart_inf); // debug串口
     int uart = SerialPortOpen(Uart_inf.Uart, 115200, SERIAL_PORT_PARITY_NONE, &Uart_inf.UID0);
+    int uart2stm32 = SerialPortOpen(Uart_inf.Uart2STM32, 115200, SERIAL_PORT_PARITY_NONE, &Uart_inf.UID2STM32);
     /*打开can----------------------------------------*/
     // 设置 CAN 接口名称
     char can_interface[] = "can0";

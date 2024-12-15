@@ -249,6 +249,30 @@ src/hardware/uart/Serial_Port_Linux.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.s
 .PHONY : src/hardware/uart/Serial_Port_Linux.c.s
 
+src/hardware/uart/modbus.o: src/hardware/uart/modbus.c.o
+.PHONY : src/hardware/uart/modbus.o
+
+# target to build an object file
+src/hardware/uart/modbus.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o
+.PHONY : src/hardware/uart/modbus.c.o
+
+src/hardware/uart/modbus.i: src/hardware/uart/modbus.c.i
+.PHONY : src/hardware/uart/modbus.i
+
+# target to preprocess a source file
+src/hardware/uart/modbus.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.i
+.PHONY : src/hardware/uart/modbus.c.i
+
+src/hardware/uart/modbus.s: src/hardware/uart/modbus.c.s
+.PHONY : src/hardware/uart/modbus.s
+
+# target to generate assembly for a file
+src/hardware/uart/modbus.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.s
+.PHONY : src/hardware/uart/modbus.c.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -393,6 +417,9 @@ help:
 	@echo "... src/hardware/uart/Serial_Port_Linux.o"
 	@echo "... src/hardware/uart/Serial_Port_Linux.i"
 	@echo "... src/hardware/uart/Serial_Port_Linux.s"
+	@echo "... src/hardware/uart/modbus.o"
+	@echo "... src/hardware/uart/modbus.i"
+	@echo "... src/hardware/uart/modbus.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

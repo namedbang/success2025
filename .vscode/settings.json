@@ -73,6 +73,9 @@
         "future": "cpp",
         "serial_port.h": "c",
         "string.h": "c",
-        "*.txx": "cpp"
+        "*.txx": "cpp",
+        "modbus.h": "c",
+        "stdint.h": "c",
+        "termios.h": "c"
     }
 }

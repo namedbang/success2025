@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart/Serial_Port_Linux.c" "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o.d"
+  "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart/modbus.c" "CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/cuda/inRange_gpu.cu" "CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o" "gcc" "CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/api/camera.cpp" "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o.d"
   "/home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/can/can.cpp" "CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o" "gcc" "CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o.d"

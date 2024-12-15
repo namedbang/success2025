@@ -42,7 +42,9 @@ typedef int TSerialPortID;
 	typedef struct
 	{
 		char Uart[20];
+		char Uart2STM32[20];
 		TSerialPortID UID0;
+		TSerialPortID UID2STM32;
 	} Serial_Port_infom;
 	extern Serial_Port_infom Uart_inf;
 

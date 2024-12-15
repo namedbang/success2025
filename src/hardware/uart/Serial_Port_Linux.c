@@ -20,6 +20,9 @@ void initialize_serial_port_info(Serial_Port_infom *info)
 	strncpy(info->Uart, "/dev/ttyTHS0", sizeof(info->Uart) - 1);
 	info->Uart[sizeof(info->Uart) - 1] = '\0'; // 确保字符串以null结尾
 	info->UID0 = 0;
+	strncpy(info->Uart2STM32, "/dev/ttyTHS1", sizeof(info->Uart2STM32) - 1);
+	info->Uart2STM32[sizeof(info->Uart2STM32) - 1] = '\0'; // 确保字符串以null结尾
+	info->UID2STM32 = 1;
 }
 int SerialPortOpen(char *String_Device_File_Name, unsigned int Baud_Rate, TSerialPortParity Parity, TSerialPortID *Pointer_Serial_Port_ID)
 {
