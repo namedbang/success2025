@@ -25,9 +25,11 @@ set(PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})# 定义一个宏来表示当前工�
 message("${B}当前工程文件夹目录: ${PROJECT_DIR}${E}")
 #以上工程相关配置--------------------------------
 #查找第三方包
+find_package(CUDA REQUIRED)
 find_package(OpenCV 4 REQUIRED)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(PkgConfig REQUIRED)
+find_package(jetson-utils REQUIRED)
 pkg_check_modules(GST REQUIRED gstreamer-1.0)
 pkg_check_modules(GSTAPP REQUIRED gstreamer-app-1.0)
 #以下头文件-----------------
@@ -41,6 +43,7 @@ include_directories(${PROJECT_DIR}/src/cuda)
 include_directories(${PROJECT_DIR}/src/hardware/uart)
 include_directories(${PROJECT_DIR}/src/hardware/can)
 include_directories(${PROJECT_DIR}/src/utils)
+include_directories(${CUDA_INCLUDE_DIRS})
 #C文件路径变量----------------
 set(SOURCE_FILES_HC "")  
 # 使用 file(GLOB_RECURSE) 命令递归查找所有 .cpp 和 .h 文件  
@@ -59,6 +62,6 @@ if(OS_LIBRARY_libMVSDK)
 else()
     message(FATAL_ERROR "${R}Library of libMVSDK not found${E}")
 endif()
-
+target_link_libraries(${MY_EXECUTABLE} jetson-utils ${CUDA_LIBRARIES})
 target_link_libraries(${MY_EXECUTABLE} ${OpenCV_LIBS} ${GST_LIBRARIES} ${GSTAPP_LIBRARIES})
 target_link_libraries (${MY_EXECUTABLE} Eigen3::Eigen)

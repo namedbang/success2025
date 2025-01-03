@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-02 18:38:09
+ * @LastEditTime: 2025-01-03 23:00:35
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -20,6 +20,8 @@
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/cudafilters.hpp>
 #include <opencv2/cudaobjdetect.hpp>
+#include <jetson-utils/videoSource.h>
+#include <jetson-utils/videoOutput.h>
 
 #include <vector>
 #include <stdio.h>
@@ -42,6 +44,7 @@ std::vector<std::vector<cv::Point>> contours;
 cv::Rect boundRect;
 LowPassFilter lpf;
 std::mutex mtx_k; // 互斥量，用于同步访问共享资源
+extern videoOutput *output;
 
 bool compareClockwise(const cv::Point2f &p1, const cv::Point2f &p2, const cv::Point2f &center)
 {
@@ -72,7 +75,8 @@ void sortPointsClockwise(cv::Point2f points[4])
         points[i] = sortedPoints[i];
     }
 }
-
+cv::cuda::GpuMat G_image;
+cv::cuda::GpuMat temp_image;
 PROCESS_state process_opencv_cuda::processing()
 {
     vector<RotatedRect> rotatedRects;
@@ -83,12 +87,20 @@ PROCESS_state process_opencv_cuda::processing()
     // cv::Rect point_array[20];
     // std::vector<cv::RotatedRect> point_array;
     cv::Mat findContour;
-    cv::cuda::GpuMat G_image;
     cv::cuda::GpuMat HSV;
     cv::cuda::GpuMat inRange(cv::Size(this->Picture_p->preImage.cols, this->Picture_p->preImage.rows), CV_8UC1, cv::Scalar(255));
     cv::cuda::GpuMat filter_open;
     cv::cuda::GpuMat filter_close;
     G_image.upload(this->Picture_p->preImage);
+    if (output != NULL)
+    {
+        temp_image = G_image;
+        uchar3 *image_data = reinterpret_cast<uchar3 *>(temp_image.data);
+        output->Render(image_data, this->Picture_p->preImage.cols, this->Picture_p->preImage.rows);
+        if (!output->IsStreaming())
+            ;
+    }
+    // cv::cuda::cvtColor(G_image, HSV, cv::Color_bgr2yuv);
     cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV);
     inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange);
     // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);

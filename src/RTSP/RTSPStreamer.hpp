@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-12-15 21:04:07
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-16 00:16:29
+ * @LastEditTime: 2025-01-03 13:54:36
  * @FilePath: /success2025/src/RTSP/RTSPStreamer.hpp
  * @Description:
  *
@@ -16,6 +16,7 @@
 #include <gst/app/gstappsink.h>
 #include <gst/app/gstappsrc.h> // 确保包含此头文件
 #include <thread>
+#include <deque>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
@@ -44,7 +45,7 @@ private:
 private:
     std::string rtsp_url;
     bool done;
-    std::queue<cv::Mat> frame_queue; // 存放待推送帧的队列
+    std::deque<cv::Mat> frame_queue; // 存放待推送帧的队列
     std::mutex mtx;                  // 用于队列同步
     std::condition_variable cv;      // 用于线程间同步
     std::thread stream_thread;       // 推流线程

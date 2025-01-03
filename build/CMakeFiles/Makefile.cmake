@@ -49,6 +49,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/local/lib/cmake/opencv4/OpenCVConfig.cmake"
   "/usr/local/lib/cmake/opencv4/OpenCVModules-release.cmake"
   "/usr/local/lib/cmake/opencv4/OpenCVModules.cmake"
+  "/usr/local/share/jetson-utils/cmake/jetson-utilsConfig-noconfig.cmake"
+  "/usr/local/share/jetson-utils/cmake/jetson-utilsConfig.cmake"
   )
 
 # The corresponding makefile is:

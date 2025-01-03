@@ -269,6 +269,9 @@ RM_exe: CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/build.make
 RM_exe: /usr/lib/libMVSDK.so
+RM_exe: /usr/local/lib/libjetson-utils.so
+RM_exe: /usr/local/cuda-11.4/lib64/libcudart_static.a
+RM_exe: /usr/lib/aarch64-linux-gnu/librt.so
 RM_exe: /usr/local/lib/libopencv_gapi.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_stitching.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_alphamat.so.4.6.0
@@ -309,6 +312,8 @@ RM_exe: /usr/local/lib/libopencv_wechat_qrcode.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_xfeatures2d.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_xobjdetect.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_xphoto.so.4.6.0
+RM_exe: /usr/local/cuda/lib64/libcudart.so
+RM_exe: /usr/local/cuda/lib64/libnppicc.so
 RM_exe: /usr/local/lib/libopencv_shape.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_highgui.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_datasets.so.4.6.0

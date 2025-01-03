@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-16 00:11:52
+ * @LastEditTime: 2025-01-03 23:27:27
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -33,6 +33,8 @@ extern "C"
 #include <unistd.h>
 #include <chrono>
 #include <thread>
+#include <jetson-utils/videoSource.h>
+#include <jetson-utils/videoOutput.h>
 
 // using namespace Kalman;
 using namespace std;
@@ -45,6 +47,7 @@ Serial_Port_infom Uart_inf;
 ConfigurationReader *reader_p;
 GM6020 *motor_control;
 Picture *picture;
+videoOutput *output;
 extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 
 class TimerForKalman : public CppTimer
@@ -115,11 +118,24 @@ int main(int argc, char *argv[])
     picture = new Picture(reader_p, EnemyInform_p);                      // 创建视频管道
     BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
     // chank = BsaeCamera->camera_chank();                               // debug时用
+    // BsaeCamera->camera_software_Trigger();                   // 触发读图像
+    // BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
     /*rtsp*/
-    // std::string rtsp_url = "rtsp://192.168.137.4:554/live"; // RTSP 服务器地址
-    RTSPStreamer streamer("rtsp://192.168.137.4:8554/live");
-    streamer.start_stream();           // 启动推流线程
-    streamer.start_frame_generation(); // 启动帧生成线程
+    // RTSPStreamer streamer("rtsp://192.168.137.4:8554/live");
+    // streamer.start_stream();           // 启动推流线程
+    // streamer.start_frame_generation(); // 启动帧生成线程
+    cv::cuda::setDevice(0);
+    videoOptions options;
+    // options.width = picture->preImage.cols;
+    // options.height = picture->preImage.rows;
+    // options.frameRate = 30;
+    // options.codecType = options.CODEC_CPU;
+    // options.codec = options.CODEC_H265;
+    // options.codecType = options.CODEC_NVENC;
+    // options.flipMethod = videoOptions::FLIP_ROTATE_180;
+    // videoSource *input = videoSource::Create(argc, argv, ARG_POSITION(0));
+    std::string str = "rtsp://192.168.137.4:8554/live";
+    output = videoOutput::Create(str.c_str(), options);
     /*kalman 初始化*/
     Filter = new MYKalmanFilter(reader_p, EnemyInform_p);
     Filter->KalmanFilterInit();
@@ -163,12 +179,25 @@ int main(int argc, char *argv[])
         picture->TimeEnd();
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
+        // uchar3 *image = reinterpret_cast<uchar3 *>(picture->displayImage.data);
+        int status = 0; // see videoSource::Status (OK, TIMEOUT, EOS, ERROR)
+
+        // if (!input->Capture(&image, 1000, &status)) // 1000ms timeout (default)
+        // {
+        //     if (status == videoSource::TIMEOUT)
+        //         continue;
+
+        //     break; // EOS
+        // }
         // streamer.push_frame(picture->displayImage);
         picture->CvPutTextOnUI();
         // if (true == picture->ImgShow())
         //     break;
         // usleep(1000);
     }
+    // destroy resources
+    // SAFE_DELETE(input);
+    SAFE_DELETE(output);
     KalmanTimer.stop();
     GM6020Timer.stop();
     delete motor_control;

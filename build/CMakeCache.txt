@@ -377,6 +377,12 @@ CUDA_rt_LIBRARY:FILEPATH=/usr/lib/aarch64-linux-gnu/librt.so
 //The directory containing a CMake configuration file for Eigen3.
 Eigen3_DIR:PATH=/usr/lib/cmake/eigen3
 
+//The directory containing a CMake configuration file for JetsonUtilsConfig.
+JetsonUtilsConfig_DIR:PATH=JetsonUtilsConfig_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for JetsonUtils.
+JetsonUtils_DIR:PATH=JetsonUtils_DIR-NOTFOUND
+
 //Path to a library.
 OS_LIBRARY_libMVSDK:FILEPATH=/usr/lib/libMVSDK.so
 
@@ -394,6 +400,9 @@ RM_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 RM_SOURCE_DIR:STATIC=/home/gyxy/Desktop/workspeaseMY/success2025
+
+//The directory containing a CMake configuration file for jetson-utils.
+jetson-utils_DIR:PATH=/usr/local/share/jetson-utils/cmake
 
 //Path to a library.
 pkgcfg_lib_GSTAPP_glib-2.0:FILEPATH=/usr/lib/aarch64-linux-gnu/libglib-2.0.so
@@ -687,7 +696,7 @@ CUDA_parse_cubin:INTERNAL=/home/gyxy/.local/lib/python3.8/site-packages/cmake/da
 //Location of run_nvcc.cmake
 CUDA_run_nvcc:INTERNAL=/home/gyxy/.local/lib/python3.8/site-packages/cmake/data/share/cmake-3.21/Modules/FindCUDA/run_nvcc.cmake
 //Details about finding CUDA
-FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda-11.4][/usr/local/cuda-11.4/bin/nvcc][/usr/local/cuda-11.4/include][/usr/local/cuda-11.4/lib64/libcudart_static.a][v11.4(11.4)]
+FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda-11.4][/usr/local/cuda-11.4/bin/nvcc][/usr/local/cuda-11.4/include][/usr/local/cuda-11.4/lib64/libcudart_static.a][v11.4()]
 //Details about finding OpenCV
 FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/usr/local][v4.6.0(4)]
 //Details about finding PkgConfig
