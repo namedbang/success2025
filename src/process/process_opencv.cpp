@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-03 23:00:35
+ * @LastEditTime: 2025-01-04 18:24:45
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -84,23 +84,12 @@ PROCESS_state process_opencv_cuda::processing()
     // std::cout << "1" << std::endl;
     if (this->Picture_p->preImage.empty())
         return PROCESUNSUCCESS;
-    // cv::Rect point_array[20];
-    // std::vector<cv::RotatedRect> point_array;
     cv::Mat findContour;
     cv::cuda::GpuMat HSV;
     cv::cuda::GpuMat inRange(cv::Size(this->Picture_p->preImage.cols, this->Picture_p->preImage.rows), CV_8UC1, cv::Scalar(255));
     cv::cuda::GpuMat filter_open;
     cv::cuda::GpuMat filter_close;
     G_image.upload(this->Picture_p->preImage);
-    if (output != NULL)
-    {
-        temp_image = G_image;
-        uchar3 *image_data = reinterpret_cast<uchar3 *>(temp_image.data);
-        output->Render(image_data, this->Picture_p->preImage.cols, this->Picture_p->preImage.rows);
-        if (!output->IsStreaming())
-            ;
-    }
-    // cv::cuda::cvtColor(G_image, HSV, cv::Color_bgr2yuv);
     cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV);
     inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange);
     // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);

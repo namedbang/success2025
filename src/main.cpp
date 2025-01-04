@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-03 23:35:35
+ * @LastEditTime: 2025-01-04 19:10:02
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -35,6 +35,9 @@ extern "C"
 #include <thread>
 #include <jetson-utils/videoSource.h>
 #include <jetson-utils/videoOutput.h>
+#include <opencv2/cudaimgproc.hpp>
+#include <opencv2/cudafilters.hpp>
+#include <opencv2/cudawarping.hpp>
 
 // using namespace Kalman;
 using namespace std;
@@ -118,22 +121,12 @@ int main(int argc, char *argv[])
     picture = new Picture(reader_p, EnemyInform_p);                      // 创建视频管道
     BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
     // chank = BsaeCamera->camera_chank();                               // debug时用
-    // BsaeCamera->camera_software_Trigger();                   // 触发读图像
-    // BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
     /*rtsp*/
-    // RTSPStreamer streamer("rtsp://192.168.137.4:8554/live");
-    // streamer.start_stream();           // 启动推流线程
-    // streamer.start_frame_generation(); // 启动帧生成线程
     cv::cuda::setDevice(0);
     videoOptions options;
-    // options.width = picture->preImage.cols;
-    // options.height = picture->preImage.rows;
-    // options.frameRate = 30;
-    // options.codecType = options.CODEC_CPU;
-    // options.codec = options.CODEC_H265;
-    // options.codecType = options.CODEC_NVENC;
-    // options.flipMethod = videoOptions::FLIP_ROTATE_180;
-    // videoSource *input = videoSource::Create(argc, argv, ARG_POSITION(0));
+    options.frameRate = 60;
+    options.bitRate = 700000000;
+    // options.latency = 0;
     std::string str = "rtsp://192.168.137.4:8554/live";
     output = videoOutput::Create(str.c_str(), options);
     /*kalman 初始化*/
@@ -179,24 +172,25 @@ int main(int argc, char *argv[])
         picture->TimeEnd();
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
-        // uchar3 *image = reinterpret_cast<uchar3 *>(picture->displayImage.data);
-        int status = 0; // see videoSource::Status (OK, TIMEOUT, EOS, ERROR)
-
-        // if (!input->Capture(&image, 1000, &status)) // 1000ms timeout (default)
-        // {
-        //     if (status == videoSource::TIMEOUT)
-        //         continue;
-
-        //     break; // EOS
-        // }
-        // streamer.push_frame(picture->displayImage);
         picture->CvPutTextOnUI();
+        uint8_t *imgPtr;
+        cv::cuda::GpuMat G_displayImage;
+        G_displayImage.upload(picture->displayImage);
+        if (output != NULL)
+        {
+            cv::Size target_size(1000, 1024);
+            cv::cuda::cvtColor(G_displayImage, G_displayImage, cv::COLOR_BGR2RGB);
+            cv::cuda::resize(G_displayImage, G_displayImage, target_size);
+            uchar3 *image_data = (uchar3 *)G_displayImage.ptr<uchar3>(0);
+            output->Render(image_data, G_displayImage.rows, G_displayImage.cols);
+            if (!output->IsStreaming())
+                ;
+        }
+        G_displayImage.download(picture->displayImage);
         // if (true == picture->ImgShow())
         //     break;
         // usleep(1000);
     }
-    // destroy resources
-    // SAFE_DELETE(input);
     SAFE_DELETE(output);
     KalmanTimer.stop();
     GM6020Timer.stop();

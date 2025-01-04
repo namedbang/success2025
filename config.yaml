@@ -3,8 +3,8 @@ verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
 #------Debug-------#
-Debug_FPS: "true"
-Debug_Kalman: "false"
+Debug_FPS: "false"
+Debug_Kalman: "true"
 Debug_Can: "false"
 #################################################################
 camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1280X1240_6ms.config"
@@ -28,7 +28,8 @@ enable_show: "true"
 FPS_show: "true"
 time_show: "true"
 ##########卡尔曼预测部分############
-Debug_Kalman_AdvantceTime: 0
+Debug_Kalman_AdvantceTime: 50
+#
 Q : !!opencv-matrix
    rows: 6
    cols: 6
