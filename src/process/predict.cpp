@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:56:21
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-06 02:29:09
+ * @LastEditTime: 2025-01-05 19:01:24
  * @FilePath: /success2025/src/process/predict.cpp
  * @Description:
  *
@@ -12,6 +12,20 @@
 #include "../utils/KalmanFilter/kalman.hpp"
 #include "Eigen/Dense"
 #include "predict.hpp"
+
+double MYKalmanFilter::computeADTime(double v0, double x_target_mm)
+{
+    // 将目标距离从毫米转换为米
+    double x_target = x_target_mm / 1000.0;
+    if (AIR_RESISTANCE_COEFFICIENT == 0)
+    {                                  // 无空气阻力时使用匀速运动公式
+        return (x_target / v0) * 1000; // 返回毫秒单位
+    }
+    // 计算时间 (单位为秒)
+    double time_seconds = (MASS / (AIR_RESISTANCE_COEFFICIENT * v0)) * (exp((AIR_RESISTANCE_COEFFICIENT / MASS) * x_target) - 1);
+    // 将时间从秒转换为毫秒
+    return time_seconds * 1000;
+}
 
 void MYKalmanFilter::KalmanFilterInit()
 {
@@ -58,7 +72,7 @@ void MYKalmanFilter::KalmanFilterInit()
               << P << std::endl;
     this->kf = new KalmanFilter(dt, A, C, Q, R, P);
     // kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, this->enemy_p->Xvw, this->enemy_p->Yvw, this->enemy_p->Zvw));
-    kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, 10000, 10000, 10000));
+    kf->init(t, xyzV2Eigen(this->enemy_p->Xw, this->enemy_p->Yw, this->enemy_p->Zw, 10, 10, 10));
 
     // return kf;
 }

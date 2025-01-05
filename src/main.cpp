@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-04 20:01:59
+ * @LastEditTime: 2025-01-05 19:16:39
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -25,6 +25,8 @@
 #include "./hardware/can/canbus.hpp"
 #include "./hardware/can/can.hpp"
 #include "./RTSP/RTSPStreamer.hpp"
+#include "./hardware/gpio/GPIO.hpp"
+
 extern "C"
 {
 #include "./hardware/uart/modbus.h"
@@ -51,6 +53,7 @@ ConfigurationReader *reader_p;
 GM6020 *motor_control;
 Picture *picture;
 videoOutput *output;
+Gpio gpio_h;
 extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 
 class TimerForKalman : public CppTimer
@@ -58,11 +61,12 @@ class TimerForKalman : public CppTimer
     void timerEvent()
     {
         std::lock_guard<std::mutex> lock(mtx_k);                                                         // 加锁
+        double AdTime = Filter->computeADTime(Filter->v_projectile, EnemyInform_p->Zw);                  // 提前量的计算
         Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw); // 打包
         if (reader_p->Debug_Kalman == "true" && reader_p->Debug_Kalman_AdvantceTime != 0)
-            Filter->KalmanUpdate(y, reader_p->Debug_Kalman_AdvantceTime, 1);
+            Filter->KalmanUpdate(y, reader_p->Debug_Kalman_AdvantceTime, 1); // 应用卡尔曼滤波
         else
-            Filter->KalmanUpdate(y, 0, 1);
+            Filter->KalmanUpdate(y, AdTime, 1); // 应用卡尔曼滤波
         if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
         {
             cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<     //
@@ -82,7 +86,7 @@ class TimerForKalman : public CppTimer
             {
                 char buffer[100];
                 memset(buffer, 0, sizeof(buffer));
-                sprintf(buffer, " :%f,%f,%f,%f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, EnemyInform_p->yaw, EnemyInform_p->pitch); // y(0), y(1), y(2) 分别是 x, y, z
+                sprintf(buffer, " :%f,%f,%f,%f,%f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, EnemyInform_p->yaw, EnemyInform_p->pitch, AdTime); // y(0), y(1), y(2) 分别是 x, y, z
                 SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
             }
             /*debug-------------------------------------------------------------------------------- */
@@ -98,8 +102,19 @@ class TimerFor6020 : public CppTimer
     }
 };
 
+class GpioReader : public CppTimer
+{ //
+    void timerEvent()
+    {
+        gpio_h.SwitchVal = gpio_h.gpio_read(gpio_h.SwitchPort);
+        // std::cout << gpio_h.SwitchVal << std::endl;
+    }
+};
+
 int main(int argc, char *argv[])
 {
+    /*打开IO------------------------------------------*/
+    gpio_h.GpioInit();
     /*打开串口----------------------------------------*/
     initialize_serial_port_info(&Uart_inf); // debug串口
     int uart = SerialPortOpen(Uart_inf.Uart, 115200, SERIAL_PORT_PARITY_NONE, &Uart_inf.UID0);
@@ -120,15 +135,18 @@ int main(int argc, char *argv[])
     EnemyInform_p = new EnemyInform();                                   // 敌人信息初始化
     picture = new Picture(reader_p, EnemyInform_p);                      // 创建视频管道
     BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
-    // chank = BsaeCamera->camera_chank();                               // debug时用
-    /*rtsp*/
-    cv::cuda::setDevice(0);
-    videoOptions options;
-    options.frameRate = 60;
-    options.bitRate = 700000000;
-    // options.latency = 0;
-    std::string str = "rtsp://192.168.137.4:8554/live";
-    output = videoOutput::Create(str.c_str(), options);
+                                                                         // chank = BsaeCamera->camera_chank();                               // debug时用
+    /*rtsp*/ if (reader_p->Debug_RTSP == "true")
+    {
+        cv::cuda::setDevice(0);
+        videoOptions options;
+        options.frameRate = 60;
+        // options.bitRate = 700000000;
+        // options.latency = 0;
+        std::string str = "rtsp://192.168.137.4:8554/live";
+        output = videoOutput::Create(str.c_str(), argc, argv, 0, options);
+    }
+
     /*kalman 初始化*/
     Filter = new MYKalmanFilter(reader_p, EnemyInform_p);
     Filter->KalmanFilterInit();
@@ -156,6 +174,8 @@ int main(int argc, char *argv[])
     KalmanTimer.startms(Kalman_cycle);
     TimerFor6020 GM6020Timer;
     GM6020Timer.startms(1);
+    GpioReader GpioReadThead;
+    GpioReadThead.startms(500);
     // std::thread t1(timerEvent6020);
     // t1.detach();
     ThreadPool pool(2);
@@ -173,20 +193,22 @@ int main(int argc, char *argv[])
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
         picture->CvPutTextOnUI();
-        uint8_t *imgPtr;
-        cv::cuda::GpuMat G_displayImage;
-        G_displayImage.upload(picture->displayImage);
-        if (output != NULL)
+        /*rtsp*/ if (reader_p->Debug_RTSP == "true")
         {
-            cv::Size target_size(1000, 1024);
-            cv::cuda::cvtColor(G_displayImage, G_displayImage, cv::COLOR_BGR2RGB);
-            cv::cuda::resize(G_displayImage, G_displayImage, target_size);
-            uchar3 *image_data = (uchar3 *)G_displayImage.ptr<uchar3>(0);
-            output->Render(image_data, G_displayImage.rows, G_displayImage.cols);
-            if (!output->IsStreaming())
-                ;
+            cv::cuda::GpuMat G_displayImage;
+            G_displayImage.upload(picture->displayImage);
+            if (output != NULL)
+            {
+                cv::Size target_size(1000, 1024);
+                cv::cuda::cvtColor(G_displayImage, G_displayImage, cv::COLOR_BGR2RGB);
+                cv::cuda::resize(G_displayImage, G_displayImage, target_size);
+                uchar3 *image_data = (uchar3 *)G_displayImage.ptr<uchar3>(0);
+                output->Render(image_data, G_displayImage.rows, G_displayImage.cols);
+                if (!output->IsStreaming())
+                    ;
+            }
+            G_displayImage.download(picture->displayImage);
         }
-        G_displayImage.download(picture->displayImage);
         // if (true == picture->ImgShow())
         //     break;
         // usleep(1000);
@@ -194,6 +216,7 @@ int main(int argc, char *argv[])
     SAFE_DELETE(output);
     KalmanTimer.stop();
     GM6020Timer.stop();
+    GpioReadThead.stop();
     delete motor_control;
     delete BsaeCamera;
     delete picture;

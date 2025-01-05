@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 09:55:47
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-01 04:41:59
+ * @LastEditTime: 2025-01-05 19:57:36
  * @FilePath: /success2025/src/process/process_opencv.hpp
  * @Description:
  *
@@ -67,6 +67,8 @@ private:
     /* data */
     cv::Scalar *lowerFilter;
     cv::Scalar *higherFilter;
+    cv::Scalar *lowerFilter_blue;
+    cv::Scalar *higherFilter_blue;
 
 public:
     process_opencv_cuda(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr, EnemyInform *EnemyInform_P = nullptr, MYKalmanFilter *Filterp = nullptr)
@@ -74,8 +76,17 @@ public:
     { // hsv阈值参数读入
         this->lowerFilter = new cv::Scalar(this->Reader->HSV_lowerb_red[0], this->Reader->HSV_lowerb_red[1], this->Reader->HSV_lowerb_red[2]);
         this->higherFilter = new cv::Scalar(this->Reader->HSV_upperb_red[0], this->Reader->HSV_upperb_red[1], this->Reader->HSV_upperb_red[2]);
+
+        this->lowerFilter_blue = new cv::Scalar(this->Reader->HSV_lowerb_blue[0], this->Reader->HSV_lowerb_blue[1], this->Reader->HSV_lowerb_blue[2]);
+        this->higherFilter_blue = new cv::Scalar(this->Reader->HSV_upperb_blue[0], this->Reader->HSV_upperb_blue[1], this->Reader->HSV_upperb_blue[2]);
     }
-    ~process_opencv_cuda() {};
+    ~process_opencv_cuda()
+    {
+        delete this->lowerFilter;
+        delete this->higherFilter;
+        delete this->lowerFilter_blue;
+        delete this->higherFilter_blue;
+    };
     PROCESS_state processing() override;
 };
 

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-04 18:24:45
+ * @LastEditTime: 2025-01-05 19:58:41
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -14,6 +14,7 @@
 #include "../hardware/uart/Serial_Port.h"
 #include "./predict.hpp"
 #include "../utils/LowPassFilter.hpp"
+#include "../hardware/gpio/GPIO.hpp"
 
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
@@ -45,6 +46,7 @@ cv::Rect boundRect;
 LowPassFilter lpf;
 std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 extern videoOutput *output;
+extern Gpio gpio_h;
 
 bool compareClockwise(const cv::Point2f &p1, const cv::Point2f &p2, const cv::Point2f &center)
 {
@@ -91,7 +93,14 @@ PROCESS_state process_opencv_cuda::processing()
     cv::cuda::GpuMat filter_close;
     G_image.upload(this->Picture_p->preImage);
     cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV);
-    inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange);
+    if (gpio_h.SwitchVal == 1)
+    {
+        inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange);
+    }
+    else
+    {
+        inRange_gpu(HSV, *this->lowerFilter_blue, *this->higherFilter_blue, inRange);
+    }
     // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);
     // cv::Ptr<cv::cuda::Filter> morph_filter_close = cv::cuda::createMorphologyFilter(cv::MORPH_OPEN, inRange.type(), close_kernel);
     // morph_filter_open->apply(inRange, filter_open);
@@ -289,7 +298,6 @@ PROCESS_state process::getEuler()
         this->EnemyInform_p->tvec = this->CoordinateSystemChange(temp_tvec);
         this->EnemyInform_p->rvec.at<double>(0, 0) = 0; // 不需要x轴方向的旋转，其偏差过的，pnp问题透视问题
         // https://github.com/opencv/opencv/issues/8813 pnp算法问题，不是错误
-
         // std::cout << this->EnemyInform_p->tvec << std::endl;
         /*debug------------------------------------ */
         // char buffer[100];

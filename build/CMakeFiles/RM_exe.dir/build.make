@@ -153,10 +153,24 @@ CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.s"
 	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/can/canbus.cpp -o CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.s
 
+CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o: CMakeFiles/RM_exe.dir/flags.make
+CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o: ../src/hardware/gpio/GPIO.cpp
+CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o"
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o -MF CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o.d -o CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/gpio/GPIO.cpp
+
+CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.i"
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/gpio/GPIO.cpp > CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.i
+
+CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.s"
+	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/gpio/GPIO.cpp -o CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.s
+
 CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o: ../src/hardware/uart/Serial_Port_Linux.c
 CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o"
 	/usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o -MF CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o.d -o CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart/Serial_Port_Linux.c
 
 CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.s: cmake_force
 CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o: ../src/hardware/uart/modbus.c
 CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o"
 	/usr/bin/aarch64-linux-gnu-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o -MF CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o.d -o CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/hardware/uart/modbus.c
 
 CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.s: cmake_force
 CMakeFiles/RM_exe.dir/src/process/predict.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/process/predict.cpp.o: ../src/process/predict.cpp
 CMakeFiles/RM_exe.dir/src/process/predict.cpp.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/RM_exe.dir/src/process/predict.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/RM_exe.dir/src/process/predict.cpp.o"
 	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/process/predict.cpp.o -MF CMakeFiles/RM_exe.dir/src/process/predict.cpp.o.d -o CMakeFiles/RM_exe.dir/src/process/predict.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/process/predict.cpp
 
 CMakeFiles/RM_exe.dir/src/process/predict.cpp.i: cmake_force
@@ -198,7 +212,7 @@ CMakeFiles/RM_exe.dir/src/process/predict.cpp.s: cmake_force
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: ../src/process/process_opencv.cpp
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o"
 	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o -MF CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o.d -o CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/process/process_opencv.cpp
 
 CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/RM_exe.dir/src/process/process_opencv.cpp.s: cmake_force
 CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o: ../src/utils/KalmanFilter/kalman.cpp
 CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o"
 	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o -MF CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o.d -o CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/utils/KalmanFilter/kalman.cpp
 
 CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.i: cmake_force
@@ -226,7 +240,7 @@ CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.s: cmake_force
 CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o: CMakeFiles/RM_exe.dir/flags.make
 CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o: ../src/utils/LowPassFilter.cpp
 CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o: CMakeFiles/RM_exe.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o"
 	/usr/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o -MF CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o.d -o CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o -c /home/gyxy/Desktop/workspeaseMY/success2025/src/utils/LowPassFilter.cpp
 
 CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.i: cmake_force
@@ -245,6 +259,7 @@ RM_exe_OBJECTS = \
 "CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o" \
 "CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o" \
 "CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o" \
+"CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o" \
 "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o" \
 "CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o" \
 "CMakeFiles/RM_exe.dir/src/process/predict.cpp.o" \
@@ -261,6 +276,7 @@ RM_exe: CMakeFiles/RM_exe.dir/src/cuda/inRange_gpu.cu.o
 RM_exe: CMakeFiles/RM_exe.dir/src/hardware/api/camera.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o
+RM_exe: CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o
 RM_exe: CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o
 RM_exe: CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o
 RM_exe: CMakeFiles/RM_exe.dir/src/process/predict.cpp.o
@@ -272,6 +288,7 @@ RM_exe: /usr/lib/libMVSDK.so
 RM_exe: /usr/local/lib/libjetson-utils.so
 RM_exe: /usr/local/cuda-11.4/lib64/libcudart_static.a
 RM_exe: /usr/lib/aarch64-linux-gnu/librt.so
+RM_exe: /usr/local/lib/libJetsonGPIO.so.1.2.5
 RM_exe: /usr/local/lib/libopencv_gapi.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_stitching.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_alphamat.so.4.6.0
@@ -343,7 +360,7 @@ RM_exe: /usr/local/lib/libopencv_cudaarithm.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_core.so.4.6.0
 RM_exe: /usr/local/lib/libopencv_cudev.so.4.6.0
 RM_exe: CMakeFiles/RM_exe.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable RM_exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/gyxy/Desktop/workspeaseMY/success2025/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable RM_exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RM_exe.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

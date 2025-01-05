@@ -249,6 +249,30 @@ src/hardware/can/canbus.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.s
 .PHONY : src/hardware/can/canbus.cpp.s
 
+src/hardware/gpio/GPIO.o: src/hardware/gpio/GPIO.cpp.o
+.PHONY : src/hardware/gpio/GPIO.o
+
+# target to build an object file
+src/hardware/gpio/GPIO.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o
+.PHONY : src/hardware/gpio/GPIO.cpp.o
+
+src/hardware/gpio/GPIO.i: src/hardware/gpio/GPIO.cpp.i
+.PHONY : src/hardware/gpio/GPIO.i
+
+# target to preprocess a source file
+src/hardware/gpio/GPIO.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.i
+.PHONY : src/hardware/gpio/GPIO.cpp.i
+
+src/hardware/gpio/GPIO.s: src/hardware/gpio/GPIO.cpp.s
+.PHONY : src/hardware/gpio/GPIO.s
+
+# target to generate assembly for a file
+src/hardware/gpio/GPIO.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.s
+.PHONY : src/hardware/gpio/GPIO.cpp.s
+
 src/hardware/uart/Serial_Port_Linux.o: src/hardware/uart/Serial_Port_Linux.c.o
 .PHONY : src/hardware/uart/Serial_Port_Linux.o
 
@@ -441,6 +465,9 @@ help:
 	@echo "... src/hardware/can/canbus.o"
 	@echo "... src/hardware/can/canbus.i"
 	@echo "... src/hardware/can/canbus.s"
+	@echo "... src/hardware/gpio/GPIO.o"
+	@echo "... src/hardware/gpio/GPIO.i"
+	@echo "... src/hardware/gpio/GPIO.s"
 	@echo "... src/hardware/uart/Serial_Port_Linux.o"
 	@echo "... src/hardware/uart/Serial_Port_Linux.i"
 	@echo "... src/hardware/uart/Serial_Port_Linux.s"

@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RM_exe.dir/src/hardware/can/can.cpp.o.d"
   "CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o"
   "CMakeFiles/RM_exe.dir/src/hardware/can/canbus.cpp.o.d"
+  "CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o"
+  "CMakeFiles/RM_exe.dir/src/hardware/gpio/GPIO.cpp.o.d"
   "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o"
   "CMakeFiles/RM_exe.dir/src/hardware/uart/Serial_Port_Linux.c.o.d"
   "CMakeFiles/RM_exe.dir/src/hardware/uart/modbus.c.o"

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:54:16
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-06 02:29:28
+ * @LastEditTime: 2025-01-05 19:02:10
  * @FilePath: /success2025/src/process/predict.hpp
  * @Description:
  *
@@ -25,6 +25,8 @@ using namespace chrono;
 using namespace Kalman;
 
 constexpr uint16_t Kalman_cycle = 10;
+#define AIR_RESISTANCE_COEFFICIENT 0.1 // 空气阻力系数 k (kg/m)
+#define MASS 5.0                       // 物体质量 m (kg)
 
 // 三维位置结构体
 struct Position
@@ -59,6 +61,7 @@ private:
     Eigen::VectorXd y;
 
 public:
+    double v_projectile = 17; // mm/ms
     Kalman::KalmanFilter *kf;
     MYKalmanFilter(ConfigurationReader *reader, EnemyInform *enemy) : reader_p(reader),
                                                                       enemy_p(enemy), y(3) {
@@ -68,6 +71,7 @@ public:
     {
         delete this->kf;
     }
+    double computeADTime(double v0, double x_target_mm);
     void KalmanFilterInit();
     void KalmanUpdate(Eigen::VectorXd &y, uint64_t adtime, uint8_t reset = 1);
     Eigen::VectorXd xyzV2Eigen(double x, double y, double z, double vx, double vy, double vz);

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-05 14:46:32
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-06 01:48:34
+ * @LastEditTime: 2025-01-05 19:14:36
  * @FilePath: /success2025/src/app/ConfigurationReader.hpp
  * @Description:
  *
@@ -32,9 +32,12 @@ public:
     std::string Debug_FPS;
     std::string Debug_Kalman;
     std::string Debug_Can;
+    std::string Debug_RTSP;
     int Debug_Kalman_AdvantceTime;
     std::vector<int> HSV_lowerb_red;
     std::vector<int> HSV_upperb_red;
+    std::vector<int> HSV_lowerb_blue;
+    std::vector<int> HSV_upperb_blue;
     cv::Mat_<double> camera_matrix, distort_coefficient;
     cv::Mat_<double> R;
     cv::Mat_<double> Q;
@@ -70,7 +73,9 @@ public:
         fs_read["Q"] >> this->Q;
         fs_read["P"] >> this->P;
         fs_read["TVEC"] >> this->TVEC;
-        fs_read["Debug_Kalman_AdvantceTime"] >> this->Debug_Kalman_AdvantceTime;
+        fs_read["HSV_lowerb_blue"] >> this->HSV_lowerb_blue;
+        fs_read["HSV_upperb_blue"] >> this->HSV_upperb_blue;
+        fs_read["Debug_RTSP"] >> this->Debug_RTSP;
         std::cout << GREEN << "verison :" << this->verison << "\n"
                   << "ros_enable :" << this->ros_enable << "\n"
                   << "enable_show :" << this->enable_show << "\n"
