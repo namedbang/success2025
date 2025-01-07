@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-05 19:58:41
+ * @LastEditTime: 2025-01-06 18:24:59
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -32,6 +32,7 @@
 #include <chrono>
 #include <thread>
 #include <list>
+#include "../can/can.hpp"
 
 using namespace std;
 using namespace cv;
@@ -47,6 +48,7 @@ LowPassFilter lpf;
 std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 extern videoOutput *output;
 extern Gpio gpio_h;
+extern imu_angle_t imu_angle;
 
 bool compareClockwise(const cv::Point2f &p1, const cv::Point2f &p2, const cv::Point2f &center)
 {
@@ -189,18 +191,8 @@ PROCESS_state process_opencv_cuda::processing()
     // // }
     if (rotatedRects.size() >= 2)
     {
-        // // 判断其x轴的大小
-        // if (point_array[this->EnemyInform_p->point_near[0]].y < point_array[this->EnemyInform_p->point_near[1]].x)
-        // {
-        //     int temp = this->EnemyInform_p->point_near[0];
-        //     this->EnemyInform_p->point_near[0] = this->EnemyInform_p->point_near[1];
-        //     this->EnemyInform_p->point_near[1] = temp;
-        // } // 如果...就交换两矩形位置
-
         try
         {
-            // cv::Rect rectangle_1 = point_array[this->EnemyInform_p->point_near[0]];
-            // cv::Rect rectangle_2 = point_array[this->EnemyInform_p->point_near[1]];
             cv::RotatedRect rectangle_1 = rotatedRects[0];
             cv::RotatedRect rectangle_2 = rotatedRects[1];
             if (rectangle_1.size.width <= 0 || rectangle_1.size.height <= 0 ||
@@ -208,11 +200,6 @@ PROCESS_state process_opencv_cuda::processing()
             {
                 throw std::runtime_error("Invalid rectangle dimensions");
             }
-            // cv::Point point1 = cv::Point(rectangle_1.x + rectangle_1.width / 2, rectangle_1.y);
-            // cv::Point point2 = cv::Point(rectangle_1.x + rectangle_1.width / 2, rectangle_1.y + rectangle_1.height);
-            // cv::Point point3 = cv::Point(rectangle_2.x + rectangle_2.width / 2, rectangle_2.y);
-            // cv::Point point4 = cv::Point(rectangle_2.x + rectangle_2.width / 2, rectangle_2.y + rectangle_2.height);
-            // cv::Point p[4] = {point1, point2, point4, point3};//坑死我了，坑我一下午
             cv::Point2f points1[4];
             rectangle_1.points(points1); // 获取rectangle_1的四个角点
             cv::Point2f points2[4];
@@ -223,7 +210,6 @@ PROCESS_state process_opencv_cuda::processing()
             cv::Point point2 = cv::Point((points2[0].x + points2[1].x) / 2, (points2[0].y + points2[1].y) / 2);
             cv::Point point3 = cv::Point((points1[2].x + points1[3].x) / 2, (points1[2].y + points1[3].y) / 2);
             cv::Point point4 = cv::Point((points2[2].x + points2[3].x) / 2, (points2[2].y + points2[3].y) / 2);
-            // cv::Point p[4] = {point3, point1, point2, point4};
             cv::Point p[4] = {point1, point2, point4, point3}; // 坑死我了，坑我一下午
             for (u_char i = 0; i < 4; i++)
             {
@@ -232,24 +218,14 @@ PROCESS_state process_opencv_cuda::processing()
             cv::Point Center1 = cv::Point((p[0].x + p[2].x) / 2, (p[0].y + p[2].y) / 2);
             cv::Point Center2 = cv::Point((p[1].x + p[3].x) / 2, (p[1].y + p[3].y) / 2);
             this->EnemyInform_p->CenterPoint = cv::Point((Center1.x + Center2.x) / 2, (Center1.y + Center2.y) / 2);
-            // std::cout << p[0] << p[1] << p[2] << p[3] << std::endl;
-            // for (int i = 0; i < 4; i++) // 画四个点
-            // {
-            //     cv::line(this->Picture_p->preImage, p[i % 4], p[(i + 1) % 4], cv::Scalar(255, 255, 255), 5);
-            //     cv::putText(this->Picture_p->preImage, std::to_string(i), p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
-            // }
-            // cv::circle(this->Picture_p->preImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
         }
         catch (const char *msg)
         {
             // std::cout << msg << std::endl;
             // continue;
         }
-        // if (this->EnemyInform_p->p.empty() == false)
-        // {
         this->getEuler();
         this->EnemyInform_p->enemy_exist = 1; // 敌人存在
-        // }
     }
     else
     {
@@ -267,23 +243,12 @@ PROCESS_state process::getEuler()
         cv::Point3d(HALF_LENGTH_LENGHT, HALF_LENGTH_WIDTH, 0),   // 2
         cv::Point3d(-HALF_LENGTH_LENGHT, HALF_LENGTH_WIDTH, 0),  // 3
     };
-    // /*下面这个是错的只为旋转角服务*/
-    // std::vector<cv::Point3d> obj_fR = std::vector<cv::Point3d>{
-    //     // 顺时针
-    //     cv::Point3d(-HALF_LENGTH_LENGHT, HALF_LENGTH_WIDTH, 0),  // 0
-    //     cv::Point3d(HALF_LENGTH_LENGHT, HALF_LENGTH_WIDTH, 0),   // 1
-    //     cv::Point3d(HALF_LENGTH_LENGHT, -HALF_LENGTH_WIDTH, 0),  // 2
-    //     cv::Point3d(-HALF_LENGTH_LENGHT, -HALF_LENGTH_WIDTH, 0), // 3////这行是错的**********
-    // };
-    // cv::Mat Trvec;
-    // cv::Mat Ttvec;
     cv::Mat temp_tvec;
     /*这里必须要说一下，不知道为什么只有上面的错的（*****这个位置）才能得出不跳变的旋转向量*/
     /*有大神帮忙解释以下哇，不然我需要做两次pnp，我真的，卡一下午了*/
     // if (true == cv::solvePnP(obj, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, Trvec, temp_tvec, false, cv::SOLVEPNP_IPPE_SQUARE))
     if (true == cv::solvePnP(obj, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, this->EnemyInform_p->rvec, temp_tvec, false, cv::SOLVEPNP_IPPE))
     {
-        // cv::solvePnP(obj_fR, this->EnemyInform_p->p, this->Reader->camera_matrix, this->Reader->distort_coefficient, this->EnemyInform_p->rvec, Ttvec, false, cv::SOLVEPNP_IPPE_SQUARE);
         // 平移向量比较重要，旋转向量没那么重要了以下是pnp后的平移向量[x,y,z]
         /*
             -y
@@ -296,9 +261,10 @@ PROCESS_state process::getEuler()
         // 朝坐标轴发射方向看去，顺时针正为逆时针为负
         /*相机相对坐标*/ /*转换为相对于世界坐标系的坐标*/
         this->EnemyInform_p->tvec = this->CoordinateSystemChange(temp_tvec);
-        this->EnemyInform_p->rvec.at<double>(0, 0) = 0; // 不需要x轴方向的旋转，其偏差过的，pnp问题透视问题
+        this->EnemyInform_p->rvec.at<double>(0, 0) = imu_angle.Pitch_imu / 180.0 * M_PI; // 不需要x轴方向的旋转，其偏差过的，pnp问题透视问题
+        this->EnemyInform_p->rvec.at<double>(0, 1) = imu_angle.yaw_imu / 180.0 * M_PI;
+        this->EnemyInform_p->rvec.at<double>(0, 2) = imu_angle.roll_imu / 180.0 * M_PI;
         // https://github.com/opencv/opencv/issues/8813 pnp算法问题，不是错误
-        // std::cout << this->EnemyInform_p->tvec << std::endl;
         /*debug------------------------------------ */
         // char buffer[100];
         // memset(buffer, 0, sizeof(buffer));

@@ -76,6 +76,9 @@
         "*.txx": "cpp",
         "modbus.h": "c",
         "stdint.h": "c",
-        "termios.h": "c"
+        "termios.h": "c",
+        "codecvt": "cpp",
+        "__nullptr": "cpp",
+        "locale": "cpp"
     }
 }

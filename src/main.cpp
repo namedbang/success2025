@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-05 19:16:39
+ * @LastEditTime: 2025-01-07 19:04:49
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -35,6 +35,7 @@ extern "C"
 #include <unistd.h>
 #include <chrono>
 #include <thread>
+#include <atomic>
 #include <jetson-utils/videoSource.h>
 #include <jetson-utils/videoOutput.h>
 #include <opencv2/cudaimgproc.hpp>
@@ -54,33 +55,45 @@ GM6020 *motor_control;
 Picture *picture;
 videoOutput *output;
 Gpio gpio_h;
+cv::Mat point_Kalman_image;
+std::mutex point_Kalman_image_mtx; // 互斥锁
+cv::Point KalmanPoint;
 extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
+extern imu_angle_t imu_angle;
 
 class TimerForKalman : public CppTimer
 { //
     void timerEvent()
     {
-        std::lock_guard<std::mutex> lock(mtx_k);                                                         // 加锁
-        double AdTime = Filter->computeADTime(Filter->v_projectile, EnemyInform_p->Zw);                  // 提前量的计算
-        Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw); // 打包
-        if (reader_p->Debug_Kalman == "true" && reader_p->Debug_Kalman_AdvantceTime != 0)
-            Filter->KalmanUpdate(y, reader_p->Debug_Kalman_AdvantceTime, 1); // 应用卡尔曼滤波
-        else
-            Filter->KalmanUpdate(y, AdTime, 1); // 应用卡尔曼滤波
+        std::lock_guard<std::mutex> lock(mtx_k); // 加锁
+
         if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
         {
+            double AdTime = Filter->computeADTime(Filter->v_projectile, EnemyInform_p->Zw);                  // 提前量的计算
+            Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw); // 打包
+            if (reader_p->Debug_Kalman == "true" && reader_p->Debug_Kalman_AdvantceTime != 0)
+                Filter->KalmanUpdate(y, reader_p->Debug_Kalman_AdvantceTime, 1); // 应用卡尔曼滤波
+            else
+                Filter->KalmanUpdate(y, AdTime, 1);               // 应用卡尔曼滤波
             cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<     //
                                         Filter->kf->state()(0),   //
                                     Filter->kf->state()(1),       //
                                     Filter->kf->state()(2), 1.0); //
-                                                                  // 应用齐次变换矩阵将点从世界坐标系转换到相机坐标系
+            // 应用齐次变换矩阵将点从世界坐标系转换到相机坐标系
+            std::vector<cv::Point3f> objectPoints = {cv::Point3f(Filter->kf->state()(0), Filter->kf->state()(1), Filter->kf->state()(2))};
+            {
+                std::lock_guard<std::mutex> lock(point_Kalman_image_mtx); // 加锁保护对 point_image 的访问
+                std::vector<cv::Point2f> imagePoints;
+                // cv::projectPoints(point_c, EnemyInform_p->rvec, EnemyInform_p->tvec, reader_p->camera_matrix, reader_p->distort_coefficient.t(), imagePoints);
+                cv::projectPoints(objectPoints, EnemyInform_p->rvec, EnemyInform_p->tvec, reader_p->camera_matrix, reader_p->distort_coefficient.t(), imagePoints);
+                KalmanPoint = cv::Point(imagePoints[0].x, imagePoints[0].y);
+            }
             cv::Mat point_world = EnemyInform_p->T * point_camera;
-            auto Xw = point_world.at<double>(0, 0);
-            auto Yw = point_world.at<double>(1, 0);
-            auto Zw = point_world.at<double>(2, 0);
-            EnemyInform_p->yaw_kalman = atan2(Xw, Zw) / M_PI * 180;
-            EnemyInform_p->pitch_kalman = atan2(-Yw, sqrt(pow(Xw, 2) + pow(Zw, 2))) / M_PI * 180;
-            modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman), static_cast<float>(EnemyInform_p->pitch_kalman));
+            auto Xc = point_world.at<double>(0, 0);
+            auto Yc = point_world.at<double>(1, 0);
+            auto Zc = point_world.at<double>(2, 0);
+            EnemyInform_p->yaw_kalman = atan2(Xc, Zc) / M_PI * 180;
+            EnemyInform_p->pitch_kalman = atan2(-Yc, sqrt(pow(Xc, 2) + pow(Zc, 2))) / M_PI * 180;
             /*debug-------------------------------------------------------------------------------- */
             if (reader_p->Debug_Kalman == "true")
             {
@@ -91,6 +104,7 @@ class TimerForKalman : public CppTimer
             }
             /*debug-------------------------------------------------------------------------------- */
         }
+        modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman), static_cast<float>(EnemyInform_p->pitch_kalman));
     }
 };
 
@@ -173,15 +187,20 @@ int main(int argc, char *argv[])
     TimerForKalman KalmanTimer;
     KalmanTimer.startms(Kalman_cycle);
     TimerFor6020 GM6020Timer;
-    GM6020Timer.startms(1);
+    GM6020Timer.startns(1);
     GpioReader GpioReadThead;
     GpioReadThead.startms(500);
     // std::thread t1(timerEvent6020);
     // t1.detach();
-    ThreadPool pool(2);
+    ThreadPool pool(3);
 
     while (true)
     { /// 8ms
+        // char buffer[50];
+        // memset(buffer, 0, sizeof(buffer));
+        // sprintf(buffer, ":%f\n", imu_angle.yaw_imu.load());
+        // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
+
         auto result = pool.enqueue(
             [process_p]
             { return process_p->processing(); }); // 加入任务列表

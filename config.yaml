@@ -8,7 +8,7 @@ Debug_Kalman: "true"
 Debug_Can: "false"
 Debug_RTSP: "true"
 #################################################################
-camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1280X1240_6ms.config"
+camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/1280X640_6ms.config"
 ##***********1280 X 800分辨率下的内参矩阵和畸变矩阵***************##
 imageSize: [ 1280, 800 ]
 cameraMatrix: !!opencv-matrix
@@ -24,8 +24,8 @@ distCoeffs: !!opencv-matrix
        -0.00283467731726698, 0., 4.11438823246245]
 HSV_lowerb_red: [0,151,136]
 HSV_upperb_red: [10,255,255]
-HSV_lowerb_blue: [0,0,0]
-HSV_upperb_blue: [10,255,255]
+HSV_lowerb_blue: [50,10,100]
+HSV_upperb_blue: [136,255,255]
 ########show on picture############
 enable_show: "true"
 FPS_show: "true"

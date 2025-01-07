@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-10 19:53:35
+ * @LastEditTime: 2025-01-07 17:47:41
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -16,7 +16,11 @@
 #include "../ConfigurationReader.hpp"
 #include "../../process/enemy_Inform.hpp"
 #include "../../hardware/uart/Serial_Port.h"
+#include <atomic>
 
+extern cv::Mat point_Kalman_image;
+extern std::mutex point_Kalman_image_mtx; // 互斥锁v
+extern cv::Point KalmanPoint;
 class Picture
 {
 private:
@@ -98,6 +102,10 @@ public:
                     cv::putText(this->displayImage, std::to_string(i), this->EnemyInform_p->p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
                 }
                 cv::circle(this->displayImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
+                {
+                    std::lock_guard<std::mutex> lock(point_Kalman_image_mtx); // 加锁保护对 point_image 的访问
+                    cv::circle(this->displayImage, KalmanPoint, 5, cv::Scalar(0, 255, 255));
+                }
             }
         }
     }
