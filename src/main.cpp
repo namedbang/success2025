@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-07 19:04:49
+ * @LastEditTime: 2025-01-07 19:07:06
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -84,7 +84,6 @@ class TimerForKalman : public CppTimer
             {
                 std::lock_guard<std::mutex> lock(point_Kalman_image_mtx); // 加锁保护对 point_image 的访问
                 std::vector<cv::Point2f> imagePoints;
-                // cv::projectPoints(point_c, EnemyInform_p->rvec, EnemyInform_p->tvec, reader_p->camera_matrix, reader_p->distort_coefficient.t(), imagePoints);
                 cv::projectPoints(objectPoints, EnemyInform_p->rvec, EnemyInform_p->tvec, reader_p->camera_matrix, reader_p->distort_coefficient.t(), imagePoints);
                 KalmanPoint = cv::Point(imagePoints[0].x, imagePoints[0].y);
             }
