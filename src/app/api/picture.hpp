@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-07 17:47:41
+ * @LastEditTime: 2025-01-09 17:22:44
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -16,11 +16,16 @@
 #include "../ConfigurationReader.hpp"
 #include "../../process/enemy_Inform.hpp"
 #include "../../hardware/uart/Serial_Port.h"
+#include "../../yolo/yolov8.hpp"
 #include <atomic>
 
-extern cv::Mat point_Kalman_image;
-extern std::mutex point_Kalman_image_mtx; // 互斥锁v
 extern cv::Point KalmanPoint;
+extern cv::Mat point_Kalman_image;
+extern std::mutex point_Kalman_image_mtx; // 互斥锁
+extern std::mutex displayImg_mtx;
+extern std::vector<Object> objs;
+extern YOLOv8 *yolov8;
+
 class Picture
 {
 private:
@@ -106,6 +111,10 @@ public:
                     std::lock_guard<std::mutex> lock(point_Kalman_image_mtx); // 加锁保护对 point_image 的访问
                     cv::circle(this->displayImage, KalmanPoint, 5, cv::Scalar(0, 255, 255));
                 }
+            }
+            {
+                std::lock_guard<std::mutex> lock(displayImg_mtx);
+                yolov8->DrawObjects(this->displayImage, objs);
             }
         }
     }

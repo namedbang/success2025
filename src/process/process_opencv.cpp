@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-06 18:24:59
+ * @LastEditTime: 2025-01-09 21:59:10
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -15,6 +15,7 @@
 #include "./predict.hpp"
 #include "../utils/LowPassFilter.hpp"
 #include "../hardware/gpio/GPIO.hpp"
+#include "../yolo/yolov8.hpp"
 
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
@@ -81,33 +82,63 @@ void sortPointsClockwise(cv::Point2f points[4])
 }
 cv::cuda::GpuMat G_image;
 cv::cuda::GpuMat temp_image;
+std::vector<Object> objs;
+extern YOLOv8 *yolov8;
+extern std::mutex displayImg_mtx;
+
 PROCESS_state process_opencv_cuda::processing()
 {
     vector<RotatedRect> rotatedRects;
     vector<RotatedRect> point_array;
-    // std::cout << "1" << std::endl;
     if (this->Picture_p->preImage.empty())
         return PROCESUNSUCCESS;
+    /*interface yolo*/
+    // TODO config
+    cv::Size im_size(640, 640);
+    const int num_labels = 9;
+    const int topk = 9;
+    const float score_thres = 0.25f;
+    const float iou_thres = 0.65f;
+    float f;
+    std::chrono::steady_clock::time_point Tbegin, Tend;
+    yolov8->CopyFromMat(this->Picture_p->preImage, im_size);
+    Tbegin = std::chrono::steady_clock::now();
+    yolov8->Infer();
+    { // 加锁改变objs
+        std::lock_guard<std::mutex> lock(displayImg_mtx);
+        yolov8->PostProcess(objs, score_thres, iou_thres, topk, num_labels);
+    }
+    Tend = std::chrono::steady_clock::now();
+    f = std::chrono::duration_cast<std::chrono::milliseconds>(Tend - Tbegin).count();
+    cout << f << endl;
+
+    /********************************************************** */
+    cv::cuda::Stream stream; // 创建CUDA流
+
     cv::Mat findContour;
     cv::cuda::GpuMat HSV;
     cv::cuda::GpuMat inRange(cv::Size(this->Picture_p->preImage.cols, this->Picture_p->preImage.rows), CV_8UC1, cv::Scalar(255));
     cv::cuda::GpuMat filter_open;
     cv::cuda::GpuMat filter_close;
-    G_image.upload(this->Picture_p->preImage);
-    cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV);
-    if (gpio_h.SwitchVal == 1)
-    {
-        inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange);
-    }
-    else
-    {
-        inRange_gpu(HSV, *this->lowerFilter_blue, *this->higherFilter_blue, inRange);
-    }
+    G_image.upload(this->Picture_p->preImage, stream);
+    cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV, 0, stream);
     // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);
     // cv::Ptr<cv::cuda::Filter> morph_filter_close = cv::cuda::createMorphologyFilter(cv::MORPH_OPEN, inRange.type(), close_kernel);
     // morph_filter_open->apply(inRange, filter_open);
     // morph_filter_close->apply(filter_open, filter_close);
-    inRange.download(this->Picture_p->endImage);
+    // return PROCESS_state();
+    if (gpio_h.SwitchVal == 1)
+    {
+        inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange, objs, stream);
+    }
+    else
+    {
+        inRange_gpu(HSV, *this->lowerFilter_blue, *this->higherFilter_blue, inRange, objs, stream);
+    }
+    stream.waitForCompletion(); // 等待CUDA流完成所有操作
+    inRange.download(this->Picture_p->endImage, stream);
+
+    /***************************************************************************** */
     cv::findContours(this->Picture_p->endImage, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     // int index = 0;
     for (size_t i = 0; i < contours.size(); i++)
@@ -123,72 +154,6 @@ PROCESS_state process_opencv_cuda::processing()
          {
         if(a.center.x != b.center.x) return a.center.x < b.center.x;
         return a.center.y > b.center.y; });
-
-    // for (const RotatedRect &box : rotatedRects)
-    // {
-    //     if (box.size.height > 10 && box.size.width > 10)
-    //     {
-    //         point_array.push_back(box);
-    //         index++;
-    //     }
-    //     cout << box.size.height << " " << box.size.width << endl;
-    // }
-    // cout << point_array.size() << endl;
-    // // 根据面积差异找到最接近的两个矩形
-    // int min = 100000;
-    // // int point_near[2] = {-1, -1}; // 初始化索引为无效值
-    // for (int i = 0; i < index - 1; i++)
-    // {
-    //     for (int j = i + 1; j < index; j++)
-    //     {
-    //         double approxArea1 = point_array[i].size.width * point_array[i].size.height;
-    //         double approxArea2 = point_array[j].size.width * point_array[j].size.height;
-    //         double areaDiff = std::abs(approxArea1 - approxArea2);
-    //         // double areaDiff = abs(point_array[i].area() - point_array[j].area());
-    //         if (areaDiff < min)
-    //         {
-    //             min = areaDiff;
-    //             this->EnemyInform_p->point_near[0] = i;
-    //             this->EnemyInform_p->point_near[1] = j;
-    //         }
-    //     }
-    // }
-
-    // // for (int i = 0; i < contours.size(); i++)
-    // // {
-    // //     // box = minAreaRect(Mat(contours[i]));
-    // //     // box.points(boxPts.data());
-    // //     boundRect = cv::boundingRect(cv::Mat(contours[i]));
-    // //     // rectangle(frame, boundRect.tl(), boundRect.br(), (0, 255, 0), 2,8 ,0);
-    // //     try
-    // //     {
-    // //         // if (double(boundRect.height / boundRect.width) >= 1.3 && boundRect.height > 36 && boundRect.width > 1)
-    // //         if (boundRect.height > 36 && boundRect.width > 1)
-    // //         {
-    // //             point_array[index] = boundRect;
-    // //             index++; // 记录有多少矩形
-    // //         }
-    // //     }
-    // //     catch (const char *msg)
-    // //     {
-    // //         std::cout << msg << std::endl;
-    // //         // continue;
-    // //     }
-    // // }
-    // // int min = 100000; // 根据识别到的矩形对矩形进行排序
-    // // for (int i = 0; i < index - 1; i++)
-    // // {
-    // //     for (int j = i + 1; j < index; j++)
-    // //     {
-    // //         int value = abs(point_array[i].area() - point_array[j].area()); // 根据其面积相差的值进行匹配
-    // //         if (value < min)
-    // //         {
-    // //             min = value;
-    // //             this->EnemyInform_p->point_near[0] = i; // 将矩形index保存//
-    // //             this->EnemyInform_p->point_near[1] = j; //               //
-    // //         }
-    // //     }
-    // // }
     if (rotatedRects.size() >= 2)
     {
         try
@@ -366,12 +331,9 @@ bool process::checkAspectRatio(double ratio)
 bool process::isValidLightBarBlob(const RotatedRect &rrect)
 {
     if (
-        // checkAspectRatio(rrect.size.aspectRatio())
-        //&&
-        checkArea(rrect.size.area())
-        // &&
-        // checkAngle(rrect)
-    )
+        checkAspectRatio(rrect.size.aspectRatio()) &&
+        checkArea(rrect.size.area()) &&
+        checkAngle(rrect))
     {
         return true;
     }

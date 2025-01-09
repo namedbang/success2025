@@ -79,6 +79,12 @@
         "termios.h": "c",
         "codecvt": "cpp",
         "__nullptr": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "__functional_base": "cpp",
+        "csignal": "cpp",
+        "unordered_set": "cpp",
+        "valarray": "cpp",
+        "ios": "cpp",
+        "__bit_reference": "cpp"
     }
 }

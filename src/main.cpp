@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-07 19:07:06
+ * @LastEditTime: 2025-01-09 20:08:48
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -26,7 +26,7 @@
 #include "./hardware/can/can.hpp"
 #include "./RTSP/RTSPStreamer.hpp"
 #include "./hardware/gpio/GPIO.hpp"
-
+#include "./yolo/yolov8.hpp"
 extern "C"
 {
 #include "./hardware/uart/modbus.h"
@@ -54,12 +54,16 @@ ConfigurationReader *reader_p;
 GM6020 *motor_control;
 Picture *picture;
 videoOutput *output;
+YOLOv8 *yolov8;
 Gpio gpio_h;
 cv::Mat point_Kalman_image;
-std::mutex point_Kalman_image_mtx; // 互斥锁
 cv::Point KalmanPoint;
-extern std::mutex mtx_k; // 互斥量，用于同步访问共享资源
 extern imu_angle_t imu_angle;
+
+// 互斥锁
+std::mutex point_Kalman_image_mtx;
+std::mutex displayImg_mtx;
+extern std::mutex mtx_k;
 
 class TimerForKalman : public CppTimer
 { //
@@ -145,10 +149,11 @@ int main(int argc, char *argv[])
     reader_p = new ConfigurationReader("/home/gyxy/Desktop/workspeaseMY/success2025/config.yaml");
     reader_p->ConfigurationRead();
     /*相机视频初始化 */
-    EnemyInform_p = new EnemyInform();                                   // 敌人信息初始化
-    picture = new Picture(reader_p, EnemyInform_p);                      // 创建视频管道
-    BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
-                                                                         // chank = BsaeCamera->camera_chank();                               // debug时用
+    EnemyInform_p = new EnemyInform();              // 敌人信息初始化
+    picture = new Picture(reader_p, EnemyInform_p); // 创建视频管道
+    // BsaeCamera *BsaeCamera = new MindCamera_software(picture, reader_p); // 将Mind相机接入管道
+    BsaeCamera *BsaeCamera = new MindCamera(picture, reader_p); // 将Mind相机接入管道
+                                                                // chank = BsaeCamera->camera_chank();                               // debug时用
     /*rtsp*/ if (reader_p->Debug_RTSP == "true")
     {
         cv::cuda::setDevice(0);
@@ -164,8 +169,19 @@ int main(int argc, char *argv[])
     Filter = new MYKalmanFilter(reader_p, EnemyInform_p);
     Filter->KalmanFilterInit();
 
-    process *process_p = new process_opencv_cuda(picture, reader_p, EnemyInform_p, Filter); // 将视频数据传入处理类
+    /*yolo初始化*/
+    const string engine_file_path = "../mode/yolo.trt";
+    cout << "Set CUDA...\n"
+         << endl;
+    cudaSetDevice(0);
+    cout << "Loading TensorRT model " << engine_file_path << endl;
+    cout << "\nWait a second...." << std::flush;
+    yolov8 = new YOLOv8(engine_file_path);
+    cout << "\rLoading the pipe... " << string(10, ' ') << "\n\r";
+    cout << endl;
+    yolov8->MakePipe(false);
 
+    process *process_p = new process_opencv_cuda(picture, reader_p, EnemyInform_p, Filter); // 将视频数据传入处理类
     if (true == BsaeCamera->MYCameraInit())
     {
         std::cout << "相机初始化成功" << std::endl;
@@ -189,28 +205,40 @@ int main(int argc, char *argv[])
     GM6020Timer.startns(1);
     GpioReader GpioReadThead;
     GpioReadThead.startms(500);
-    // std::thread t1(timerEvent6020);
-    // t1.detach();
-    ThreadPool pool(3);
-
+    ThreadPool pool(10);
+    std::future<PROCESS_state> result; // 8ms ↓
+    std::thread result_thread([&result]()
+                              {
+        while (true) {
+            if (result.valid()) {
+                try {
+                    // 阻塞直到异步任务完成并获取结果
+                    PROCESS_state state = result.get();
+                    break; // 任务完成后退出循环
+                } catch (const std::exception& e) {
+                    std::cerr << "获取结果时发生异常: " << e.what() << std::endl;
+                }
+            }
+        } });
     while (true)
-    { /// 8ms
+    {
         // char buffer[50];
         // memset(buffer, 0, sizeof(buffer));
         // sprintf(buffer, ":%f\n", imu_angle.yaw_imu.load());
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
 
-        auto result = pool.enqueue(
+        result = pool.enqueue(
             [process_p]
             { return process_p->processing(); }); // 加入任务列表
         picture->TimeBegin();
-        BsaeCamera->camera_software_Trigger();                   // 触发读图像
-        auto re = result.get();                                  // 处理图像数据
+        // BsaeCamera->camera_software_Trigger(); // 触发读图像
+        // auto re = result.get();                                  // 处理图像数据//同步处理（测速时使用）
         BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
         picture->TimeEnd();
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
         picture->CvPutTextOnUI();
+
         /*rtsp*/ if (reader_p->Debug_RTSP == "true")
         {
             cv::cuda::GpuMat G_displayImage;
@@ -235,6 +263,7 @@ int main(int argc, char *argv[])
     KalmanTimer.stop();
     GM6020Timer.stop();
     GpioReadThead.stop();
+    delete yolov8;
     delete motor_control;
     delete BsaeCamera;
     delete picture;

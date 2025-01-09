@@ -12,6 +12,21 @@ if(CMAKE_CUDA_COMPILER)
 else()
     message(FATAL_ERROR "Not found CUDA!")
 endif()
+# CUDA
+find_package(CUDA REQUIRED)
+# TensorRT
+set(TensorRT_INCLUDE_DIRS /usr/include /usr/include/aarch-linux-gnu)
+set(TensorRT_LIBRARIES /usr/lib/aarch64-linux-gnu)
+set(TensorRT_DIR /usr/src/tensorrt/)
+message(STATUS "TensorRT Libs: \n\n${TensorRT_LIBRARIES}\n")
+message(STATUS "TensorRT Headers: \n${TensorRT_INCLUDE_DIRS}\n")
+list(APPEND INCLUDE_DIRS
+        ${TensorRT_INCLUDE_DIRS}
+        include
+        )
+list(APPEND ALL_LIBS
+        ${TensorRT_LIBRARIES}
+        )
 #-------coloer
 string(ASCII 27 Esc)
 set(R "${Esc}[0;31m")   #红色
@@ -45,6 +60,7 @@ include_directories(${PROJECT_DIR}/src/hardware/uart)
 include_directories(${PROJECT_DIR}/src/hardware/can)
 include_directories(${PROJECT_DIR}/src/utils)
 include_directories(${CUDA_INCLUDE_DIRS})
+include_directories(${PROJECT_NAME} PUBLIC ${ALL_LIBS})
 #C文件路径变量----------------
 set(SOURCE_FILES_HC "")  
 # 使用 file(GLOB_RECURSE) 命令递归查找所有 .cpp 和 .h 文件  
@@ -66,3 +82,4 @@ endif()
 target_link_libraries(${MY_EXECUTABLE} jetson-utils ${CUDA_LIBRARIES} JetsonGPIO::JetsonGPIO)
 target_link_libraries(${MY_EXECUTABLE} ${OpenCV_LIBS} ${GST_LIBRARIES} ${GSTAPP_LIBRARIES})
 target_link_libraries (${MY_EXECUTABLE} Eigen3::Eigen)
+target_link_libraries (${MY_EXECUTABLE} nvinfer nvinfer_plugin cudart)

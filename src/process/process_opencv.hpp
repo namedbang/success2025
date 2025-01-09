@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 09:55:47
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-05 19:57:36
+ * @LastEditTime: 2025-01-08 17:20:30
  * @FilePath: /success2025/src/process/process_opencv.hpp
  * @Description:
  *
@@ -18,11 +18,11 @@
 #include "Eigen/Dense"
 
 /*小装甲板*/
-// #define HALF_LENGTH_LENGHT 134 / 2
-// #define HALF_LENGTH_WIDTH 60 / 2
+#define HALF_LENGTH_LENGHT 134 / 2
+#define HALF_LENGTH_WIDTH 60 / 2
 /*大装甲板*/
-#define HALF_LENGTH_LENGHT 221 / 2
-#define HALF_LENGTH_WIDTH 56 / 2
+// #define HALF_LENGTH_LENGHT 221 / 2
+// #define HALF_LENGTH_WIDTH 56 / 2
 
 constexpr int max_size = 2;
 constexpr float Pi = 3.1415;

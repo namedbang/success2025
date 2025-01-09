@@ -25,6 +25,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RM_exe.dir/src/utils/KalmanFilter/kalman.cpp.o.d"
   "CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o"
   "CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.o.d"
+  "CMakeFiles/RM_exe.dir/src/yolo/yolov8.cpp.o"
+  "CMakeFiles/RM_exe.dir/src/yolo/yolov8.cpp.o.d"
   "RM_exe"
   "RM_exe.pdb"
 )

@@ -441,6 +441,30 @@ src/utils/LowPassFilter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/utils/LowPassFilter.cpp.s
 .PHONY : src/utils/LowPassFilter.cpp.s
 
+src/yolo/yolov8.o: src/yolo/yolov8.cpp.o
+.PHONY : src/yolo/yolov8.o
+
+# target to build an object file
+src/yolo/yolov8.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/yolo/yolov8.cpp.o
+.PHONY : src/yolo/yolov8.cpp.o
+
+src/yolo/yolov8.i: src/yolo/yolov8.cpp.i
+.PHONY : src/yolo/yolov8.i
+
+# target to preprocess a source file
+src/yolo/yolov8.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/yolo/yolov8.cpp.i
+.PHONY : src/yolo/yolov8.cpp.i
+
+src/yolo/yolov8.s: src/yolo/yolov8.cpp.s
+.PHONY : src/yolo/yolov8.s
+
+# target to generate assembly for a file
+src/yolo/yolov8.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RM_exe.dir/build.make CMakeFiles/RM_exe.dir/src/yolo/yolov8.cpp.s
+.PHONY : src/yolo/yolov8.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -489,6 +513,9 @@ help:
 	@echo "... src/utils/LowPassFilter.o"
 	@echo "... src/utils/LowPassFilter.i"
 	@echo "... src/utils/LowPassFilter.s"
+	@echo "... src/yolo/yolov8.o"
+	@echo "... src/yolo/yolov8.i"
+	@echo "... src/yolo/yolov8.s"
 .PHONY : help
 
 
