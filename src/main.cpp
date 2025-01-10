@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-09 20:08:48
+ * @LastEditTime: 2025-01-10 21:38:31
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -70,7 +70,6 @@ class TimerForKalman : public CppTimer
     void timerEvent()
     {
         std::lock_guard<std::mutex> lock(mtx_k); // 加锁
-
         if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
         {
             double AdTime = Filter->computeADTime(Filter->v_projectile, EnemyInform_p->Zw);                  // 提前量的计算
@@ -107,7 +106,7 @@ class TimerForKalman : public CppTimer
             }
             /*debug-------------------------------------------------------------------------------- */
         }
-        modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman), static_cast<float>(EnemyInform_p->pitch_kalman));
+        modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman), static_cast<float>(EnemyInform_p->pitch_kalman), EnemyInform_p->enemy_exist);
     }
 };
 
@@ -170,7 +169,7 @@ int main(int argc, char *argv[])
     Filter->KalmanFilterInit();
 
     /*yolo初始化*/
-    const string engine_file_path = "../mode/yolo.trt";
+    const string engine_file_path = "../mode/yoloInt8.trt";
     cout << "Set CUDA...\n"
          << endl;
     cudaSetDevice(0);
@@ -205,35 +204,36 @@ int main(int argc, char *argv[])
     GM6020Timer.startns(1);
     GpioReader GpioReadThead;
     GpioReadThead.startms(500);
-    ThreadPool pool(10);
+    ThreadPool pool(1);
     std::future<PROCESS_state> result; // 8ms ↓
-    std::thread result_thread([&result]()
-                              {
-        while (true) {
-            if (result.valid()) {
-                try {
-                    // 阻塞直到异步任务完成并获取结果
-                    PROCESS_state state = result.get();
-                    break; // 任务完成后退出循环
-                } catch (const std::exception& e) {
-                    std::cerr << "获取结果时发生异常: " << e.what() << std::endl;
-                }
-            }
-        } });
+    // std::thread result_thread([&result]()
+    //                           {
+    //     while (true) {
+    //         if (result.valid()) {
+    //             try {
+    //                 // 阻塞直到异步任务完成并获取结果
+    //                 PROCESS_state state = result.get();
+    //                 // break; // 任务完成后退出循环
+    //             } catch (const std::exception& e) {
+    //                 std::cerr << "获取结果时发生异常: " << e.what() << std::endl;
+    //             }
+    //         }
+    //     } });
     while (true)
     {
         // char buffer[50];
         // memset(buffer, 0, sizeof(buffer));
         // sprintf(buffer, ":%f\n", imu_angle.yaw_imu.load());
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
-
+        picture->TimeBegin();
         result = pool.enqueue(
             [process_p]
             { return process_p->processing(); }); // 加入任务列表
-        picture->TimeBegin();
+
         // BsaeCamera->camera_software_Trigger(); // 触发读图像
-        // auto re = result.get();                                  // 处理图像数据//同步处理（测速时使用）
         BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
+
+        auto re = result.get(); // 处理图像数据//同步处理（测速时使用）
         picture->TimeEnd();
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();

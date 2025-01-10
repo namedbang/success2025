@@ -85,6 +85,8 @@
         "unordered_set": "cpp",
         "valarray": "cpp",
         "ios": "cpp",
-        "__bit_reference": "cpp"
+        "__bit_reference": "cpp",
+        "enemy_inform.hpp": "c",
+        "__mutex_base": "cpp"
     }
 }

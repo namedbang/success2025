@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-12-15 14:50:49
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-15 17:32:25
+ * @LastEditTime: 2025-01-10 16:45:04
  * @FilePath: /success2025/src/hardware/uart/modbus.c
  * @Description:
  *
@@ -14,7 +14,6 @@
 #include <stdio.h>
 
 extern Serial_Port_infom Uart_inf;
-
 /*
  * @name CRC_Check
  * @brief CRC校验
@@ -42,7 +41,7 @@ uint16_t CRC_Check(uint8_t *CRC_Ptr, uint8_t LEN)
     return CRC_Value;
 }
 
-int modbus_write_registers_noreply(unsigned char slave_id, unsigned char function_code, float yaw, float pitch)
+int modbus_write_registers_noreply(unsigned char slave_id, unsigned char function_code, float yaw, float pitch, bool enemy)
 {
     switch (function_code)
     {
@@ -53,7 +52,7 @@ int modbus_write_registers_noreply(unsigned char slave_id, unsigned char functio
         YunTai YunTai2stm32;
         YunTai2stm32.stm32_id = MB_STM32_YUNTAI_ID;
         YunTai2stm32.function_code = MB_WRITE_AUTOMATIC_AIMING_REGISTERS;
-        YunTai2stm32.enemy = 0;
+        YunTai2stm32.enemy = enemy;
         YunTai2stm32.yaw_h = data_byte_yaw[1];
         YunTai2stm32.yaw_l = data_byte_yaw[0];
         YunTai2stm32.pitch_h = data_byte_pitch[1];

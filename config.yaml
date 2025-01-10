@@ -3,12 +3,12 @@ verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
 #------Debug-------#
-Debug_FPS: "false"
+Debug_FPS: "true"
 Debug_Kalman: "false"
 Debug_Can: "false"
-Debug_RTSP: "true"
+Debug_RTSP: "false"
 #################################################################
-camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/conti.config"
+camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/net.config"
 ##***********1280 X 800分辨率下的内参矩阵和畸变矩阵***************##
 imageSize: [ 1280, 800 ]
 cameraMatrix: !!opencv-matrix
@@ -22,12 +22,12 @@ distCoeffs: !!opencv-matrix
    dt: d
    data: [ -0.0720881737322847, -0.00731279929186677,
        -0.00283467731726698, 0., 4.11438823246245]
-HSV_lowerb_red: [0,151,136]
-HSV_upperb_red: [10,255,255]
-HSV_lowerb_blue: [50,10,100]
-HSV_upperb_blue: [136,255,255]
+HSV_lowerb_red: [0,0,204]
+HSV_upperb_red: [100,255,255]
+HSV_lowerb_blue: [0,0,204]
+HSV_upperb_blue: [169,255,255]
 ########show on picture############
-enable_show: "true"
+enable_show: "false"
 FPS_show: "true"
 time_show: "true"
 ##########卡尔曼预测部分############

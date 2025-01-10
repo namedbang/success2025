@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-09 21:59:10
+ * @LastEditTime: 2025-01-10 21:37:54
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -46,10 +46,13 @@ std::vector<cv::Vec4i> hierarchy;
 std::vector<std::vector<cv::Point>> contours;
 cv::Rect boundRect;
 LowPassFilter lpf;
-std::mutex mtx_k; // 互斥量，用于同步访问共享资源
+
 extern videoOutput *output;
 extern Gpio gpio_h;
 extern imu_angle_t imu_angle;
+
+std::mutex mtx_k;           // 互斥量，用于同步访问共享资源
+std::mutex EnemyInform_mtx; // 定义互斥锁
 
 bool compareClockwise(const cv::Point2f &p1, const cv::Point2f &p2, const cv::Point2f &center)
 {
@@ -85,14 +88,31 @@ cv::cuda::GpuMat temp_image;
 std::vector<Object> objs;
 extern YOLOv8 *yolov8;
 extern std::mutex displayImg_mtx;
+extern std::mutex perImg_mtx;
 
 PROCESS_state process_opencv_cuda::processing()
 {
     vector<RotatedRect> rotatedRects;
     vector<RotatedRect> point_array;
-    if (this->Picture_p->preImage.empty())
+
+    cv::Mat PerImg;
+    {
+        std::lock_guard<std::mutex> lock(perImg_mtx);
+        PerImg = this->Picture_p->preImage.clone();
+    }
+
+    if (PerImg.empty())
         return PROCESUNSUCCESS;
     /*interface yolo*/
+    /********************************************************** */
+    cv::cuda::Stream stream; // 创建CUDA流
+
+    cv::cuda::GpuMat HSV;
+    cv::cuda::GpuMat inRange(cv::Size(PerImg.cols, PerImg.rows), CV_8UC1, cv::Scalar(255));
+    // cv::cuda::GpuMat filter_open;
+    // cv::cuda::GpuMat filter_close;
+    G_image.upload(PerImg, stream);
+    cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV, 0, stream);
     // TODO config
     cv::Size im_size(640, 640);
     const int num_labels = 9;
@@ -101,27 +121,17 @@ PROCESS_state process_opencv_cuda::processing()
     const float iou_thres = 0.65f;
     float f;
     std::chrono::steady_clock::time_point Tbegin, Tend;
-    yolov8->CopyFromMat(this->Picture_p->preImage, im_size);
-    Tbegin = std::chrono::steady_clock::now();
-    yolov8->Infer();
-    { // 加锁改变objs
+    auto start = std::chrono::high_resolution_clock::now(); ///////////////////////////
+    yolov8->CopyFromMat(PerImg, im_size);                   // 8ms
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "代码运行时间: " << duration.count() << " 毫秒\n";
+    yolov8->Infer(); // 8ms
+    {                // 加锁改变objs
         std::lock_guard<std::mutex> lock(displayImg_mtx);
-        yolov8->PostProcess(objs, score_thres, iou_thres, topk, num_labels);
+        yolov8->PostProcess(objs, score_thres, iou_thres, topk, num_labels); // 1ms
     }
-    Tend = std::chrono::steady_clock::now();
-    f = std::chrono::duration_cast<std::chrono::milliseconds>(Tend - Tbegin).count();
-    cout << f << endl;
 
-    /********************************************************** */
-    cv::cuda::Stream stream; // 创建CUDA流
-
-    cv::Mat findContour;
-    cv::cuda::GpuMat HSV;
-    cv::cuda::GpuMat inRange(cv::Size(this->Picture_p->preImage.cols, this->Picture_p->preImage.rows), CV_8UC1, cv::Scalar(255));
-    cv::cuda::GpuMat filter_open;
-    cv::cuda::GpuMat filter_close;
-    G_image.upload(this->Picture_p->preImage, stream);
-    cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV, 0, stream);
     // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);
     // cv::Ptr<cv::cuda::Filter> morph_filter_close = cv::cuda::createMorphologyFilter(cv::MORPH_OPEN, inRange.type(), close_kernel);
     // morph_filter_open->apply(inRange, filter_open);
@@ -135,12 +145,11 @@ PROCESS_state process_opencv_cuda::processing()
     {
         inRange_gpu(HSV, *this->lowerFilter_blue, *this->higherFilter_blue, inRange, objs, stream);
     }
-    stream.waitForCompletion(); // 等待CUDA流完成所有操作
     inRange.download(this->Picture_p->endImage, stream);
+    stream.waitForCompletion(); // 等待CUDA流完成所有操作
 
     /***************************************************************************** */
     cv::findContours(this->Picture_p->endImage, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-    // int index = 0;
     for (size_t i = 0; i < contours.size(); i++)
     {
         RotatedRect box = minAreaRect(Mat(contours[i]));
@@ -175,7 +184,8 @@ PROCESS_state process_opencv_cuda::processing()
             cv::Point point2 = cv::Point((points2[0].x + points2[1].x) / 2, (points2[0].y + points2[1].y) / 2);
             cv::Point point3 = cv::Point((points1[2].x + points1[3].x) / 2, (points1[2].y + points1[3].y) / 2);
             cv::Point point4 = cv::Point((points2[2].x + points2[3].x) / 2, (points2[2].y + points2[3].y) / 2);
-            cv::Point p[4] = {point1, point2, point4, point3}; // 坑死我了，坑我一下午
+            cv::Point p[4] = {point1, point2, point4, point3};             // 坑死我了，坑我一下午
+            std::lock_guard<std::mutex> EnemyInform_lock(EnemyInform_mtx); // 操作this->EnemyInform_p加锁
             for (u_char i = 0; i < 4; i++)
             {
                 this->EnemyInform_p->p[i] = p[i];
@@ -189,8 +199,24 @@ PROCESS_state process_opencv_cuda::processing()
             // std::cout << msg << std::endl;
             // continue;
         }
-        this->getEuler();
-        this->EnemyInform_p->enemy_exist = 1; // 敌人存在
+        bool is_point_in_rect = false;
+        std::lock_guard<std::mutex> EnemyInform_lock(EnemyInform_mtx); // 操作this->EnemyInform_p加锁
+        for (uint16_t i = 0; i < objs.size(); i++)
+        {
+            if (objs[i].rect.contains(this->EnemyInform_p->CenterPoint) && (objs[i].label == 7 || objs[i].label == 8 || objs[i].label == 6))
+            {
+                is_point_in_rect = true;
+            }
+        }
+        if (is_point_in_rect)
+        {
+            this->getEuler();
+            this->EnemyInform_p->enemy_exist = 1; // 敌人存在
+        }
+        else
+        {
+            this->EnemyInform_p->enemy_exist = 0; // 敌人不存在
+        }
     }
     else
     {

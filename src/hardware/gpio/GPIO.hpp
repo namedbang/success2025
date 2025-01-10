@@ -12,7 +12,7 @@ public:
     // const unsigned short SwitchPort = 443;
     std::string SwitchPort = "GPIO07";
 
-    std::atomic<int> SwitchVal; // gpio7为 gpiochip1 PR.00 443
+    std::atomic<int> SwitchVal; // gpio7为 gpiochip1 PR.00 443 //1 红 | 0 蓝
     Gpio(/* args */) {};
     ~Gpio() {};
     void GpioInit();

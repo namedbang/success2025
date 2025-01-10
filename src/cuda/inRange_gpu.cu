@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-10 16:21:41
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-09 22:35:29
+ * @LastEditTime: 2025-01-10 16:30:27
  * @FilePath: /success2025/src/cuda/inRange_gpu.cu
  * @Description:
  *
@@ -14,6 +14,10 @@
 #include <opencv2/core/cuda.hpp>
 #include <cuda_runtime.h>
 #include <cuda.h>
+#include "../yolo/yolov8.hpp"
+#include "../hardware/gpio/GPIO.hpp"
+
+extern Gpio gpio_h;
 struct RectF
 {
     float x;
@@ -100,16 +104,18 @@ void inRange_gpu(cv::cuda::GpuMat &src, cv::Scalar &lowerb, cv::Scalar &upperb,
 
     cudaStream_t cuStream = reinterpret_cast<cudaStream_t>(stream.cudaPtr());
     // 异步执行内核，传入CUDA流
-    // inRange_kernel<<<gridSize, blockSize, 0, cuStream>>>(src, dst, lowerb[0], upperb[0], lowerb[1], upperb[1],
-    //                                                      lowerb[2], upperb[2]);
-    inRange_kernel<<<gridSize, blockSize>>>(src, dst, lowerb[0], upperb[0], lowerb[1], upperb[1],
-                                            lowerb[2], upperb[2]);
+    inRange_kernel<<<gridSize, blockSize, 0, cuStream>>>(src, dst, lowerb[0], upperb[0], lowerb[1], upperb[1],
+                                                         lowerb[2], upperb[2]);
+    // inRange_kernel<<<gridSize, blockSize>>>(src, dst, lowerb[0], upperb[0], lowerb[1], upperb[1],
+    //                                         lowerb[2], upperb[2]);
     std::vector<cv::Rect_<float>> rect_armor;
     for (uint16_t i = 0; i < rect.size(); i++)
     {
-        if (rect[i].label == 7 || rect[i].label == 8 || rect[i].label == 6) // TODO换
+        if (gpio_h.SwitchVal == 1 && class_name[rect[i].label] == "armor_red") // 打红色装甲板
             rect_armor.push_back(rect[i].rect);
-    }
+        if (gpio_h.SwitchVal == 0 && class_name[rect[i].label] == "armor_blue") // 打红色装甲板
+            rect_armor.push_back(rect[i].rect);
+    } // TODO注释
     std::vector<RectF> rects;
     rects.reserve(rect_armor.size());
     for (const auto &rect : rect_armor)
@@ -118,10 +124,10 @@ void inRange_gpu(cv::cuda::GpuMat &src, cv::Scalar &lowerb, cv::Scalar &upperb,
     }
     RectF *d_rects;
     size_t size = rects.size() * sizeof(RectF);
-    cudaMalloc(&d_rects, size);
-    cudaMemcpy(d_rects, rects.data(), size, cudaMemcpyHostToDevice);
+    cudaMallocAsync(&d_rects, size, cuStream);
+    cudaMemcpyAsync(d_rects, rects.data(), size, cudaMemcpyHostToDevice, cuStream);
     int temp = rect_armor.size();
-    maskImageOutsideRect<<<gridSize, blockSize>>>(dst, numCols, numRows, d_rects, temp);
+    maskImageOutsideRect<<<gridSize, blockSize, 0, cuStream>>>(dst, numCols, numRows, d_rects, temp);
 }
 
 //---------------------inRange_gpu.cu-----end-----------

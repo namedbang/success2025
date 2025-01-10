@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-12-15 14:50:49
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-15 16:02:30
+ * @LastEditTime: 2025-01-10 16:42:07
  * @FilePath: /success2025/src/hardware/uart/modbus.h
  * @Description:
  *
@@ -16,8 +16,7 @@
 #include <stdbool.h>
 
 unsigned short CRC16(unsigned char *puchMsg, unsigned short usDataLen);
-int modbus_write_registers_noreply(unsigned char slave_id, unsigned char function_code, float yaw, float pitch);
-
+int modbus_write_registers_noreply(unsigned char slave_id, unsigned char function_code, float yaw, float pitch, bool enemy);
 #define MB_STM32_YUNTAI_ID 0x01
 #define MB_WRITE_AUTOMATIC_AIMING_REGISTERS 0x16
 #define MB_WRITE_ 0x10

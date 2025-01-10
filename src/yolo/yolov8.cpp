@@ -142,9 +142,68 @@ void YOLOv8::MakePipe(bool warmup)
         }
     }
 }
+#include <opencv2/opencv.hpp>
+#include <opencv2/cudaarithm.hpp>
+#include <opencv2/cudawarping.hpp>
+#include <opencv2/cudabgsegm.hpp>
+#include <opencv2/cudawarping.hpp>
+
 //----------------------------------------------------------------------------------------
 void YOLOv8::Letterbox(const cv::Mat &image, cv::Mat &out, cv::Size &size)
 {
+    // const float inp_h = size.height;
+    // const float inp_w = size.width;
+    // float height = image.rows;
+    // float width = image.cols;
+    // auto start = std::chrono::high_resolution_clock::now(); ///////////////////////////
+    // // 计算缩放比例
+    // float r = std::min(inp_h / height, inp_w / width);
+    // int padw = std::round(width * r);
+    // int padh = std::round(height * r);
+
+    // // 使用GPU存储和处理图像
+    // cv::cuda::GpuMat d_image, tmp;
+    // d_image.upload(image);
+
+    // // 如果图像需要缩放，进行缩放
+    // if ((int)width != padw || (int)height != padh)
+    // {
+    //     cv::cuda::resize(d_image, tmp, cv::Size(padw, padh));
+    // }
+    // else
+    // {
+    //     tmp = d_image.clone();
+    // }
+
+    // // 计算边界扩展所需的宽高差
+    // float dw = inp_w - padw;
+    // float dh = inp_h - padh;
+
+    // dw /= 2.0f;
+    // dh /= 2.0f;
+    // int top = int(std::round(dh - 0.1f));
+    // int bottom = int(std::round(dh + 0.1f));
+    // int left = int(std::round(dw - 0.1f));
+    // int right = int(std::round(dw + 0.1f));
+
+    // // 在GPU上进行边界扩展
+    // cv::cuda::GpuMat tmp_with_border;
+    // cv::cuda::copyMakeBorder(tmp, tmp_with_border, top, bottom, left, right, cv::BORDER_CONSTANT, cv::Scalar(114, 114, 114));
+    // cv::Mat tmp_with_border_cpu(tmp_with_border.size(), tmp_with_border.type());
+    // tmp_with_border.download(tmp_with_border_cpu);
+
+    // cv::dnn::blobFromImage(tmp_with_border_cpu, out, 1 / 255.f, cv::Size(), cv::Scalar(0, 0, 0), true, false, CV_32F);
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    // std::cout << "代码运行时间: " << duration.count() << " 毫秒\n";
+
+    // // 设置参数
+    // this->pparam.ratio = 1 / r;
+    // this->pparam.dw = dw;
+    // this->pparam.dh = dh;
+    // this->pparam.height = height;
+    // this->pparam.width = width;
+
     const float inp_h = size.height;
     const float inp_w = size.width;
     float height = image.rows;
@@ -182,7 +241,6 @@ void YOLOv8::Letterbox(const cv::Mat &image, cv::Mat &out, cv::Size &size)
     this->pparam.dh = dh;
     this->pparam.height = height;
     this->pparam.width = width;
-    ;
 }
 //----------------------------------------------------------------------------------------
 void YOLOv8::CopyFromMat(const cv::Mat &image)

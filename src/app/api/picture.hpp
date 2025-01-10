@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-02 12:50:18
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-09 17:22:44
+ * @LastEditTime: 2025-01-10 17:18:08
  * @FilePath: /success2025/src/app/api/picture.hpp
  * @Description:
  *
@@ -25,7 +25,7 @@ extern std::mutex point_Kalman_image_mtx; // 互斥锁
 extern std::mutex displayImg_mtx;
 extern std::vector<Object> objs;
 extern YOLOv8 *yolov8;
-
+extern std::mutex EnemyInform_mtx;
 class Picture
 {
 private:
@@ -87,29 +87,23 @@ public:
             if (Config->time_show == "true")
                 oss << "Time :  " << static_cast<int>(spendTime) << " ms" << "   ";
             result = oss.str();
-            /*debug------------------------------------------------------------------------------------------------ */
-            if (this->Config->Debug_FPS == "true")
-            {
-                char buffer[20];
-                memset(buffer, 0, sizeof(buffer));
-                sprintf(buffer, " :%f,%d\n", spendTime, static_cast<int>(1000 / spendTime)); // y(0), y(1), y(2) 分别是 x, y, z
-                SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
-            }
-            /*debug------------------------------------------------------------------------------------------------ */
             // 定义文本的位置（图像左下角的坐标）
             cv::Point orgTime(50, 100);
             cv::putText(displayImage, result, orgTime, fontFace, fontScale, color, thickness, cv::LINE_AA);
             if (this->EnemyInform_p->enemy_exist == 1)
             {
-                for (int i = 0; i < 4; i++) // 画四个点
                 {
-                    cv::line(this->displayImage, this->EnemyInform_p->p[i % 4], this->EnemyInform_p->p[(i + 1) % 4], cv::Scalar(255, 255, 255), 5);
-                    cv::putText(this->displayImage, std::to_string(i), this->EnemyInform_p->p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
-                }
-                cv::circle(this->displayImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
-                {
-                    std::lock_guard<std::mutex> lock(point_Kalman_image_mtx); // 加锁保护对 point_image 的访问
-                    cv::circle(this->displayImage, KalmanPoint, 5, cv::Scalar(0, 255, 255));
+                    std::lock_guard<std::mutex> EnemyInform_lock(EnemyInform_mtx); // 操作this->EnemyInform_p加锁
+                    for (int i = 0; i < 4; i++)                                    // 画四个点
+                    {
+                        cv::line(this->displayImage, this->EnemyInform_p->p[i % 4], this->EnemyInform_p->p[(i + 1) % 4], cv::Scalar(255, 255, 255), 5);
+                        cv::putText(this->displayImage, std::to_string(i), this->EnemyInform_p->p[i], cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
+                    }
+                    cv::circle(this->displayImage, this->EnemyInform_p->CenterPoint, 10, cv::Scalar(255, 255, 255)); // 画中心点坐标
+                    {
+                        std::lock_guard<std::mutex> lock(point_Kalman_image_mtx); // 加锁保护对 point_image 的访问
+                        cv::circle(this->displayImage, KalmanPoint, 5, cv::Scalar(0, 255, 255));
+                    }
                 }
             }
             {
@@ -117,6 +111,15 @@ public:
                 yolov8->DrawObjects(this->displayImage, objs);
             }
         }
+        /*debug------------------------------------------------------------------------------------------------ */
+        if (this->Config->Debug_FPS == "true")
+        {
+            char buffer[50];
+            memset(buffer, 0, sizeof(buffer));
+            sprintf(buffer, " :%f,%d\n", spendTime, static_cast<int>(1000 / spendTime)); // y(0), y(1), y(2) 分别是 x, y, z
+            SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
+        }
+        /*debug------------------------------------------------------------------------------------------------ */
     }
     Picture(ConfigurationReader *Config_p, EnemyInform *EnemyInform_p)
         : Config(Config_p), EnemyInform_p(EnemyInform_p) {}
