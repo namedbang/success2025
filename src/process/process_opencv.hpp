@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 09:55:47
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-08 17:20:30
+ * @LastEditTime: 2025-01-13 16:05:20
  * @FilePath: /success2025/src/process/process_opencv.hpp
  * @Description:
  *
@@ -16,6 +16,7 @@
 #include "./enemy_Inform.hpp"
 #include "./predict.hpp"
 #include "Eigen/Dense"
+#include "../yolo/yolov8.hpp"
 
 /*小装甲板*/
 #define HALF_LENGTH_LENGHT 134 / 2
@@ -54,11 +55,11 @@ public:
     bool checkAspectRatio(double ratio);
     bool isValidLightBarBlob(const RotatedRect &rrect);
     void MeasureSpeed(const double x, const double y, const double z);
-
+    void isValidLightRects(vector<RotatedRect> &rotatedRects);
     process(Picture *Picturep = nullptr, ConfigurationReader *Readerp = nullptr, EnemyInform *EnemyInform_P = nullptr, MYKalmanFilter *Filterp = nullptr)
         : Picture_p(Picturep), Reader(Readerp), EnemyInform_p(EnemyInform_P), Filter_p(Filterp) {}
     virtual ~process() {}
-    virtual PROCESS_state processing() = 0;
+    virtual PROCESS_state processing(YOLOv8 *yolov8, cv::Mat preImage) = 0;
 };
 
 class process_opencv_cuda : public process
@@ -87,7 +88,7 @@ public:
         delete this->lowerFilter_blue;
         delete this->higherFilter_blue;
     };
-    PROCESS_state processing() override;
+    PROCESS_state processing(YOLOv8 *yolov8, cv::Mat preImage) override;
 };
 
 #endif /* __PROCESS_OPENCV_CUDA_H__ */

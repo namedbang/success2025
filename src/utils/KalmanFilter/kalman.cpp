@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:51:14
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-12-06 01:19:00
+ * @LastEditTime: 2025-01-15 17:10:53
  * @FilePath: /success2025/src/utils/KalmanFilter/kalman.cpp
  * @Description:
  *
@@ -105,8 +105,9 @@ void KalmanFilter::update(const Eigen::VectorXd &y, uint64_t adpower, uint8_t re
   x_hat_out = TM * x_hat;
   t += dt;
   // 如果需要复位
-  if (!reset)
+  if (reset == 0)
   {
+    x_hat_out = y;
     P.setIdentity(); // 协方差矩阵重置为单位矩阵
     x_hat.setZero(); // 状态重置为零
   }

@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-24 13:56:59
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-10 21:38:31
+ * @LastEditTime: 2025-01-15 19:14:29
  * @FilePath: /success2025/src/main.cpp
  * @Description:
  *
@@ -54,11 +54,13 @@ ConfigurationReader *reader_p;
 GM6020 *motor_control;
 Picture *picture;
 videoOutput *output;
-YOLOv8 *yolov8;
+// YOLOv8 *yolov8;
 Gpio gpio_h;
 cv::Mat point_Kalman_image;
 cv::Point KalmanPoint;
 extern imu_angle_t imu_angle;
+double yaw_last;
+uint8_t reset;
 
 // 互斥锁
 std::mutex point_Kalman_image_mtx;
@@ -72,12 +74,24 @@ class TimerForKalman : public CppTimer
         std::lock_guard<std::mutex> lock(mtx_k); // 加锁
         if (EnemyInform_p->T.empty() == 0 && EnemyInform_p->enemy_exist == 1)
         {
+            bool flage = 0;
+            if (abs(yaw_last - EnemyInform_p->yaw) >= 6)
+            {
+                reset = 0; // 低复位
+                flage = 1;
+            }
             double AdTime = Filter->computeADTime(Filter->v_projectile, EnemyInform_p->Zw);                  // 提前量的计算
             Eigen::VectorXd y = Filter->xyzV2Eigen(EnemyInform_p->Xw, EnemyInform_p->Yw, EnemyInform_p->Zw); // 打包
-            if (reader_p->Debug_Kalman == "true" && reader_p->Debug_Kalman_AdvantceTime != 0)
-                Filter->KalmanUpdate(y, reader_p->Debug_Kalman_AdvantceTime, 1); // 应用卡尔曼滤波
-            else
-                Filter->KalmanUpdate(y, AdTime, 1);               // 应用卡尔曼滤波
+
+            // if (reader_p->Debug_Kalman == "true" && reader_p->Debug_Kalman_AdvantceTime != 0)
+            // {
+            Filter->KalmanUpdate(y, AdTime, reset); // 应用卡尔曼滤波
+            // Filter->KalmanUpdate(y, AdTime, reset);
+            reset = 1;
+            yaw_last = EnemyInform_p->yaw;
+            // }
+            // else
+            //     Filter->KalmanUpdate(y, AdTime, 1);               // 应用卡尔曼滤波
             cv::Mat point_camera = (cv::Mat_<double>(4, 1) <<     //
                                         Filter->kf->state()(0),   //
                                     Filter->kf->state()(1),       //
@@ -101,12 +115,18 @@ class TimerForKalman : public CppTimer
             {
                 char buffer[100];
                 memset(buffer, 0, sizeof(buffer));
-                sprintf(buffer, " :%f,%f,%f,%f,%f\n", EnemyInform_p->yaw_kalman, EnemyInform_p->pitch_kalman, EnemyInform_p->yaw, EnemyInform_p->pitch, AdTime); // y(0), y(1), y(2) 分别是 x, y, z
+                sprintf(buffer, " :%f,%f,%f,%f,%f,%d,%d\n", EnemyInform_p->yaw_kalman.load(), EnemyInform_p->pitch_kalman.load(), EnemyInform_p->yaw, EnemyInform_p->pitch, AdTime, flage, EnemyInform_p->enemy_exist); // y(0), y(1), y(2) 分别是 x, y, z
                 SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
             }
+            flage = 0;
             /*debug-------------------------------------------------------------------------------- */
         }
-        modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman), static_cast<float>(EnemyInform_p->pitch_kalman), EnemyInform_p->enemy_exist);
+        else
+        {
+            reset = 0;
+        }
+        // modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw_kalman.load()), static_cast<float>(EnemyInform_p->pitch_kalman.load()), EnemyInform_p->enemy_exist);
+        modbus_write_registers_noreply(MB_STM32_YUNTAI_ID, MB_WRITE_AUTOMATIC_AIMING_REGISTERS, static_cast<float>(EnemyInform_p->yaw), static_cast<float>(EnemyInform_p->pitch), EnemyInform_p->enemy_exist);
     }
 };
 
@@ -169,16 +189,34 @@ int main(int argc, char *argv[])
     Filter->KalmanFilterInit();
 
     /*yolo初始化*/
-    const string engine_file_path = "../mode/yoloInt8.trt";
-    cout << "Set CUDA...\n"
-         << endl;
+    // const string engine_file_path = "../mode/yolo.trt";
+    // cout << "Set CUDA...\n"
+    //      << endl;
+    // cudaSetDevice(0);
+    // cout << "Loading TensorRT model " << engine_file_path << endl;
+    // cout << "\nWait a second...." << std::flush;
+    // yolov8 = new YOLOv8(engine_file_path);
+    // cout << "\rLoading the pipe... " << string(10, ' ') << "\n\r";
+    // cout << endl;
+    // yolov8->MakePipe(false);
+
+    const std::vector<std::string> engine_files = {
+        // "../mode/yolo.trt",
+        // "../mode/yolo.trt",
+        // "../mode/yolo.trt",
+        // "../mode/yolo.trt",
+        // "../mode/yoloInt8.trt",
+        "../mode/yolo.trt"};
+    std::vector<std::shared_ptr<YOLOv8>> yolo_models; // 使用智能指针管理 YOLOv8
+    std::cout << "Set CUDA...\n";
     cudaSetDevice(0);
-    cout << "Loading TensorRT model " << engine_file_path << endl;
-    cout << "\nWait a second...." << std::flush;
-    yolov8 = new YOLOv8(engine_file_path);
-    cout << "\rLoading the pipe... " << string(10, ' ') << "\n\r";
-    cout << endl;
-    yolov8->MakePipe(false);
+    for (const auto &engine_file : engine_files)
+    {
+        std::cout << "Loading TensorRT model " << engine_file << std::endl;
+        auto yolo = std::make_shared<YOLOv8>(engine_file);
+        yolo->MakePipe(false);
+        yolo_models.push_back(yolo);
+    }
 
     process *process_p = new process_opencv_cuda(picture, reader_p, EnemyInform_p, Filter); // 将视频数据传入处理类
     if (true == BsaeCamera->MYCameraInit())
@@ -204,42 +242,51 @@ int main(int argc, char *argv[])
     GM6020Timer.startns(1);
     GpioReader GpioReadThead;
     GpioReadThead.startms(500);
-    ThreadPool pool(1);
+    ThreadPool pool(3);
     std::future<PROCESS_state> result; // 8ms ↓
-    // std::thread result_thread([&result]()
-    //                           {
-    //     while (true) {
-    //         if (result.valid()) {
-    //             try {
-    //                 // 阻塞直到异步任务完成并获取结果
-    //                 PROCESS_state state = result.get();
-    //                 // break; // 任务完成后退出循环
-    //             } catch (const std::exception& e) {
-    //                 std::cerr << "获取结果时发生异常: " << e.what() << std::endl;
-    //             }
-    //         }
-    //     } });
+    cv::Mat tempMat;
+    std::vector<std::future<PROCESS_state>> results; // 存储任务结果
     while (true)
     {
+
         // char buffer[50];
         // memset(buffer, 0, sizeof(buffer));
         // sprintf(buffer, ":%f\n", imu_angle.yaw_imu.load());
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
         picture->TimeBegin();
-        result = pool.enqueue(
-            [process_p]
-            { return process_p->processing(); }); // 加入任务列表
+        // result = pool.enqueue(
+        //     [process_p]
+        //     { return process_p->processing(); }); // 加入任务列表
 
         // BsaeCamera->camera_software_Trigger(); // 触发读图像
-        BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
+        // BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
 
-        auto re = result.get(); // 处理图像数据//同步处理（测速时使用）
+        for (auto &yolo_p : yolo_models)
+        {
+            results.push_back(pool.enqueue(
+                [&process_p, &yolo_p, &BsaeCamera, tempMat]
+                {
+                    auto temp_state = process_p->processing(yolo_p.get(), tempMat.clone());
+
+                    return temp_state;
+                }));
+            tempMat = BsaeCamera->camera_read_once(BsaeCamera->iCameraCounts); // 读图像数据
+        }
+        for (auto &resul : results)
+        {
+            bool success = resul.get();
+        }
+        // results.front().get();
+        // results.pop_front();
+        // results.front().get();
+        results.clear();
+        // auto re = result.get(); // 处理图像数据//同步处理（测速时使用）
         picture->TimeEnd();
         picture->CalculateTime();
         picture->displayImage = picture->preImage.clone();
-        picture->CvPutTextOnUI();
+        picture->CvPutTextOnUI(yolo_models[0].get());
 
-        /*rtsp*/ if (reader_p->Debug_RTSP == "true")
+        /*rtsp*/ if (reader_p->Debug_RTSP == "true" && picture->displayImage.empty() == false)
         {
             cv::cuda::GpuMat G_displayImage;
             G_displayImage.upload(picture->displayImage);
@@ -263,7 +310,6 @@ int main(int argc, char *argv[])
     KalmanTimer.stop();
     GM6020Timer.stop();
     GpioReadThead.stop();
-    delete yolov8;
     delete motor_control;
     delete BsaeCamera;
     delete picture;

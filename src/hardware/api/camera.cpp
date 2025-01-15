@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:36:52
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-10 15:00:28
+ * @LastEditTime: 2025-01-12 18:02:40
  * @FilePath: /success2025/src/hardware/api/camera.cpp
  * @Description:
  *
@@ -75,7 +75,7 @@ bool MindCamera::MYCameraInit()
     return true;
 }
 
-void MindCamera::camera_read_once(unsigned char camera_id)
+cv::Mat MindCamera::camera_read_once(unsigned char camera_id)
 {
     try // 相机读取帧
     {
@@ -108,6 +108,7 @@ void MindCamera::camera_read_once(unsigned char camera_id)
     {
         std::cerr << e << '\n';
     }
+    return this->Picture_p->preImage;
 }
 
 #include <iostream>
@@ -182,7 +183,7 @@ bool MindCamera_software::MYCameraInit()
     return true;
 }
 
-void MindCamera_software::camera_read_once(unsigned char camera_id)
+cv::Mat MindCamera_software::camera_read_once(unsigned char camera_id)
 {
     try // 相机读取帧
     {
@@ -213,6 +214,7 @@ void MindCamera_software::camera_read_once(unsigned char camera_id)
     {
         std::cerr << e << '\n';
     }
+    return this->Picture_p->preImage;
 }
 
 void MindCamera_software::camera_software_Trigger()

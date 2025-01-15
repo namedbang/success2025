@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-27 19:54:16
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-05 19:02:10
+ * @LastEditTime: 2025-01-14 15:31:52
  * @FilePath: /success2025/src/process/predict.hpp
  * @Description:
  *
@@ -25,9 +25,9 @@ using namespace chrono;
 using namespace Kalman;
 
 constexpr uint16_t Kalman_cycle = 10;
-#define AIR_RESISTANCE_COEFFICIENT 0.1 // 空气阻力系数 k (kg/m)
-#define MASS 5.0                       // 物体质量 m (kg)
-
+#define AIR_RESISTANCE_COEFFICIENT 0.47 // 空气阻力系数 k (kg/m)
+#define MASS 3.2 / 1000                 // 小丹弯质量 m (kg)
+#define MASSD 41 / 1000                 // 小丹弯质量 m (kg)
 // 三维位置结构体
 struct Position
 {

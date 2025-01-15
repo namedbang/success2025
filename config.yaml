@@ -3,10 +3,10 @@ verison: "1.0.0"
 ros_enable: "false"
 Debug: "false"
 #------Debug-------#
-Debug_FPS: "true"
-Debug_Kalman: "false"
+Debug_FPS: "false"
+Debug_Kalman: "true"
 Debug_Can: "false"
-Debug_RTSP: "false"
+Debug_RTSP: "true"
 #################################################################
 camera_config_path: "/home/gyxy/Desktop/workspeaseMY/success2025/cfg/net.config"
 ##***********1280 X 800分辨率下的内参矩阵和畸变矩阵***************##
@@ -27,46 +27,46 @@ HSV_upperb_red: [100,255,255]
 HSV_lowerb_blue: [0,0,204]
 HSV_upperb_blue: [169,255,255]
 ########show on picture############
-enable_show: "false"
+enable_show: "true"
 FPS_show: "true"
 time_show: "true"
 ##########卡尔曼预测部分############
-Debug_Kalman_AdvantceTime: 240
+Debug_Kalman_AdvantceTime: 200
 #
 Q : !!opencv-matrix
    rows: 6
    cols: 6
    dt: d
-   data: [0.1, 0, 0, 0, 0, 0,
-          0, 0.1, 0, 0, 0, 0,
-          0, 0, 0.1, 0, 0, 0,
-          0, 0, 0, 0.1, 0, 0,
-          0, 0, 0, 0, 0.1, 0,
-          0, 0, 0, 0, 0, 0.1]
+   data: [0.01, 0, 0, 0, 0, 0,
+          0, 0.01, 0, 0, 0, 0,
+          0, 0, 0.01, 0, 0, 0,
+          0, 0, 0, 0.01, 0, 0,
+          0, 0, 0, 0, 0.01, 0,
+          0, 0, 0, 0, 0, 0.01]
 R : !!opencv-matrix
    rows: 3
    cols: 3
    dt: d
-   data: [1000, 0, 0,
-          0, 1000, 0,
-          0, 0, 1000]
+   data: [800, 0, 0,
+          0, 800, 0,
+          0, 0, 800]
 ##初始协方差
 P : !!opencv-matrix
    rows: 6
    cols: 6
    dt: d
-   data: [1, 0, 0, 0, 0, 0,
-          0, 1, 0, 0, 0, 0,
-          0, 0, 1, 0, 0, 0,
-          0, 0, 0, 1, 0, 0,
-          0, 0, 0, 0, 1, 0,
-          0, 0, 0, 0, 0, 1]
+   data: [100000, 0, 0, 0, 0, 0,
+          0, 100000, 0, 0, 0, 0,
+          0, 0, 100000, 0, 0, 0,
+          0, 0, 0, 100000, 0, 0,
+          0, 0, 0, 0, 100000, 0,
+          0, 0, 0, 0, 0, 100000]
 ##世界坐标系相对平移向量
 TVEC : !!opencv-matrix
    rows: 1
    cols: 3
    dt: d
    data: [0,
-          0,
-          0]
+          -52.58,
+          144.89]
 ####################################################

@@ -203,7 +203,7 @@ void YOLOv8::Letterbox(const cv::Mat &image, cv::Mat &out, cv::Size &size)
     // this->pparam.dh = dh;
     // this->pparam.height = height;
     // this->pparam.width = width;
-
+    // auto start = std::chrono::high_resolution_clock::now(); ///////////////////////////
     const float inp_h = size.height;
     const float inp_w = size.width;
     float height = image.rows;
@@ -241,6 +241,9 @@ void YOLOv8::Letterbox(const cv::Mat &image, cv::Mat &out, cv::Size &size)
     this->pparam.dh = dh;
     this->pparam.height = height;
     this->pparam.width = width;
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    // std::cout << "代码运行时间: " << duration.count() << " 毫秒\n";
 }
 //----------------------------------------------------------------------------------------
 void YOLOv8::CopyFromMat(const cv::Mat &image)
@@ -261,9 +264,9 @@ void YOLOv8::CopyFromMat(const cv::Mat &image)
 void YOLOv8::CopyFromMat(const cv::Mat &image, cv::Size &size)
 {
     cv::Mat nchw;
-    this->Letterbox(image, nchw, size);
+    this->Letterbox(image, nchw, size); // 3ms
     this->context->setBindingDimensions(0, nvinfer1::Dims{4, {1, 3, size.height, size.width}});
-    CHECK(cudaMemcpyAsync(
+    CHECK(cudaMemcpyAsync( // 1ms
         this->device_ptrs[0], nchw.ptr<float>(), nchw.total() * nchw.elemSize(), cudaMemcpyHostToDevice, this->stream));
 }
 //----------------------------------------------------------------------------------------

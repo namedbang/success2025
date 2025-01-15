@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-12-15 14:50:49
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-10 16:45:04
+ * @LastEditTime: 2025-01-12 20:22:55
  * @FilePath: /success2025/src/hardware/uart/modbus.c
  * @Description:
  *
@@ -47,17 +47,20 @@ int modbus_write_registers_noreply(unsigned char slave_id, unsigned char functio
     {
     case MB_WRITE_AUTOMATIC_AIMING_REGISTERS:
     {
-        uint16_t *data_byte_yaw = (uint16_t *)&yaw;
-        uint16_t *data_byte_pitch = (uint16_t *)&pitch;
+        // uint32_t yaw_int, pitch_int;
+        // memcpy(&yaw_int, &yaw, sizeof(yaw));
+        // memcpy(&pitch_int, &pitch, sizeof(pitch));
         YunTai YunTai2stm32;
         YunTai2stm32.stm32_id = MB_STM32_YUNTAI_ID;
         YunTai2stm32.function_code = MB_WRITE_AUTOMATIC_AIMING_REGISTERS;
         YunTai2stm32.enemy = enemy;
-        YunTai2stm32.yaw_h = data_byte_yaw[1];
-        YunTai2stm32.yaw_l = data_byte_yaw[0];
-        YunTai2stm32.pitch_h = data_byte_pitch[1];
-        YunTai2stm32.pitch_l = data_byte_pitch[0];
-        YunTai2stm32.CRC = CRC_Check((uint8_t *)&YunTai2stm32, 7);
+        // YunTai2stm32.yaw_h = (yaw_int >> 16) & 0xFFFF;
+        // YunTai2stm32.yaw_l = yaw_int & 0xFFFF;
+        // YunTai2stm32.pitch_h = (pitch_int >> 16) & 0xFFFF;
+        // YunTai2stm32.pitch_l = pitch_int & 0xFFFF;
+        YunTai2stm32.yaw = yaw;
+        YunTai2stm32.pitch = pitch;
+        YunTai2stm32.CRC = CRC_Check((uint8_t *)&YunTai2stm32, 11);
         SerialPortWriteBuffer(Uart_inf.UID2STM32, &YunTai2stm32, sizeof(YunTai2stm32));
         break;
     }

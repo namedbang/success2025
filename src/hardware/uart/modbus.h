@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-12-15 14:50:49
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-10 16:42:07
+ * @LastEditTime: 2025-01-12 20:22:47
  * @FilePath: /success2025/src/hardware/uart/modbus.h
  * @Description:
  *
@@ -32,10 +32,12 @@ typedef struct
    __uint8_t stm32_id;
    __uint8_t function_code;
    bool enemy;
-   __uint8_t yaw_h;
-   __uint8_t yaw_l;
-   __uint8_t pitch_h;
-   __uint8_t pitch_l;
+   // __uint16_t yaw_h;
+   // __uint16_t yaw_l;
+   // __uint16_t pitch_h;
+   // __uint16_t pitch_l;
+   float yaw;
+   float pitch;
    __uint16_t CRC;
 } YunTai;
 #pragma pack(pop) // 恢复默认对齐

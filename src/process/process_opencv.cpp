@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-11-08 10:06:09
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2025-01-10 21:37:54
+ * @LastEditTime: 2025-01-15 19:03:42
  * @FilePath: /success2025/src/process/process_opencv.cpp
  * @Description:
  *
@@ -15,7 +15,7 @@
 #include "./predict.hpp"
 #include "../utils/LowPassFilter.hpp"
 #include "../hardware/gpio/GPIO.hpp"
-#include "../yolo/yolov8.hpp"
+// #include "../yolo/yolov8.hpp"
 
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
@@ -83,22 +83,59 @@ void sortPointsClockwise(cv::Point2f points[4])
         points[i] = sortedPoints[i];
     }
 }
+
+void keepRightmostObject(std::vector<Object> &objs)
+{
+    if (objs.empty())
+        return;
+
+    // 过滤出 "armor_red" 和 "armor_blue"
+    std::vector<Object> filtered_objs;
+    for (const auto &obj : objs)
+    {
+        if (obj.label < class_name.size()) // 防止 label 越界
+        {
+            std::string label_name = class_name[obj.label];
+            if (label_name == "armor_red" || label_name == "armor_blue")
+            {
+                filtered_objs.push_back(obj);
+            }
+        }
+    }
+
+    if (filtered_objs.empty())
+        return;
+
+    // 找到 rect.x 最大的 Object
+    auto rightmost = std::max_element(filtered_objs.begin(), filtered_objs.end(),
+                                      [](const Object &a, const Object &b)
+                                      {
+                                          return a.rect.x < b.rect.x;
+                                      });
+
+    // 只保留最右边的 Object
+    objs.clear();
+    objs.push_back(*rightmost);
+}
+
 cv::cuda::GpuMat G_image;
 cv::cuda::GpuMat temp_image;
 std::vector<Object> objs;
-extern YOLOv8 *yolov8;
+// extern YOLOv8 *yolov8;
 extern std::mutex displayImg_mtx;
 extern std::mutex perImg_mtx;
 
-PROCESS_state process_opencv_cuda::processing()
+PROCESS_state process_opencv_cuda::processing(YOLOv8 *yolov8, cv::Mat preImage)
 {
     vector<RotatedRect> rotatedRects;
     vector<RotatedRect> point_array;
-
+    // auto start = std::chrono::high_resolution_clock::now(); ///////////////////////////
     cv::Mat PerImg;
     {
-        std::lock_guard<std::mutex> lock(perImg_mtx);
-        PerImg = this->Picture_p->preImage.clone();
+        // std::lock_guard<std::mutex> lock(perImg_mtx);
+        if (preImage.empty())
+            return PROCESUNSUCCESS;
+        PerImg = preImage.clone();
     }
 
     if (PerImg.empty())
@@ -109,45 +146,37 @@ PROCESS_state process_opencv_cuda::processing()
 
     cv::cuda::GpuMat HSV;
     cv::cuda::GpuMat inRange(cv::Size(PerImg.cols, PerImg.rows), CV_8UC1, cv::Scalar(255));
-    // cv::cuda::GpuMat filter_open;
-    // cv::cuda::GpuMat filter_close;
     G_image.upload(PerImg, stream);
     cv::cuda::cvtColor(G_image, HSV, cv::COLOR_BGR2HSV, 0, stream);
     // TODO config
     cv::Size im_size(640, 640);
     const int num_labels = 9;
-    const int topk = 9;
-    const float score_thres = 0.25f;
-    const float iou_thres = 0.65f;
+    const int topk = 4;
+    const float score_thres = 0.03f;
+    const float iou_thres = 0.25f;
     float f;
-    std::chrono::steady_clock::time_point Tbegin, Tend;
-    auto start = std::chrono::high_resolution_clock::now(); ///////////////////////////
-    yolov8->CopyFromMat(PerImg, im_size);                   // 8ms
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "代码运行时间: " << duration.count() << " 毫秒\n";
+    yolov8->CopyFromMat(PerImg, im_size); // 4ms
+    std::vector<Object> obj;
     yolov8->Infer(); // 8ms
     {                // 加锁改变objs
         std::lock_guard<std::mutex> lock(displayImg_mtx);
         yolov8->PostProcess(objs, score_thres, iou_thres, topk, num_labels); // 1ms
+        obj = objs;
     }
-
-    // cv::Ptr<cv::cuda::Filter> morph_filter_open = cv::cuda::createMorphologyFilter(cv::MORPH_CLOSE, inRange.type(), open_kernel);
-    // cv::Ptr<cv::cuda::Filter> morph_filter_close = cv::cuda::createMorphologyFilter(cv::MORPH_OPEN, inRange.type(), close_kernel);
-    // morph_filter_open->apply(inRange, filter_open);
-    // morph_filter_close->apply(filter_open, filter_close);
-    // return PROCESS_state();
+    keepRightmostObject(obj);
     if (gpio_h.SwitchVal == 1)
     {
-        inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange, objs, stream);
+        inRange_gpu(HSV, *this->lowerFilter, *this->higherFilter, inRange, obj, stream);
     }
     else
     {
-        inRange_gpu(HSV, *this->lowerFilter_blue, *this->higherFilter_blue, inRange, objs, stream);
+        inRange_gpu(HSV, *this->lowerFilter_blue, *this->higherFilter_blue, inRange, obj, stream);
     }
     inRange.download(this->Picture_p->endImage, stream);
     stream.waitForCompletion(); // 等待CUDA流完成所有操作
-
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    // std::cout << "代码运行时间: " << duration.count() << " 毫秒\n";
     /***************************************************************************** */
     cv::findContours(this->Picture_p->endImage, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     for (size_t i = 0; i < contours.size(); i++)
@@ -165,8 +194,10 @@ PROCESS_state process_opencv_cuda::processing()
         return a.center.y > b.center.y; });
     if (rotatedRects.size() >= 2)
     {
+
         try
         {
+            this->isValidLightRects(rotatedRects);
             cv::RotatedRect rectangle_1 = rotatedRects[0];
             cv::RotatedRect rectangle_2 = rotatedRects[1];
             if (rectangle_1.size.width <= 0 || rectangle_1.size.height <= 0 ||
@@ -319,7 +350,7 @@ PROCESS_state process::getEuler()
         // SerialPortWriteBuffer(Uart_inf.UID0, buffer, sizeof(buffer));
         /*debug------------------------------------ */
         /*测速 两点之间的速度*/
-        MeasureSpeed(this->EnemyInform_p->Xw, this->EnemyInform_p->Yw, this->EnemyInform_p->Zw);
+        // MeasureSpeed(this->EnemyInform_p->Xw, this->EnemyInform_p->Yw, this->EnemyInform_p->Zw);
     }
 
     return PROCESS_state();
@@ -365,6 +396,44 @@ bool process::isValidLightBarBlob(const RotatedRect &rrect)
     }
     // DLOG(INFO) << "not lightbar: " << rrect.size.aspectRatio() << " " << rrect.size.area() << " " << rrect.angle;
     return false;
+}
+
+void process::isValidLightRects(vector<RotatedRect> &rotatedRects)
+{
+    if (rotatedRects.size() < 2)
+        return; // 至少需要两个矩形
+
+    // 匿名函数计算斜率
+    auto getSlope = [](const RotatedRect &rect)
+    {
+        return tan(rect.angle * CV_PI / 180.0);
+    };
+
+    int bestIdx1 = 0, bestIdx2 = 1;
+    double minSlopeDiff = fabs(getSlope(rotatedRects[0]) - getSlope(rotatedRects[1]));
+
+    // 找到斜率最接近的两个矩形
+    for (size_t i = 0; i < rotatedRects.size(); ++i)
+    {
+        for (size_t j = i + 1; j < rotatedRects.size(); ++j)
+        {
+            double slopeDiff = fabs(getSlope(rotatedRects[i]) - getSlope(rotatedRects[j]));
+            if (slopeDiff < minSlopeDiff)
+            {
+                minSlopeDiff = slopeDiff;
+                bestIdx1 = i;
+                bestIdx2 = j;
+            }
+        }
+    }
+
+    // 交换最接近的两个矩形到前两个位置
+    swap(rotatedRects[0], rotatedRects[bestIdx1]);
+    swap(rotatedRects[1], rotatedRects[bestIdx2]);
+
+    // 对剩余部分按照斜率排序（可选）
+    sort(rotatedRects.begin() + 2, rotatedRects.end(), [&](const RotatedRect &a, const RotatedRect &b)
+         { return getSlope(a) < getSlope(b); });
 }
 
 void process::MeasureSpeed(const double x, const double y, const double z)

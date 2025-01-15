@@ -2,7 +2,7 @@
  * @Author: bangbang 1789228622@qq.com
  * @Date: 2024-09-25 11:13:03
  * @LastEditors: bangbang 1789228622@qq.com
- * @LastEditTime: 2024-11-17 22:22:28
+ * @LastEditTime: 2025-01-12 17:30:17
  * @FilePath: /success2025/src/hardware/api/camera.hpp
  * @Description:
  *
@@ -34,7 +34,7 @@ public:
     virtual ~BsaeCamera() {}
 
     virtual bool MYCameraInit() = 0;
-    virtual void camera_read_once(unsigned char camera_id) = 0;
+    virtual cv::Mat camera_read_once(unsigned char camera_id) = 0;
     virtual bool camera_chank() = 0;
     virtual void camera_software_Trigger() {};
 };
@@ -56,7 +56,7 @@ public:
 
     bool camera_chank() override;
     bool MYCameraInit() override;
-    void camera_read_once(unsigned char camera_id) override;
+    cv::Mat camera_read_once(unsigned char camera_id) override;
     // void camera_id_read();
 };
 
@@ -79,7 +79,7 @@ public:
 
     bool camera_chank() override;
     bool MYCameraInit() override;
-    void camera_read_once(unsigned char camera_id) override;
+    cv::Mat camera_read_once(unsigned char camera_id) override;
     void camera_software_Trigger();
     // void camera_id_read();
 };
